@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
+import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
+import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
+import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key});
@@ -70,15 +74,8 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
-                                  child: const TextField(
-                                    decoration: InputDecoration(
-                                      labelText: 'Email',
-                                    ),
-                                  ),
+                                TextFieldWidget(
+                                  labelText: 'Email',
                                 ),
                                 const SizedBox(height: 16.0),
                                 Container(
@@ -111,54 +108,18 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // TODO: Implement login functionality
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor:
-                                          const Color(0xFF03045E), // Text color
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            50.0), // Border radius
-                                      ),
-                                      fixedSize: const Size.fromHeight(
-                                          50.0), // Button height
-                                    ),
-                                    child: const Text('Login', style: TextStyle(fontSize: 16),),
-                                  ),
+                                ButtonSolid(
+                                  text: 'Login',
+                                  onPressed: () {
+                                    // TODO: Implement login functionality
+                                  },
                                 ),
                                 const SizedBox(height: 16.0),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      // TODO: Implement sign in with Google functionality
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: const Color(0xFF333333),
-                                      backgroundColor:
-                                          Colors.white, // Text color
-                                      side: const BorderSide(
-                                        color:
-                                            Color(0xFF3A0CA3), // Border color
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            50.0), // Border radius
-                                      ),
-                                      minimumSize: const Size.fromHeight(
-                                          50.0), // Button height
-                                    ),
-                                    child: const Text('Sign in with Google', style: TextStyle(fontSize: 16),),
-                                  ),
+                                ButtonOutlined(
+                                  text: 'Sign in with Google',
+                                  onPressed: () {
+                                    // TODO: Implement sign in with Google functionality
+                                  },
                                 ),
                               ],
                             ),
@@ -194,29 +155,14 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      top: 25.0,
-                      right: 25.0,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Implement signup functionality
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          primary: Color(0xFF03045E), // Text color
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(20.0), // Border radius
-                          ),
-                          minimumSize: Size(50.0, 50.0), // Button size
-                        ),
-                        child: const Text(
-                          'Sign up',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                      ),
-                    ),
+                        top: 25.0,
+                        right: 25.0,
+                        child: ButtonElevated(
+                          text: 'Sign up',
+                          onPressed: () {
+                            // TODO: Implement signup functionality
+                          },
+                        )),
                   ],
                 ),
               ),
