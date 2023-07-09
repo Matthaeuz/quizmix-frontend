@@ -5,8 +5,8 @@ import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key});
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                                       // border: Border.all(width: 1.0),
                                       ),
                                   child: const Text(
-                                    'Login',
+                                    'Sign up',
                                     style: TextStyle(fontSize: 64.0),
                                   ),
                                 ),
@@ -75,48 +75,26 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
+                                  labelText: 'Name',
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
                                   labelText: 'Email',
                                 ),
                                 const SizedBox(height: 16.0),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
-                                  child: const TextField(
-                                    decoration: InputDecoration(
-                                      labelText: 'Password',
-                                    ),
-                                    obscureText: true,
-                                  ),
+                                TextFieldWidget(
+                                  labelText: 'Password',
                                 ),
-                                const SizedBox(height: 8.0),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      // TODO: Implement forgot password functionality
-                                    },
-                                    style: TextButton.styleFrom(
-                                      alignment: Alignment
-                                          .centerRight, // Align text to the right
-                                      primary:
-                                          const Color(0xFF03045E), // Text color
-                                    ),
-                                    child: const Text('Forgot Password'),
-                                  ),
-                                ),
-                                const SizedBox(height: 16.0),
+                                const SizedBox(height: 40.0),
                                 ButtonSolid(
-                                  text: 'Login',
+                                  text: 'Create account',
                                   onPressed: () {
                                     // TODO: Implement login functionality
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
                                 ButtonOutlined(
-                                  text: 'Sign in with Google',
+                                  text: 'Sign up with Google',
                                   onPressed: () {
                                     // TODO: Implement sign in with Google functionality
                                   },
@@ -150,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                         child: Image.asset(
                           'lib/assets/images/Laptop.png',
-                          fit: BoxFit.fill,
+                          fit: BoxFit.none,
                         ),
                       ),
                     ),
@@ -158,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                         top: 25.0,
                         right: 25.0,
                         child: ButtonElevated(
-                          text: 'Sign up',
+                          text: 'Login',
                           onPressed: () {
                             // TODO: Implement signup functionality
                           },
