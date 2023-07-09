@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/login_screen.dart';
+import 'package:quizmix_frontend/views/screens/LoginScreen.dart';
+import 'package:quizmix_frontend/views/screens/SignupScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(), // Set the home property to LoginScreen
+      home: SignupScreen(), // Set the home property to LoginScreen
     );
   }
 }
