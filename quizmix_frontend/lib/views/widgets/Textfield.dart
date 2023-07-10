@@ -4,7 +4,7 @@ class TextFieldWidget extends StatelessWidget {
   final String labelText;
   final bool obscureText;
 
-  const TextFieldWidget({
+  const TextFieldWidget({super.key, 
     required this.labelText,
     this.obscureText = false,
   });
@@ -12,7 +12,7 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
       ),
       child: TextField(
         decoration: InputDecoration(
