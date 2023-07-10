@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+
+import 'ForgotPasswordInputEmailScreen.dart';
+import 'SignupScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key});
@@ -20,9 +22,7 @@ class LoginScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(25),
               child: Container(
-                decoration: const BoxDecoration(
-                    // border: Border.all(width: 1.0),
-                    ),
+                decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,45 +56,43 @@ class LoginScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
+                                  decoration: const BoxDecoration(),
                                   child: const Text(
                                     'Login',
                                     style: TextStyle(fontSize: 64.0),
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
+                                  decoration: const BoxDecoration(),
                                   child: const Text(
                                     'Let’s get started with your QuizMix Code journey!',
                                     style: TextStyle(fontSize: 24.0),
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                TextFieldWidget(
+                                const TextFieldWidget(
                                   labelText: 'Email',
                                 ),
                                 const SizedBox(height: 16.0),
-                                TextFieldWidget(
+                                const TextFieldWidget(
                                   labelText: 'Password',
                                 ),
                                 const SizedBox(height: 8.0),
                                 Container(
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(width: 1.0),
-                                      ),
+                                  decoration: const BoxDecoration(),
                                   child: TextButton(
                                     onPressed: () {
-                                      // TODO: Implement forgot password functionality
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ForgotPasswordInputEmailScreen(),
+                                        ),
+                                      );
                                     },
                                     style: TextButton.styleFrom(
-                                      alignment: Alignment
-                                          .centerRight, // Align text to the right
-                                      primary:
-                                          const Color(0xFF03045E), // Text color
+                                      foregroundColor: const Color(0xFF03045E),
+                                      alignment: Alignment.centerRight,
                                     ),
                                     child: const Text('Forgot Password'),
                                   ),
@@ -127,7 +125,7 @@ class LoginScreen extends StatelessWidget {
           // Right Section
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(25.0),
+              padding: const EdgeInsets.all(25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey,
@@ -142,7 +140,7 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                         child: Image.asset(
                           'lib/assets/images/Laptop.png',
-                          fit: BoxFit.none,
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
@@ -152,7 +150,13 @@ class LoginScreen extends StatelessWidget {
                         child: ButtonElevated(
                           text: 'Sign up',
                           onPressed: () {
-                            // TODO: Implement signup functionality
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const SignupScreen(),
+                              ),
+                            );
                           },
                         )),
                   ],

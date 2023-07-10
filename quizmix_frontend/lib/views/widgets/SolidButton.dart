@@ -5,7 +5,7 @@ class ButtonSolid extends StatelessWidget {
   final VoidCallback onPressed;
   final double? width;
 
-  const ButtonSolid({
+  const ButtonSolid({super.key, 
     required this.text,
     required this.onPressed,
     this.width,
@@ -16,17 +16,16 @@ class ButtonSolid extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        primary: Color(0xFF03045E), // Button background color
-        onPrimary: Colors.white, // Text color
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        foregroundColor: Colors.white, backgroundColor: const Color(0xFF03045E),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), // Border radius
+          borderRadius: BorderRadius.circular(20.0),
         ),
-        minimumSize: width != null ? Size(width!, 50.0) : Size(50.0, 50.0), // Button size
+        minimumSize: width != null ? Size(width!, 50.0) : const Size(50.0, 50.0),
       ),
       child: Text(
         text,
-        style: TextStyle(fontSize: 16.0),
+        style: const TextStyle(fontSize: 16.0),
       ),
     );
   }

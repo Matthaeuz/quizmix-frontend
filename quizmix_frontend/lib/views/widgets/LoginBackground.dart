@@ -4,10 +4,8 @@ import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
-import 'LoginScreen.dart';
-
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({Key? key});
+class LoginBackground extends StatelessWidget {
+  const LoginBackground({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +55,7 @@ class SignupScreen extends StatelessWidget {
                                 Container(
                                   decoration: const BoxDecoration(),
                                   child: const Text(
-                                    'Sign up',
+                                    'Login',
                                     style: TextStyle(fontSize: 64.0),
                                   ),
                                 ),
@@ -70,30 +68,35 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16.0),
                                 const TextFieldWidget(
-                                  labelText: 'Name',
-                                ),
-                                const SizedBox(height: 16.0),
-                                const TextFieldWidget(
                                   labelText: 'Email',
                                 ),
                                 const SizedBox(height: 16.0),
                                 const TextFieldWidget(
                                   labelText: 'Password',
                                 ),
+                                const SizedBox(height: 8.0),
+                                Container(
+                                  decoration: const BoxDecoration(),
+                                  child: TextButton(
+                                    onPressed: () {},
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: const Color(0xFF03045E),
+                                      alignment:
+                                          Alignment.centerRight,
+                                    ),
+                                    child: const Text('Forgot Password'),
+                                  ),
+                                ),
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
-                                  text: 'Create account',
+                                  text: 'Login',
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginScreen()));
+                                    // TODO: Implement login functionality
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
                                 ButtonOutlined(
-                                  text: 'Sign up with Google',
+                                  text: 'Sign in with Google',
                                   onPressed: () {
                                     // TODO: Implement sign in with Google functionality
                                   },
@@ -135,12 +138,9 @@ class SignupScreen extends StatelessWidget {
                         top: 25.0,
                         right: 25.0,
                         child: ButtonElevated(
-                          text: 'Login',
+                          text: 'Sign up',
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()));
+                            // TODO: Implement signup functionality
                           },
                         )),
                   ],
