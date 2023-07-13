@@ -3,11 +3,11 @@ import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.
 import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
 
-class UploadedQuestionItemContainer extends StatelessWidget {
+class UpdateQuizBankItemContainer extends StatelessWidget {
   final QuestionDetails questionDetails;
   final int index;
 
-  const UploadedQuestionItemContainer({
+  const UpdateQuizBankItemContainer({
     super.key,
     required this.questionDetails,
     required this.index,

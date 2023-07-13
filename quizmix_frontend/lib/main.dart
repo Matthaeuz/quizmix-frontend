@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/screens/LoginScreen.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/AddQuestionScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScreen.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
 import 'views/screens/Reviewer/DashboardScreen.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: UpdateQuizBankDetailsScreen(),
     );
   }
 }
