@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,11 +91,13 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       ListTile(
-                        leading: const Icon(Icons.quiz, color: Color(0xFF03045E)),
+                        leading:
+                            const Icon(Icons.quiz, color: Color(0xFF03045E)),
                         title: const Text(
                           'Quizzes',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xFF03045E)),
                         ),
                         onTap: () {
@@ -101,15 +106,21 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       ListTile(
-                        leading: const Icon(Icons.question_answer, color: Color(0xFF03045E)),
+                        leading: const Icon(Icons.question_answer,
+                            color: Color(0xFF03045E)),
                         title: const Text(
                           'QuestionBank',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xFF03045E)),
                         ),
                         onTap: () {
-                          // Handle QuestionBank press
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      UpdateQuizBankScreen()));
                         },
                       ),
                     ],

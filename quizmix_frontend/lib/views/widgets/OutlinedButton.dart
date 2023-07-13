@@ -4,7 +4,8 @@ class ButtonOutlined extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const ButtonOutlined({super.key, 
+  const ButtonOutlined({
+    super.key,
     required this.text,
     required this.onPressed,
   });
@@ -14,7 +15,8 @@ class ButtonOutlined extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        foregroundColor: const Color(0xFF333333), backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF333333),
+        backgroundColor: Colors.white,
         side: const BorderSide(
           color: Color(0xFF3A0CA3), // Border color
         ),

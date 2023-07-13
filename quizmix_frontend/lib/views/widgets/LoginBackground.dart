@@ -81,8 +81,7 @@ class LoginBackground extends StatelessWidget {
                                     onPressed: () {},
                                     style: TextButton.styleFrom(
                                       foregroundColor: const Color(0xFF03045E),
-                                      alignment:
-                                          Alignment.centerRight,
+                                      alignment: Alignment.centerRight,
                                     ),
                                     child: const Text('Forgot Password'),
                                   ),

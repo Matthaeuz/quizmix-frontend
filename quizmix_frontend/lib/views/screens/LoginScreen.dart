@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
 import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
@@ -101,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-                                    // TODO: Implement login functionality
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
