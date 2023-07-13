@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/screens/LoginScreen.dart';
-
+import 'package:quizmix_frontend/views/screens/Reviewer/AddQuestionScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
 import 'views/screens/Reviewer/DashboardScreen.dart';
 
 void main() {
@@ -13,11 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Your App Name',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DashboardScreen(), // Set the home property to LoginScreen
+      home: LoginScreen(),
     );
   }
 }
