@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
 import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
 
@@ -164,7 +163,7 @@ class UploadedQuestionItemContainer extends StatelessWidget {
                   'Answer: ',
                   style: TextStyle(fontSize: 20),
                 ),
-                Text(questionDetails.answer!,
+                Text(questionDetails.answer,
                     style: const TextStyle(fontSize: 16)),
               ],
             ),

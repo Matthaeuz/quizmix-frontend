@@ -4,11 +4,13 @@ import 'package:quizmix_frontend/views/widgets/UpdateQuizBankItemContainer.dart'
 import 'package:quizmix_frontend/views/widgets/UploadedQuestionItemContainer.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
 
-
-
-
 class UpdateQuizBankDetailsScreen extends StatelessWidget {
-  UpdateQuizBankDetailsScreen({Key? key}) : super(key: key);
+  final Color categoryColor;
+  final String categoryTitle;
+
+  UpdateQuizBankDetailsScreen(
+      {Key? key, required this.categoryColor, required this.categoryTitle})
+      : super(key: key);
 
   // final List<String> categories = [
   //   'Algorithms and Programming',
@@ -30,7 +32,23 @@ class UpdateQuizBankDetailsScreen extends StatelessWidget {
             'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
         imagePath: 'lib/assets/images/questions/Q1.jpg',
         choices: ['a) 31/32', 'b) 31/125', 'c) 31/512', 'd) 73/512'],
-        answer: 'c) 31/512'),
+        answer: 'd) 73/512',
+        explanation:
+            '''The hexadecimal fraction 0.248 can be converted to a decimal fraction by dividing each digit by the corresponding power of 16. In this case, the digit '2' is in the position of 16^(-1), '4' is in the position of 16^(-2), and '8' is in the position of 16^(-3).
+
+To convert 0.248 to a decimal fraction, we can calculate as follows:
+
+0.248 = (2/16^1) + (4/16^2) + (8/16^3)
+
+Simplifying the expression, we get:
+
+0.248 = (2/16) + (4/256) + (8/4096)
+= 1/8 + 1/64 + 1/512
+= 64/512 + 8/512 + 1/512
+= (64 + 8 + 1)/512
+= 73/512
+
+Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0.248 is 73/512.'''),
     QuestionDetails(
         category: 'Computer Components and Hardware',
         questionText:
@@ -76,12 +94,32 @@ class UpdateQuizBankDetailsScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Uploaded Questions Screen',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Poppins',
-          ),
+        title: Row(
+          children: [
+            const Text(
+              'Question Bank',
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 25.0),
+              padding: const EdgeInsets.all(10.0),
+              height: 40,
+              decoration: BoxDecoration(
+                color: categoryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  categoryTitle,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
@@ -133,6 +171,7 @@ class UpdateQuizBankDetailsScreen extends StatelessWidget {
                   return UpdateQuizBankItemContainer(
                     questionDetails: details,
                     index: index,
+                    showCategory: false,
                   );
                 },
               ),

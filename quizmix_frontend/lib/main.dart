@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScr
 import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
 import 'views/screens/Reviewer/DashboardScreen.dart';
+import 'views/screens/Reviewer/ViewQuestionBankScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: UpdateQuizBankDetailsScreen(),
+      home: ViewQuestionBankScreen(),
     );
   }
 }

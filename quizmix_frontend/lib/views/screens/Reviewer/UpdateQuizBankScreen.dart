@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/AddQuestionScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScreen.dart';
 import 'dart:math';
 
 import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
@@ -113,7 +114,15 @@ class UpdateQuizBankScreen extends StatelessWidget {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Handle category button press
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateQuizBankDetailsScreen(
+                                          categoryColor:
+                                              getCategoryColor(index),
+                                          categoryTitle: categories[index],
+                                        )));
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,

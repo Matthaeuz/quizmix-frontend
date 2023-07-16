@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
 import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
 
 class UpdateQuizBankItemContainer extends StatelessWidget {
   final QuestionDetails questionDetails;
   final int index;
+  final bool showCategory;
 
   const UpdateQuizBankItemContainer({
     super.key,
     required this.questionDetails,
     required this.index,
+    this.showCategory = true,
   });
 
   Color getCategoryColor(String category) {
@@ -65,17 +66,19 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: getCategoryColor(questionDetails.category),
-                  borderRadius: BorderRadius.circular(10),
+              // Category Container
+              if (showCategory)
+                Container(
+                  decoration: BoxDecoration(
+                    color: getCategoryColor(questionDetails.category),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    questionDetails.category,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  questionDetails.category,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
               const Spacer(),
               TinySolidButton(
                 text: 'Edit',
@@ -160,12 +163,34 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
                 const SizedBox(
                   height: 12,
                 ),
-                const Text(
-                  'Answer: ',
-                  style: TextStyle(fontSize: 20),
+                Column(
+                  children: [
+                    const Text(
+                      'Answer:',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(questionDetails.answer,
+                        style: const TextStyle(fontSize: 16)),
+                  ],
                 ),
-                Text(questionDetails.answer!,
-                    style: const TextStyle(fontSize: 16)),
+                if (questionDetails.explanation != null &&
+                    questionDetails.explanation!.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      const Text(
+                        'Explanation:',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        questionDetails.explanation!,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

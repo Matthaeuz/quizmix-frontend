@@ -1,6 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class PdfInputButton extends StatelessWidget {
+class PdfInputButton extends StatefulWidget {
   final String buttonText;
   final IconData buttonIcon;
   final double buttonTextSize;
@@ -15,10 +16,32 @@ class PdfInputButton extends StatelessWidget {
   });
 
   @override
+  State<PdfInputButton> createState() => _PdfInputButtonState();
+}
+
+class _PdfInputButtonState extends State<PdfInputButton> {
+  bool isPdfUploaded = false;
+  String pdfFileName = '';
+
+  void _pickPdfFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        isPdfUploaded = true;
+        pdfFileName = result.files.single.name;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Handle button press
+        _pickPdfFile();
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: const Color(0xFF03045E),
@@ -35,15 +58,15 @@ class PdfInputButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                buttonIcon,
-                size: buttonIconSize,
+                isPdfUploaded ? Icons.picture_as_pdf : widget.buttonIcon,
+                size: widget.buttonIconSize,
                 color: const Color(0xFF03045E),
               ),
               const SizedBox(height: 8),
               Text(
-                buttonText,
+                isPdfUploaded ? pdfFileName : widget.buttonText,
                 style: TextStyle(
-                  fontSize: buttonTextSize,
+                  fontSize: widget.buttonTextSize,
                   color: const Color(0xFF03045E),
                 ),
               ),

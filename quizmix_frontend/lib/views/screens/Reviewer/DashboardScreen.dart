@@ -109,7 +109,7 @@ class DashboardScreen extends StatelessWidget {
                         leading: const Icon(Icons.question_answer,
                             color: Color(0xFF03045E)),
                         title: const Text(
-                          'QuestionBank',
+                          'Question Bank',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
