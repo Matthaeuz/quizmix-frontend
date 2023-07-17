@@ -6,8 +6,35 @@ import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
 import 'LoginScreen.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController middlenameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void handleSignup() {
+    String firstname = firstnameController.text;
+    String middlename = middlenameController.text;
+    String lastname = lastnameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    print(firstname);
+    print(middlename);
+    print(lastname);
+    print(email);
+    print(password);
+
+    // Perform login logic using the email and password
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,16 +96,29 @@ class SignupScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
-                                  labelText: 'Name',
+                                TextFieldWidget(
+                                  labelText: 'First Name',
+                                  controller: firstnameController,
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
+                                  labelText: 'Middle Name',
+                                  controller: middlenameController,
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
+                                  labelText: 'Last Name',
+                                  controller: lastnameController,
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
                                   labelText: 'Email',
+                                  controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Password',
+                                  controller: passwordController,
                                 ),
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(

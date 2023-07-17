@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/UpdateQuizBankItemContainer.dart';
-import 'package:quizmix_frontend/views/widgets/UploadedQuestionItemContainer.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
 
 class UpdateQuizBankDetailsScreen extends StatelessWidget {

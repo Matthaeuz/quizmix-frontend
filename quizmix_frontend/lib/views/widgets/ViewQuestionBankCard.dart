@@ -6,10 +6,10 @@ class ViewQuestionBankCard extends StatelessWidget {
   final int index;
 
   const ViewQuestionBankCard({
-    super.key,
+    Key? key,
     required this.questionDetails,
     required this.index,
-  });
+  }) : super(key: key);
 
   Color getCategoryColor(String category) {
     switch (category) {
@@ -60,19 +60,22 @@ class ViewQuestionBankCard extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: getCategoryColor(questionDetails.category),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  questionDetails.category,
-                  style: const TextStyle(
-                    color: Colors.white,
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: getCategoryColor(questionDetails.category),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    questionDetails.category,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

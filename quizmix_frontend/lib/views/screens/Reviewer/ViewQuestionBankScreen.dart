@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
 import 'package:quizmix_frontend/views/widgets/ProfileArea.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/ViewQuestionBankCard.dart';
@@ -164,33 +166,39 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
                   Padding(
                     padding: const EdgeInsets.all(25),
                     child: SizedBox(
-                      width: double.infinity, // or provide a specific width
+                      width: double.infinity,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(
-                            width: 400,
-                            height: 40,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.search),
-                                hintText: 'Search',
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
+                          const Flexible(
+                            flex: 1,
+                            child: FractionallySizedBox(
+                              widthFactor: 0.9, // Adjust this value as needed
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.search),
+                                  hintText: 'Search',
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
                                   ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 10),
                                 ),
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 10),
                               ),
                             ),
                           ),
                           ButtonSolid(
                             text: 'Update',
                             onPressed: () {
-                              // Handle update button press
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateQuizBankScreen()));
                             },
                           ),
                         ],

@@ -4,8 +4,26 @@ import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
-class LoginBackground extends StatelessWidget {
+class LoginBackground extends StatefulWidget {
   const LoginBackground({Key? key}) : super(key: key);
+
+  @override
+  State<LoginBackground> createState() => _LoginBackgroundState();
+}
+
+class _LoginBackgroundState extends State<LoginBackground> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void handleLogin() {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    print(email);
+    print(password);
+
+    // Perform login logic using the email and password
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +85,14 @@ class LoginBackground extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Email',
+                                  controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Password',
+                                  controller: passwordController,
                                 ),
                                 const SizedBox(height: 8.0),
                                 Container(

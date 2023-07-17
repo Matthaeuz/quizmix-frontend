@@ -2,23 +2,20 @@ import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String labelText;
-  final bool obscureText;
+  final TextEditingController controller;
 
-  const TextFieldWidget({super.key, 
+  const TextFieldWidget({
     required this.labelText,
-    this.obscureText = false,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: labelText,
-        ),
-        obscureText: obscureText,
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
       ),
     );
   }

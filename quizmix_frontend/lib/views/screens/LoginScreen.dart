@@ -8,8 +8,26 @@ import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 import 'ForgotPasswordInputEmailScreen.dart';
 import 'SignupScreen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void handleLogin() {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    print(email);
+    print(password);
+
+    // Perform login logic using the email and password
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +89,14 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Email',
+                                  controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Password',
+                                  controller: passwordController,
                                 ),
                                 const SizedBox(height: 8.0),
                                 Container(
@@ -102,7 +122,12 @@ class LoginScreen extends StatelessWidget {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+                                    handleLogin();
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             DashboardScreen()));
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
@@ -154,8 +179,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const SignupScreen(),
+                                builder: (context) => const SignupScreen(),
                               ),
                             );
                           },
