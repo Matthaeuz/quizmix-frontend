@@ -6,7 +6,7 @@ part 'auth_token.g.dart';
 class AuthToken {
   AuthToken({
     required this.refresh,
-    required this.access,
+    this.access,
   });
 
   String? refresh;
