@@ -15,13 +15,28 @@ class User {
     required this.createdOn,
   });
 
+  @JsonKey(name: 'id')
   final int id;
+
+  @JsonKey(name: 'email')
   final String email;
+
+  @JsonKey(name: 'first_name')
   final String firstName;
+
+  @JsonKey(name: 'middle_name')
   final String? middleName;
+
+  @JsonKey(name: 'last_name')
   final String lastName;
+
+  @JsonKey(name: 'image')
   final String? image;
+
+  @JsonKey(name: 'is_active')
   final bool isActive;
+
+  @JsonKey(name: 'created_on')
   final DateTime createdOn;
 
   /// Base user creation; call this if you need to reference an empty user.

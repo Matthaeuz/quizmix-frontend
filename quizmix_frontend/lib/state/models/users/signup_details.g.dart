@@ -9,17 +9,17 @@ part of 'signup_details.dart';
 SignUpDetails _$SignUpDetailsFromJson(Map<String, dynamic> json) =>
     SignUpDetails(
       email: json['email'] as String,
-      firstName: json['firstName'] as String,
-      middleName: json['middleName'] as String?,
-      lastName: json['lastName'] as String,
+      firstName: json['first_name'] as String,
+      middleName: json['middle_name'] as String?,
+      lastName: json['last_name'] as String,
       password: json['password'] as String,
     );
 
 Map<String, dynamic> _$SignUpDetailsToJson(SignUpDetails instance) =>
     <String, dynamic>{
       'email': instance.email,
-      'firstName': instance.firstName,
-      'middleName': instance.middleName,
-      'lastName': instance.lastName,
+      'first_name': instance.firstName,
+      'middle_name': instance.middleName,
+      'last_name': instance.lastName,
       'password': instance.password,
     };

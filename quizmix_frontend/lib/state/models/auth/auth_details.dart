@@ -9,7 +9,10 @@ class AuthDetails {
     required this.password,
   });
 
+  @JsonKey(name: 'email')
   final String email;
+
+  @JsonKey(name: 'password')
   final String password;
 
   /// Base token creation; call this if you need to reference an empty AuthToken (fresh user or logged out).

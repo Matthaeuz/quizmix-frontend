@@ -9,8 +9,8 @@ part of 'reviewee.dart';
 Reviewee _$RevieweeFromJson(Map<String, dynamic> json) => Reviewee(
       id: json['id'] as int,
       user: json['user'] as int,
-      belongsTo: json['belongsTo'] as int?,
-      categoryScores: (json['categoryScores'] as List<dynamic>)
+      belongsTo: json['belongs_to'] as int?,
+      categoryScores: (json['category_scores'] as List<dynamic>)
           .map((e) => e as int)
           .toList(),
     );
@@ -18,6 +18,6 @@ Reviewee _$RevieweeFromJson(Map<String, dynamic> json) => Reviewee(
 Map<String, dynamic> _$RevieweeToJson(Reviewee instance) => <String, dynamic>{
       'id': instance.id,
       'user': instance.user,
-      'belongsTo': instance.belongsTo,
-      'categoryScores': instance.categoryScores,
+      'belongs_to': instance.belongsTo,
+      'category_scores': instance.categoryScores,
     };

@@ -11,9 +11,16 @@ class Reviewee {
     required this.categoryScores,
   });
 
+  @JsonKey(name: 'id')
   final int id;
+
+  @JsonKey(name: 'user')
   final int user;
+
+  @JsonKey(name: 'belongs_to')
   final int? belongsTo;
+
+  @JsonKey(name: 'category_scores')
   final List<int> categoryScores;
 
   /// Base reviewee creation; call this if you need to reference an empty reviewee.
