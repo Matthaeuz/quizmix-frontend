@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
+import 'package:quizmix_frontend/views/screens/ForgotPasswordInputEmailScreen.dart';
+import 'package:quizmix_frontend/views/screens/SignupScreen.dart';
 import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
-
 import 'ForgotPasswordInputEmailScreen.dart';
 import 'SignupScreen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends ConsumerWidget {
+  const LoginScreen({super.key});
+  
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  
   void handleLogin() {
     String email = emailController.text;
     String password = passwordController.text;
@@ -28,9 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Perform login logic using the email and password
   }
-
+  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Define Rest Client and Dio
+    final client = ref.watch(restClientProvider);
     return Scaffold(
       appBar: null,
       body: Row(
@@ -122,12 +125,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-                                    // handleLogin();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DashboardScreen()));
+
+                                    AuthDetails details = AuthDetails(
+                                      email: "aloysius@test.com",
+                                      password: "tester",
+                                    );
+
+                                    client.signIn(details).then((token) {
+                                      debugPrint('$token');
+
+                                      ref
+                                          .read(authTokenProvider.notifier)
+                                          .updateToken(token);
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DashboardScreen()));
+                                    });
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
