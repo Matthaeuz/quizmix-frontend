@@ -121,10 +121,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                       password: passwordController.text,
                                     );
 
-                                    String detailsJson =
-                                        jsonEncode(details.toJson());
-                                    debugPrint('Details: $detailsJson');
-
                                     client.createUser(details).then((value) {
                                       Navigator.push(
                                           context,
