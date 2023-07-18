@@ -117,7 +117,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-
                                     AuthDetails details = AuthDetails(
                                       email: emailController.text,
                                       password: passwordController.text,
