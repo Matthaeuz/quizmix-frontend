@@ -9,7 +9,10 @@ class AuthToken {
     this.access,
   });
 
+  @JsonKey(name: 'refresh')
   String? refresh;
+
+  @JsonKey(name: 'access')
   String? access;
 
   /// Base token creation; call this if you need to reference an empty AuthToken (fresh user or logged out).

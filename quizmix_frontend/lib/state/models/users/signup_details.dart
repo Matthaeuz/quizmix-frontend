@@ -11,11 +11,20 @@ class SignUpDetails {
     required this.lastName,
     required this.password,
   });
-
+  
+  @JsonKey(name: 'email')
   final String email;
+  
+  @JsonKey(name: 'first_name')
   final String firstName;
+  
+  @JsonKey(name: 'middle_name')
   final String? middleName;
+  
+  @JsonKey(name: 'last_name')
   final String lastName;
+
+  @JsonKey(name: 'password')
   final String password;
   
   factory SignUpDetails.fromJson(Map<String, dynamic> json) => _$SignUpDetailsFromJson(json);

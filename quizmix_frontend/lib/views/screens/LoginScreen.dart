@@ -26,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     // Define Rest Client and Dio
     final client = ref.watch(restClientProvider);
+
     return Scaffold(
       appBar: null,
       body: Row(
@@ -123,7 +124,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     );
 
                                     client.signIn(details).then((token) {
-                                      debugPrint('$token');
 
                                       ref
                                           .read(authTokenProvider.notifier)

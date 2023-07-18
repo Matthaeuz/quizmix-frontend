@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/models/users/signup_details.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
 import 'LoginScreen.dart';
+import 'dart:convert';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController middlenameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
+class _SignupScreenState extends ConsumerState<SignupScreen> {
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController middleNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void handleSignup() {
-    String firstname = firstnameController.text;
-    String middlename = middlenameController.text;
-    String lastname = lastnameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    print(firstname);
-    print(middlename);
-    print(lastname);
-    print(email);
-    print(password);
-
-    // Perform login logic using the email and password
-  }
-
   @override
   Widget build(BuildContext context) {
+    final client = ref.watch(restClientProvider);
+
     return Scaffold(
       appBar: null,
       body: Row(
@@ -98,17 +88,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'First Name',
-                                  controller: firstnameController,
+                                  controller: firstNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Middle Name',
-                                  controller: middlenameController,
+                                  controller: middleNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Last Name',
-                                  controller: lastnameController,
+                                  controller: lastNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
@@ -124,11 +114,20 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ButtonSolid(
                                   text: 'Create account',
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginScreen()));
+                                    SignUpDetails details = SignUpDetails(
+                                      email: emailController.text,
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      password: passwordController.text,
+                                    );
+
+                                    client.createUser(details).then((value) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginScreen()));
+                                    });
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
