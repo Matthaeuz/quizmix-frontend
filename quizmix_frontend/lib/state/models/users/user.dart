@@ -13,6 +13,7 @@ class User {
     this.image,
     required this.isActive,
     required this.createdOn,
+    required this.userType,
   });
 
   @JsonKey(name: 'id')
@@ -39,6 +40,9 @@ class User {
   @JsonKey(name: 'created_on')
   final DateTime createdOn;
 
+  @JsonKey(name: 'user_type')
+  final String userType;
+
   /// Base user creation; call this if you need to reference an empty user.
   User.base()
       : id = 0,
@@ -48,7 +52,8 @@ class User {
         lastName = '',
         image = null,
         isActive = false,
-        createdOn = DateTime.now();
+        createdOn = DateTime.now(),
+        userType = '';
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

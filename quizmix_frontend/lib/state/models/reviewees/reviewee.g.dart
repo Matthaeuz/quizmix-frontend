@@ -8,7 +8,7 @@ part of 'reviewee.dart';
 
 Reviewee _$RevieweeFromJson(Map<String, dynamic> json) => Reviewee(
       id: json['id'] as int,
-      user: json['user'] as int,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
       belongsTo: json['belongs_to'] as int?,
       categoryScores: (json['category_scores'] as List<dynamic>)
           .map((e) => e as int)

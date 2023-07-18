@@ -20,6 +20,8 @@ class AuthToken {
       : refresh = '',
         access = '';
 
+  String get accessToken => 'Bearer $access';
+
   factory AuthToken.fromJson(Map<String, dynamic> json) =>
       _$AuthTokenFromJson(json);
   Map<String, dynamic> toJson() => _$AuthTokenToJson(this);

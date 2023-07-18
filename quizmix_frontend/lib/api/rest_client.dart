@@ -29,16 +29,22 @@ abstract class RestClient {
   // Future<List<User>> getUsers(@Header("Authorization") String token);
 
   @GET("/users/{id}/")
-  Future<User> getUser(@Header("Authorization") String token, @Path("id") int id);
+  Future<User> getUserById(@Header("Authorization") String token, @Path("id") int id);
+
+  @GET("/users/?email={email}")
+  Future<List<User>> getUserByEmail(@Header("Authorization") String token, @Path("email") String email);
 
   /// REVIEWEE API
   
   @POST("/reviewees/")
   Future<Reviewee> createReviewee(@Header("Authorization") String token, @Body() Map<String, dynamic> user);
 
-  @GET("/reviewees/{id}/")
-  Future<User> getReviewee(@Header("Authorization") String token, @Path("id") int id);
-
   @GET("/reviewees/")
   Future<List<Reviewee>> getReviewees(@Header("Authorization") String token);
+
+  @GET("/reviewees/{id}/")
+  Future<User> getRevieweeById(@Header("Authorization") String token, @Path("id") int id);
+
+  @GET("/reviewees/?user={id}")
+  Future<List<Reviewee>> getRevieweeByUserId(@Header("Authorization") String token, @Path("id") int id);
 }

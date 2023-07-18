@@ -14,6 +14,7 @@ class UserDetailsNotifier extends StateNotifier<User> {
       image: newUser.image,
       isActive: newUser.isActive,
       createdOn: newUser.createdOn,
+      userType: newUser.userType,
     );
   }
 }

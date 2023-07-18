@@ -105,7 +105,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<User> getUser(
+  Future<User> getUserById(
     String token,
     int id,
   ) async {
@@ -132,6 +132,39 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = User.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<User>> getUserByEmail(
+    String token,
+    String email,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/users/?email=${email}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 
@@ -168,7 +201,37 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<User> getReviewee(
+  Future<List<Reviewee>> getReviewees(String token) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Reviewee>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/reviewees/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Reviewee.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<User> getRevieweeById(
     String token,
     int id,
   ) async {
@@ -199,7 +262,10 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Reviewee>> getReviewees(String token) async {
+  Future<List<Reviewee>> getRevieweeByUserId(
+    String token,
+    int id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
@@ -213,7 +279,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              '/reviewees/',
+              '/reviewees/?user=${id}',
               queryParameters: queryParameters,
               data: _data,
             )
