@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/models/QuestionDetails.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScreen.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
 import 'package:quizmix_frontend/views/widgets/ProfileArea.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';

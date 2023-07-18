@@ -122,12 +122,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-                                    handleLogin();
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) =>
-                                    //             DashboardScreen()));
+                                    // handleLogin();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DashboardScreen()));
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
