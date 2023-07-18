@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
+import 'package:quizmix_frontend/views/screens/Reviewer/ViewQuestionBankScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -109,7 +110,7 @@ class DashboardScreen extends StatelessWidget {
                         leading: const Icon(Icons.question_answer,
                             color: Color(0xFF03045E)),
                         title: const Text(
-                          'QuestionBank',
+                          'Question Bank',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -120,7 +121,7 @@ class DashboardScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      UpdateQuizBankScreen()));
+                                      ViewQuestionBankScreen()));
                         },
                       ),
                     ],

@@ -10,15 +10,30 @@ import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'ForgotPasswordInputEmailScreen.dart';
+import 'SignupScreen.dart';
+
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
+  
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
+  void handleLogin() {
+    String email = emailController.text;
+    String password = passwordController.text;
 
+    print(email);
+    print(password);
+
+    // Perform login logic using the email and password
+  }
+  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Define Rest Client and Dio
     final client = ref.watch(restClientProvider);
-
     return Scaffold(
       appBar: null,
       body: Row(
@@ -77,12 +92,14 @@ class LoginScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Email',
+                                  controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
-                                const TextFieldWidget(
+                                TextFieldWidget(
                                   labelText: 'Password',
+                                  controller: passwordController,
                                 ),
                                 const SizedBox(height: 8.0),
                                 Container(
@@ -108,6 +125,7 @@ class LoginScreen extends ConsumerWidget {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
+
                                     AuthDetails details = AuthDetails(
                                       email: "aloysius@test.com",
                                       password: "tester",
