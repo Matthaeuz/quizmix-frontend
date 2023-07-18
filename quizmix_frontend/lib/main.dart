@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/login_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_question_bank_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: ViewQuestionBankScreen(),
     );
   }
 }
