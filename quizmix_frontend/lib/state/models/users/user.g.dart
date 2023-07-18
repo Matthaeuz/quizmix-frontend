@@ -15,6 +15,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       image: json['image'] as String?,
       isActive: json['is_active'] as bool,
       createdOn: DateTime.parse(json['created_on'] as String),
+      userType: json['user_type'] as String,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'image': instance.image,
       'is_active': instance.isActive,
       'created_on': instance.createdOn.toIso8601String(),
+      'user_type': instance.userType,
     };

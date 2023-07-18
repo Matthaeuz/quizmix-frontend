@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
 import 'package:quizmix_frontend/views/screens/ForgotPasswordInputEmailScreen.dart';
 import 'package:quizmix_frontend/views/screens/SignupScreen.dart';
@@ -117,24 +118,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
                                   text: 'Login',
-                                  onPressed: () {
+                                  onPressed: () async {
                                     AuthDetails details = AuthDetails(
                                       email: emailController.text,
                                       password: passwordController.text,
                                     );
 
-                                    client.signIn(details).then((token) {
+                                    // Get a token if user credentials are valid and save it
+                                    final token = await client.signIn(details);
+                                    ref.read(authTokenProvider.notifier).updateToken(token);
+                                    
+                                    debugPrint('access: ${token.accessToken}');
 
-                                      ref
-                                          .read(authTokenProvider.notifier)
-                                          .updateToken(token);
+                                    // Get user details and save to provider
+                                    final user = await client.getUserByEmail(token.accessToken, emailController.text);
+                                    
+                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
 
-                                      Navigator.push(
+                                    ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
+
+                                    Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   const DashboardScreen()));
-                                    });
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
