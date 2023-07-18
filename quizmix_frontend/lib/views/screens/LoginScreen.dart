@@ -10,28 +10,20 @@ import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
-import 'ForgotPasswordInputEmailScreen.dart';
-import 'SignupScreen.dart';
 
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
-class LoginScreen extends ConsumerWidget {
-  const LoginScreen({super.key});
-  
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  
-  void handleLogin() {
-    String email = emailController.text;
-    String password = passwordController.text;
 
-    print(email);
-    print(password);
-
-    // Perform login logic using the email and password
-  }
-  
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // Define Rest Client and Dio
     final client = ref.watch(restClientProvider);
     return Scaffold(
@@ -127,8 +119,8 @@ class LoginScreen extends ConsumerWidget {
                                   onPressed: () {
 
                                     AuthDetails details = AuthDetails(
-                                      email: "aloysius@test.com",
-                                      password: "tester",
+                                      email: emailController.text,
+                                      password: passwordController.text,
                                     );
 
                                     client.signIn(details).then((token) {
