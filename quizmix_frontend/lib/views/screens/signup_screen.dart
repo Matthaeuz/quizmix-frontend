@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
-import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
+import 'package:quizmix_frontend/views/widgets/textfield.dart';
 
-class LoginBackground extends StatefulWidget {
-  const LoginBackground({Key? key}) : super(key: key);
+import 'login_screen.dart';
+
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({Key? key});
 
   @override
-  State<LoginBackground> createState() => _LoginBackgroundState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginBackgroundState extends State<LoginBackground> {
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController middlenameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void handleLogin() {
+  void handleSignup() {
+    String firstname = firstnameController.text;
+    String middlename = middlenameController.text;
+    String lastname = lastnameController.text;
     String email = emailController.text;
     String password = passwordController.text;
 
+    print(firstname);
+    print(middlename);
+    print(lastname);
     print(email);
     print(password);
 
@@ -73,7 +84,7 @@ class _LoginBackgroundState extends State<LoginBackground> {
                                 Container(
                                   decoration: const BoxDecoration(),
                                   child: const Text(
-                                    'Login',
+                                    'Sign up',
                                     style: TextStyle(fontSize: 64.0),
                                   ),
                                 ),
@@ -86,6 +97,21 @@ class _LoginBackgroundState extends State<LoginBackground> {
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
+                                  labelText: 'First Name',
+                                  controller: firstnameController,
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
+                                  labelText: 'Middle Name',
+                                  controller: middlenameController,
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
+                                  labelText: 'Last Name',
+                                  controller: lastnameController,
+                                ),
+                                const SizedBox(height: 16.0),
+                                TextFieldWidget(
                                   labelText: 'Email',
                                   controller: emailController,
                                 ),
@@ -94,28 +120,20 @@ class _LoginBackgroundState extends State<LoginBackground> {
                                   labelText: 'Password',
                                   controller: passwordController,
                                 ),
-                                const SizedBox(height: 8.0),
-                                Container(
-                                  decoration: const BoxDecoration(),
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: const Color(0xFF03045E),
-                                      alignment: Alignment.centerRight,
-                                    ),
-                                    child: const Text('Forgot Password'),
-                                  ),
-                                ),
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
-                                  text: 'Login',
+                                  text: 'Create account',
                                   onPressed: () {
-                                    // TODO: Implement login functionality
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginScreen()));
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
                                 ButtonOutlined(
-                                  text: 'Sign in with Google',
+                                  text: 'Sign up with Google',
                                   onPressed: () {
                                     // TODO: Implement sign in with Google functionality
                                   },
@@ -157,9 +175,12 @@ class _LoginBackgroundState extends State<LoginBackground> {
                         top: 25.0,
                         right: 25.0,
                         child: ButtonElevated(
-                          text: 'Sign up',
+                          text: 'Login',
                           onPressed: () {
-                            // TODO: Implement signup functionality
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()));
                           },
                         )),
                   ],

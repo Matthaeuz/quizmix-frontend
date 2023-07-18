@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
-import 'package:quizmix_frontend/views/widgets/ProfileArea.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/ViewQuestionBankCard.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
+import 'package:quizmix_frontend/views/widgets/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/view_question_bank_card.dart';
 
 class ViewQuestionBankScreen extends StatelessWidget {
   final List<QuestionDetails> questionDetails = [
@@ -72,84 +72,11 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
             flex: 2,
             child: Container(
               color: Colors.white,
-              child: Column(
+              child: const Column(
                 children: [
-                  // Profile Area
-                  const ProfileArea(),
-                  // Dashboard Options
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading: const Icon(Icons.dashboard,
-                            color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Dashboard',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Dashboard press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading:
-                            const Icon(Icons.person, color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Reviewees',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Reviewees press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading:
-                            const Icon(Icons.quiz, color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Quizzes',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Quizzes press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        color: const Color(0xFF03045E),
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.question_answer,
-                            color: Colors.white,
-                          ),
-                          title: const Text(
-                            'Question Bank',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () {
-                            // Handle Question Bank press
-                          },
-                        ),
-                      ),
-                    ],
+                  // Left Side - Dashboard
+                  DashboardWidget(
+                    selectedOption: 'Question Bank',
                   ),
                 ],
               ),

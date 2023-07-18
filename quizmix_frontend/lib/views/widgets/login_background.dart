@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
-import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
+import 'package:quizmix_frontend/views/widgets/textfield.dart';
 
-import 'ForgotPasswordInputEmailScreen.dart';
-import 'SignupScreen.dart';
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key});
+class LoginBackground extends StatefulWidget {
+  const LoginBackground({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginBackground> createState() => _LoginBackgroundState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginBackgroundState extends State<LoginBackground> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -102,15 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Container(
                                   decoration: const BoxDecoration(),
                                   child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ForgotPasswordInputEmailScreen(),
-                                        ),
-                                      );
-                                    },
+                                    onPressed: () {},
                                     style: TextButton.styleFrom(
                                       foregroundColor: const Color(0xFF03045E),
                                       alignment: Alignment.centerRight,
@@ -122,12 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ButtonSolid(
                                   text: 'Login',
                                   onPressed: () {
-                                    // handleLogin();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DashboardScreen()));
+                                    // TODO: Implement login functionality
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
@@ -176,12 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ButtonElevated(
                           text: 'Sign up',
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignupScreen(),
-                              ),
-                            );
+                            // TODO: Implement signup functionality
                           },
                         )),
                   ],

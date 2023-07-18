@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/UpdateQuizBankItemContainer.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
+import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/update_quiz_bank_item_container.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
 
 class UpdateQuizBankDetailsScreen extends StatelessWidget {
   final Color categoryColor;
