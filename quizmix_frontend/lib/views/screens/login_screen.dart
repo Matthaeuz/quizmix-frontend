@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/api/utils/sign_in.helper.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
-import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
-import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
-import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
 import 'package:quizmix_frontend/views/screens/signup_screen.dart';
@@ -26,9 +23,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Define Rest Client and Dio
-    final client = ref.watch(restClientProvider);
-
     return Scaffold(
       appBar: null,
       body: Row(
@@ -119,30 +113,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
                                   text: 'Login',
-                                  onPressed: () async {
+                                  onPressed: () {
                                     AuthDetails details = AuthDetails(
                                       email: emailController.text,
                                       password: passwordController.text,
                                     );
 
-                                    // Get a token if user credentials are valid and save it
-                                    final token = await client.signIn(details);
-                                    ref.read(authTokenProvider.notifier).updateToken(token);
-                                    
-                                    debugPrint('access: ${token.accessToken}');
-
-                                    // Get user details and save to provider
-                                    final user = await client.getUserByEmail(token.accessToken, emailController.text);
-                                    ref.read(userProvider.notifier).updateUser(user[0]);
-
-                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
-                                    ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
-
-                                    Navigator.push(
+                                    signIn(details, ref).then((value) => {
+                                      Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const DashboardScreen()));
+                                                  const DashboardScreen()))
+                                    });
                                   },
                                 ),
                                 const SizedBox(height: 16.0),

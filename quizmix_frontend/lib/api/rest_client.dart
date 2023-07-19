@@ -1,6 +1,7 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:retrofit/retrofit.dart';
@@ -47,4 +48,10 @@ abstract class RestClient {
 
   @GET("/reviewees/?user={id}")
   Future<List<Reviewee>> getRevieweeByUserId(@Header("Authorization") String token, @Path("id") int id);
+
+  /// REVIEWER API
+  
+  @GET("reviewers/?user={id}")
+    Future<List<Reviewer>> getReviewerByUserId(@Header("Authorization") String token, @Path("id") int id);
+
 }

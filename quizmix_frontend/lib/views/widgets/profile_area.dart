@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 class ProfileArea extends ConsumerWidget {
@@ -8,7 +7,7 @@ class ProfileArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final details = ref.watch(revieweeProvider);
+    final details = ref.watch(userProvider);
 
     return Container(
       padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
@@ -33,7 +32,7 @@ class ProfileArea extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  details.user.fullName,
+                  details.fullName,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -41,7 +40,7 @@ class ProfileArea extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  details.user.email,
+                  details.email,
                   style: const TextStyle(
                     fontSize: 12,
                     overflow: TextOverflow.ellipsis,
