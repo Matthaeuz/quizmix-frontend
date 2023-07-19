@@ -4,12 +4,12 @@ import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
-import 'package:quizmix_frontend/views/screens/ForgotPasswordInputEmailScreen.dart';
-import 'package:quizmix_frontend/views/screens/SignupScreen.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
+import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
+import 'package:quizmix_frontend/views/screens/signup_screen.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
