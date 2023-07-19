@@ -6,9 +6,7 @@ import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
 import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
 import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
-
-import 'LoginScreen.dart';
-import 'dart:convert';
+import 'package:quizmix_frontend/views/screens/Textfield.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key});

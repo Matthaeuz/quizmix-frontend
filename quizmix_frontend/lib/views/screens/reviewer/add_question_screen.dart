@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UploadedQuestionsScreen.dart';
-import 'package:quizmix_frontend/views/widgets/PdfInputButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/uploaded_questions_screen.dart';
+import 'package:quizmix_frontend/views/widgets/pdf_input_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class AddQuestionScreen extends StatelessWidget {
   const AddQuestionScreen({Key? key}) : super(key: key);

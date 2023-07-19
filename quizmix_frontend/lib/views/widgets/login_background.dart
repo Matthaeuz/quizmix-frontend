@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
-import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
+import 'package:quizmix_frontend/views/widgets/textfield.dart';
 
 class LoginBackground extends StatefulWidget {
   const LoginBackground({Key? key}) : super(key: key);
