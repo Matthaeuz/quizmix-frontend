@@ -169,14 +169,10 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Reviewee> createReviewee(
-    String token,
-    Map<String, dynamic> user,
-  ) async {
+  Future<Reviewee> createReviewee(Map<String, dynamic> user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(user);
     final _result =

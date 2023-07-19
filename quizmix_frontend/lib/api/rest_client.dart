@@ -38,7 +38,7 @@ abstract class RestClient {
   /// REVIEWEE API
   
   @POST("/reviewees/")
-  Future<Reviewee> createReviewee(@Header("Authorization") String token, @Body() Map<String, dynamic> user);
+  Future<Reviewee> createReviewee(@Body() Map<String, dynamic> user);
 
   @GET("/reviewees/")
   Future<List<Reviewee>> getReviewees(@Header("Authorization") String token);

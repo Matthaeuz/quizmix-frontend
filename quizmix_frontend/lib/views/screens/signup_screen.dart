@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/api/utils/sign_up.helper.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
-import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
@@ -24,8 +24,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final client = ref.watch(restClientProvider);
-
     return Scaffold(
       appBar: null,
       body: Row(
@@ -119,13 +117,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                       password: passwordController.text,
                                     );
 
-                                    client.createUser(details).then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginScreen()));
-                                    });
+                                    signUp(details, ref).then((value) => {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const LoginScreen()))
+                                        });
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
