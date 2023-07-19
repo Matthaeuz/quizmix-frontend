@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
-class ProfileArea extends StatelessWidget {
+class ProfileArea extends ConsumerWidget {
   const ProfileArea({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final details = ref.watch(revieweeProvider);
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(15,25,15,0),
-      child: const Row(
+      padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Circular Picture
-          Align(
+          const Align(
             alignment: Alignment.centerLeft,
             child: CircleAvatar(
               radius: 30,
@@ -20,7 +25,7 @@ class ProfileArea extends StatelessWidget {
               //     AssetImage('assets/images/ProfilePicture.jpg'),
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           // Text Information
           Expanded(
             child: Column(
@@ -28,16 +33,16 @@ class ProfileArea extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Aloysius Matthew A. Beronque',
-                  style: TextStyle(
+                  details.user.fullName,
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Text(
-                  'aloysiusmatthew1@gmail.com',
-                  style: TextStyle(
+                  details.user.email,
+                  style: const TextStyle(
                     fontSize: 12,
                     overflow: TextOverflow.ellipsis,
                   ),

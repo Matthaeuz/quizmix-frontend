@@ -4,6 +4,7 @@ import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
 import 'package:quizmix_frontend/views/screens/signup_screen.dart';
@@ -132,9 +133,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                                     // Get user details and save to provider
                                     final user = await client.getUserByEmail(token.accessToken, emailController.text);
-                                    
-                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
+                                    ref.read(userProvider.notifier).updateUser(user[0]);
 
+                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
                                     ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
 
                                     Navigator.push(
