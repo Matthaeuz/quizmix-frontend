@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
+import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
 
-class UpdateQuizBankItemContainer extends StatelessWidget {
+class UploadedQuestionItemContainer extends StatelessWidget {
   final QuestionDetails questionDetails;
   final int index;
-  final bool showCategory;
 
-  const UpdateQuizBankItemContainer({
+  const UploadedQuestionItemContainer({
     super.key,
     required this.questionDetails,
     required this.index,
-    this.showCategory = true,
   });
 
   Color getCategoryColor(String category) {
@@ -66,19 +64,17 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              // Category Container
-              if (showCategory)
-                Container(
-                  decoration: BoxDecoration(
-                    color: getCategoryColor(questionDetails.category),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    questionDetails.category,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  color: getCategoryColor(questionDetails.category),
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  questionDetails.category,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
               const Spacer(),
               TinySolidButton(
                 text: 'Edit',
@@ -163,34 +159,12 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
                 const SizedBox(
                   height: 12,
                 ),
-                Column(
-                  children: [
-                    const Text(
-                      'Answer:',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(questionDetails.answer,
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                const Text(
+                  'Answer: ',
+                  style: TextStyle(fontSize: 20),
                 ),
-                if (questionDetails.explanation != null &&
-                    questionDetails.explanation!.isNotEmpty)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      const Text(
-                        'Explanation:',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        questionDetails.explanation!,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
+                Text(questionDetails.answer,
+                    style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),

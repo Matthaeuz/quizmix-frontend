@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
 
 class ViewQuestionBankCard extends StatelessWidget {
   final QuestionDetails questionDetails;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankScreen.dart';
-import 'package:quizmix_frontend/views/widgets/ProfileArea.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/ViewQuestionBankCard.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
+import 'package:quizmix_frontend/views/widgets/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/view_question_bank_card.dart';
 
 class ViewQuestionBankScreen extends StatelessWidget {
   final List<QuestionDetails> questionDetails = [
@@ -60,102 +60,65 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
         answer: 'b) 7F800000'),
   ];
 
-  ViewQuestionBankScreen({super.key});
+  int? selectedQuestionIndex;
+  final int? index;
+
+  ViewQuestionBankScreen({
+    Key? key,
+    this.selectedQuestionIndex,
+    this.index,
+  }) : super(key: key);
+
+  Color getCategoryColor(String category) {
+    switch (category) {
+      case 'Algorithms and Programming':
+        return const Color(0xFF9854B2);
+      case 'Computer Components and Hardware':
+        return const Color(0xFFCF4321);
+      case 'System Components':
+        return const Color(0xFFC92D5C);
+      case 'Software':
+        return const Color(0xFF0D2916);
+      case 'Development Technology and Management':
+        return const Color(0xFF3371E4);
+      case 'Database':
+        return const Color(0xFF75A768);
+      case 'Network':
+        return const Color(0xFF8768A7);
+      case 'Security':
+        return const Color(0xFF223160);
+      case 'System Audit, Strategy and Planning':
+        return const Color(0xFF678026);
+      case 'Business, Corporate & Legal Affairs':
+        return const Color(0xFF282680);
+      default:
+        // Return a random color for unknown categories
+        return Colors.primaries[index! % Colors.primaries.length];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          // Left Side - Dashboard
+          // Left Section - Dashboard
           Expanded(
             flex: 2,
             child: Container(
               color: Colors.white,
-              child: Column(
+              child: const Column(
                 children: [
-                  // Profile Area
-                  const ProfileArea(),
-                  // Dashboard Options
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading: const Icon(Icons.dashboard,
-                            color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Dashboard',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Dashboard press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading:
-                            const Icon(Icons.person, color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Reviewees',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Reviewees press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        leading:
-                            const Icon(Icons.quiz, color: Color(0xFF03045E)),
-                        title: const Text(
-                          'Quizzes',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF03045E),
-                          ),
-                        ),
-                        onTap: () {
-                          // Handle Quizzes press
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        color: const Color(0xFF03045E),
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.question_answer,
-                            color: Colors.white,
-                          ),
-                          title: const Text(
-                            'Question Bank',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () {
-                            // Handle Question Bank press
-                          },
-                        ),
-                      ),
-                    ],
+                  // Left Side - Dashboard
+                  DashboardWidget(
+                    selectedOption: 'Question Bank',
                   ),
                 ],
               ),
             ),
           ),
-          // Middle Area
+
+          // Middle Section
           Expanded(
             flex: 3,
             child: Container(
@@ -216,9 +179,23 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
                               itemCount:
                                   5, // Replace with the actual number of items
                               itemBuilder: (context, index) {
-                                return ViewQuestionBankCard(
-                                  questionDetails: questionDetails[index],
-                                  index: index,
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ViewQuestionBankScreen(
+                                          selectedQuestionIndex: index,
+                                          index: index,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: ViewQuestionBankCard(
+                                    questionDetails: questionDetails[index],
+                                    index: index,
+                                  ),
                                 );
                               },
                             ),
@@ -232,18 +209,87 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
             ),
           ),
 
-          // Right Area
+          // Right Section
           Expanded(
             flex: 5,
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
+                final selectedQuestion = selectedQuestionIndex != null
+                    ? questionDetails[selectedQuestionIndex!]
+                    : null;
+
                 return Container(
                   color: const Color(0xFF90E0EF),
-                  height: constraints
-                      .maxHeight, // Set the height to fill the available space
-                  child: const SingleChildScrollView(
+                  height: constraints.maxHeight,
+                  child: SingleChildScrollView(
                     child: Column(
-                      children: [Text('data2')],
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: selectedQuestion != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Question ${selectedQuestionIndex! + 1}',
+                                          style: const TextStyle(fontSize: 32),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                              horizontal: 12,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: getCategoryColor(
+                                                  selectedQuestion.category),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Text(
+                                              selectedQuestion.category,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Image.asset(
+                                      selectedQuestion.imagePath,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      'The correct answer is "${selectedQuestion.answer}"',
+                                      style: const TextStyle(fontSize: 28),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      'Explanation:',
+                                      style: TextStyle(fontSize: 28),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      selectedQuestion.explanation ??
+                                          'No explanation available',
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                        ),
+                      ],
                     ),
                   ),
                 );

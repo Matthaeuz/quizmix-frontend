@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
-import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
-import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/DashboardScreen.dart';
-import 'package:quizmix_frontend/views/screens/ForgotPasswordInputEmailScreen.dart';
-import 'package:quizmix_frontend/views/screens/SignupScreen.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
-import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
+import 'package:quizmix_frontend/views/widgets/textfield.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginBackground extends StatefulWidget {
+  const LoginBackground({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginBackground> createState() => _LoginBackgroundState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginBackgroundState extends State<LoginBackground> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  void handleLogin() {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    print(email);
+    print(password);
+
+    // Perform login logic using the email and password
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Define Rest Client and Dio
-    final client = ref.watch(restClientProvider);
-
     return Scaffold(
       appBar: null,
       body: Row(
@@ -99,15 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 Container(
                                   decoration: const BoxDecoration(),
                                   child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ForgotPasswordInputEmailScreen(),
-                                        ),
-                                      );
-                                    },
+                                    onPressed: () {},
                                     style: TextButton.styleFrom(
                                       foregroundColor: const Color(0xFF03045E),
                                       alignment: Alignment.centerRight,
@@ -118,30 +109,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
                                   text: 'Login',
-                                  onPressed: () async {
-                                    AuthDetails details = AuthDetails(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    );
-
-                                    // Get a token if user credentials are valid and save it
-                                    final token = await client.signIn(details);
-                                    ref.read(authTokenProvider.notifier).updateToken(token);
-                                    
-                                    debugPrint('access: ${token.accessToken}');
-
-                                    // Get user details and save to provider
-                                    final user = await client.getUserByEmail(token.accessToken, emailController.text);
-                                    
-                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
-
-                                    ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
-
-                                    Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DashboardScreen()));
+                                  onPressed: () {
+                                    // TODO: Implement login functionality
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
@@ -190,12 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: ButtonElevated(
                           text: 'Sign up',
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignupScreen(),
-                              ),
-                            );
+                            // TODO: Implement signup functionality
                           },
                         )),
                   ],

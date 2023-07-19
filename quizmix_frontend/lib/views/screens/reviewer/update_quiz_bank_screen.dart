@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/AddQuestionScreen.dart';
-import 'package:quizmix_frontend/views/screens/Reviewer/UpdateQuizBankDetailsScreen.dart';
+// import 'package:quizmix_frontend/views/screens/Reviewer/add_question_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_details_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/add_question_screen.dart';
 import 'dart:math';
 
-import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
+import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
 class UpdateQuizBankScreen extends StatelessWidget {
   final List<String> categories = [

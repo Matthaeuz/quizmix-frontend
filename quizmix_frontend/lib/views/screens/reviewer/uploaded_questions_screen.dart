@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/views/widgets/TinySolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/UploadedQuestionItemContainer.dart';
-import 'package:quizmix_frontend/models/QuestionDetails.dart';
+import 'package:quizmix_frontend/models/question_details.dart';
+import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/uploaded_question_item_container.dart';
 
 class UploadedQuestionsScreen extends StatelessWidget {
   UploadedQuestionsScreen({Key? key}) : super(key: key);

@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/models/users/signup_details.dart';
+import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
-import 'package:quizmix_frontend/views/widgets/ElevatedButton.dart';
-import 'package:quizmix_frontend/views/widgets/SolidButton.dart';
-import 'package:quizmix_frontend/views/widgets/OutlinedButton.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
+import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
+import 'package:quizmix_frontend/views/screens/signup_screen.dart';
+import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
 import 'package:quizmix_frontend/views/widgets/Textfield.dart';
 
-import 'LoginScreen.dart';
-import 'dart:convert';
-
-class SignupScreen extends ConsumerStatefulWidget {
-  const SignupScreen({Key? key});
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SignupScreen> createState() => _SignupScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends ConsumerState<SignupScreen> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController middleNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    // Define Rest Client and Dio
     final client = ref.watch(restClientProvider);
 
     return Scaffold(
@@ -74,7 +74,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 Container(
                                   decoration: const BoxDecoration(),
                                   child: const Text(
-                                    'Sign up',
+                                    'Login',
                                     style: TextStyle(fontSize: 64.0),
                                   ),
                                 ),
@@ -87,21 +87,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
-                                  labelText: 'First Name',
-                                  controller: firstNameController,
-                                ),
-                                const SizedBox(height: 16.0),
-                                TextFieldWidget(
-                                  labelText: 'Middle Name',
-                                  controller: middleNameController,
-                                ),
-                                const SizedBox(height: 16.0),
-                                TextFieldWidget(
-                                  labelText: 'Last Name',
-                                  controller: lastNameController,
-                                ),
-                                const SizedBox(height: 16.0),
-                                TextFieldWidget(
                                   labelText: 'Email',
                                   controller: emailController,
                                 ),
@@ -110,29 +95,58 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   labelText: 'Password',
                                   controller: passwordController,
                                 ),
+                                const SizedBox(height: 8.0),
+                                Container(
+                                  decoration: const BoxDecoration(),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ForgotPasswordInputEmailScreen(),
+                                        ),
+                                      );
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: const Color(0xFF03045E),
+                                      alignment: Alignment.centerRight,
+                                    ),
+                                    child: const Text('Forgot Password'),
+                                  ),
+                                ),
                                 const SizedBox(height: 40.0),
                                 ButtonSolid(
-                                  text: 'Create account',
-                                  onPressed: () {
-                                    SignUpDetails details = SignUpDetails(
+                                  text: 'Login',
+                                  onPressed: () async {
+                                    AuthDetails details = AuthDetails(
                                       email: emailController.text,
-                                      firstName: firstNameController.text,
-                                      lastName: lastNameController.text,
                                       password: passwordController.text,
                                     );
 
-                                    client.createUser(details).then((value) {
-                                      Navigator.push(
+                                    // Get a token if user credentials are valid and save it
+                                    final token = await client.signIn(details);
+                                    ref.read(authTokenProvider.notifier).updateToken(token);
+                                    
+                                    debugPrint('access: ${token.accessToken}');
+
+                                    // Get user details and save to provider
+                                    final user = await client.getUserByEmail(token.accessToken, emailController.text);
+                                    
+                                    final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
+
+                                    ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
+
+                                    Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const LoginScreen()));
-                                    });
+                                                  const DashboardScreen()));
                                   },
                                 ),
                                 const SizedBox(height: 16.0),
                                 ButtonOutlined(
-                                  text: 'Sign up with Google',
+                                  text: 'Sign in with Google',
                                   onPressed: () {
                                     // TODO: Implement sign in with Google functionality
                                   },
@@ -174,12 +188,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         top: 25.0,
                         right: 25.0,
                         child: ButtonElevated(
-                          text: 'Login',
+                          text: 'Sign up',
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignupScreen(),
+                              ),
+                            );
                           },
                         )),
                   ],
