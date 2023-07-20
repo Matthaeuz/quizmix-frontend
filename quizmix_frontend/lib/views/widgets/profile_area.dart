@@ -16,12 +16,14 @@ class ProfileArea extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Circular Picture
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: CircleAvatar(
               radius: 30,
-              // backgroundImage:
-              //     AssetImage('assets/images/ProfilePicture.jpg'),
+              backgroundImage: details.image == ''
+                  ? NetworkImage(details.image!)
+                  : const AssetImage('lib/assets/images/default_pic.png')
+                      as ImageProvider<Object>,
             ),
           ),
           const SizedBox(width: 16),
