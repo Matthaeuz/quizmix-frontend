@@ -15,8 +15,9 @@ Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
           (json['choices'] as List<dynamic>).map((e) => e as String).toList(),
       category: json['category'] as String,
       solution: json['solution'] as String?,
-      parameters:
-          (json['parameters'] as List<dynamic>).map((e) => e as int).toList(),
+      parameters: (json['parameters'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
       responses:
           (json['responses'] as List<dynamic>).map((e) => e as int).toList(),
       thetas: (json['thetas'] as List<dynamic>)

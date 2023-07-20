@@ -39,7 +39,7 @@ class Question {
   final String? solution;
 
   @JsonKey(name: 'parameters')
-  final List<int> parameters;
+  final List<double> parameters;
 
   @JsonKey(name: 'responses')
   final List<int> responses;
