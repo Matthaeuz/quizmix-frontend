@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/dashboard_item_list_container.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  const DashboardScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,16 @@ class DashboardScreen extends StatelessWidget {
           Expanded(
             flex: 8,
             child: Container(
-              color: const Color(0xFFCAF0F8),
-            ),
+                color: const Color(0xFFCAF0F8),
+                padding: const EdgeInsets.all(25),
+                child: const Column(
+                  children: [
+                    DashboardItemListContainer(myQuizzesText: 'My Quizzes'),
+                    SizedBox(height: 25),
+                    DashboardItemListContainer(
+                        myQuizzesText: 'My Reviewees', useImages: true),
+                  ],
+                )),
           ),
         ],
       ),

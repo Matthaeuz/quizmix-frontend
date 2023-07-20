@@ -71,6 +71,7 @@ flutter:
     - lib/assets/images/Laptop.png
     - lib/assets/images/QuizMix_Logo.png
     - lib/assets/images/questions/
+    - lib/assets/images/profile_pictures/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
