@@ -5,7 +5,7 @@ import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
-import 'package:quizmix_frontend/views/widgets/textfield.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 import 'package:quizmix_frontend/views/screens/login_screen.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
@@ -84,26 +84,31 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'First Name',
+                                  obscureText: false,
                                   controller: firstNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Middle Name',
+                                  obscureText: false,
                                   controller: middleNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Last Name',
+                                  obscureText: false,
                                   controller: lastNameController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Email',
+                                  obscureText: false,
                                   controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Password',
+                                  obscureText: true,
                                   controller: passwordController,
                                 ),
                                 const SizedBox(height: 40.0),
