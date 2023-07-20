@@ -8,7 +8,7 @@ import 'package:quizmix_frontend/views/screens/signup_screen.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
-import 'package:quizmix_frontend/views/widgets/Textfield.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -83,11 +83,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Email',
+                                  obscureText: false,
                                   controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Password',
+                                  obscureText: true,
                                   controller: passwordController,
                                 ),
                                 const SizedBox(height: 8.0),

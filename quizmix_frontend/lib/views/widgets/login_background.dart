@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
-import 'package:quizmix_frontend/views/widgets/textfield.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 
 class LoginBackground extends StatefulWidget {
   const LoginBackground({Key? key}) : super(key: key);
@@ -15,15 +15,6 @@ class _LoginBackgroundState extends State<LoginBackground> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void handleLogin() {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    print(email);
-    print(password);
-
-    // Perform login logic using the email and password
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,11 +78,13 @@ class _LoginBackgroundState extends State<LoginBackground> {
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Email',
+                                  obscureText: false,
                                   controller: emailController,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextFieldWidget(
                                   labelText: 'Password',
+                                  obscureText: true,
                                   controller: passwordController,
                                 ),
                                 const SizedBox(height: 8.0),

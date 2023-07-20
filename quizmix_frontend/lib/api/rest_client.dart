@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
@@ -30,13 +33,17 @@ abstract class RestClient {
   // Future<List<User>> getUsers(@Header("Authorization") String token);
 
   @GET("/users/{id}/")
-  Future<User> getUserById(@Header("Authorization") String token, @Path("id") int id);
+  Future<User> getUserById(
+      @Header("Authorization") String token, @Path("id") int id);
 
   @GET("/users/?email={email}")
-  Future<List<User>> getUserByEmail(@Header("Authorization") String token, @Path("email") String email);
+  Future<List<User>> getUserByEmail(
+    @Header("Authorization") String token,
+    @Path("email") String email,
+  );
 
   /// REVIEWEE API
-  
+
   @POST("/reviewees/")
   Future<Reviewee> createReviewee(@Body() Map<String, dynamic> user);
 
@@ -44,14 +51,47 @@ abstract class RestClient {
   Future<List<Reviewee>> getReviewees(@Header("Authorization") String token);
 
   @GET("/reviewees/{id}/")
-  Future<User> getRevieweeById(@Header("Authorization") String token, @Path("id") int id);
+  Future<User> getRevieweeById(
+      @Header("Authorization") String token, @Path("id") int id);
 
   @GET("/reviewees/?user={id}")
-  Future<List<Reviewee>> getRevieweeByUserId(@Header("Authorization") String token, @Path("id") int id);
+  Future<List<Reviewee>> getRevieweeByUserId(
+      @Header("Authorization") String token, @Path("id") int id);
+
+  @GET("/reviewees/?belongs_to={belongsTo}")
+  Future<List<Reviewee>> getReviewerReviewees(
+    @Header("Authorization") String token,
+    @Path("belongsTo") int belongsTo,
+  );
+
+  @GET("/reviewees/?belongs_to=null")
+  Future<List<Reviewee>> getUnassignedReviewees(
+    @Header("Authorization") String token,
+  );
 
   /// REVIEWER API
-  
-  @GET("reviewers/?user={id}")
-    Future<List<Reviewer>> getReviewerByUserId(@Header("Authorization") String token, @Path("id") int id);
 
+  @GET("/reviewers/?user={id}")
+  Future<List<Reviewer>> getReviewerByUserId(
+    @Header("Authorization") String token,
+    @Path("id") int id,
+  );
+
+  /// QUESTION API
+
+  @POST("/questions/")
+  Future<Question> createQuestion(
+    @Header("Authorization") String token,
+    @Body() Question newQuestion,
+  );
+
+  @POST("/questions/create_questions_from_pdf/")
+  Future<List<Question>> createQuestionsFromPdf(
+    @Header("Authorization") String token,
+    @Part() File aFile,
+    @Part() File qFile,
+  );
+
+  @GET("/questions/")
+  Future<List<Question>> getQuestions(@Header("Authorization") String token);
 }
