@@ -419,54 +419,6 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Question>> createQuestionsFromPdf(
-    String token,
-    File aFile,
-    File qFile,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = FormData();
-    _data.files.add(MapEntry(
-      'aFile',
-      MultipartFile.fromFileSync(
-        aFile.path,
-        filename: aFile.path.split(Platform.pathSeparator).last,
-      ),
-    ));
-    _data.files.add(MapEntry(
-      'qFile',
-      MultipartFile.fromFileSync(
-        qFile.path,
-        filename: qFile.path.split(Platform.pathSeparator).last,
-      ),
-    ));
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Question>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/questions/create_questions_from_pdf/',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => Question.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
-  }
-
-  @override
   Future<List<Question>> getQuestions(String token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

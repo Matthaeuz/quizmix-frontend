@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
-import 'package:quizmix_frontend/models/question_details.dart';
 
 class UploadedQuestionItemContainer extends StatelessWidget {
-  final QuestionDetails questionDetails;
+  final Question questionDetails;
   final int index;
 
   const UploadedQuestionItemContainer({
@@ -11,34 +12,6 @@ class UploadedQuestionItemContainer extends StatelessWidget {
     required this.questionDetails,
     required this.index,
   });
-
-  Color getCategoryColor(String category) {
-    switch (category) {
-      case 'Algorithms and Programming':
-        return const Color(0xFF9854B2);
-      case 'Computer Components and Hardware':
-        return const Color(0xFFCF4321);
-      case 'System Components':
-        return const Color(0xFFC92D5C);
-      case 'Software':
-        return const Color(0xFF0D2916);
-      case 'Development Technology and Management':
-        return const Color(0xFF3371E4);
-      case 'Database':
-        return const Color(0xFF75A768);
-      case 'Network':
-        return const Color(0xFF8768A7);
-      case 'Security':
-        return const Color(0xFF223160);
-      case 'System Audit, Strategy and Planning':
-        return const Color(0xFF678026);
-      case 'Business, Corporate & Legal Affairs':
-        return const Color(0xFF282680);
-      default:
-        // Return a random color for unknown categories
-        return Colors.primaries[index % Colors.primaries.length];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +76,7 @@ class UploadedQuestionItemContainer extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  questionDetails.questionText,
+                  questionDetails.question,
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
@@ -116,9 +89,9 @@ class UploadedQuestionItemContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: Image.asset(
-                  questionDetails.imagePath,
-                  fit: BoxFit.contain,
+                child: Image.network(
+                  questionDetails.image!,
+                  fit: BoxFit.cover,
                 ),
               ),
             ],
@@ -137,22 +110,22 @@ class UploadedQuestionItemContainer extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(questionDetails.choices![0],
+                    Text(questionDetails.choices[0],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices![1],
+                    Text(questionDetails.choices[1],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices![2],
+                    Text(questionDetails.choices[2],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices![3],
+                    Text(questionDetails.choices[3],
                         style: const TextStyle(fontSize: 16)),
                   ],
                 ),

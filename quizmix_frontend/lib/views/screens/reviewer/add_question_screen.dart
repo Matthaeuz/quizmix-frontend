@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/api/utils/multipart_form_handlers/upload_pdf.helper.dart';
+import 'package:quizmix_frontend/state/providers/file_picker/pdf_file_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/uploaded_questions_screen.dart';
-import 'package:quizmix_frontend/views/widgets/pdf_input_button.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_add_questions/upload_buttons_set.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-class AddQuestionScreen extends StatelessWidget {
+class AddQuestionScreen extends ConsumerWidget {
   const AddQuestionScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -35,26 +38,7 @@ class AddQuestionScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: PdfInputButton(
-                                  buttonText: 'Upload Question Set',
-                                  buttonIcon: Icons.upload,
-                                  buttonTextSize: 16,
-                                  buttonIconSize: 100,
-                                ),
-                              ),
-                              SizedBox(width: 25),
-                              Expanded(
-                                  child: PdfInputButton(
-                                buttonText: 'Upload Answer Set',
-                                buttonIcon: Icons.upload,
-                                buttonTextSize: 16,
-                                buttonIconSize: 100,
-                              )),
-                            ],
-                          ),
+                          const UploadButtonsSet(),
                           const SizedBox(height: 25),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -71,11 +55,21 @@ class AddQuestionScreen extends StatelessWidget {
                                 text: 'Continue',
                                 width: 200,
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              UploadedQuestionsScreen()));
+                                  final aFilePath =
+                                      ref.read(pdfFileProvider('a_file')).state;
+                                  final qFilePath =
+                                      ref.read(pdfFileProvider('q_file')).state;
+                                  if (aFilePath != null && qFilePath != null) {
+                                    createQuestionsFromPdf(
+                                            aFilePath, qFilePath, ref)
+                                        .then((value) => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const UploadedQuestionsScreen())));
+                                  } else {
+                                    debugPrint('something happened');
+                                  }
                                 },
                               ),
                             ],

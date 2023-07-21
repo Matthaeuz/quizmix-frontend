@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/categories.constants.dart';
 // import 'package:quizmix_frontend/views/screens/Reviewer/add_question_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_details_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_question_screen.dart';
@@ -7,19 +8,6 @@ import 'dart:math';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
 class UpdateQuizBankScreen extends StatelessWidget {
-  final List<String> categories = [
-    'Algorithms and Programming',
-    'Computer Components and Hardware',
-    'System Components',
-    'Software',
-    'Development Technology and Management',
-    'Database',
-    'Network',
-    'Security',
-    'System Audit, Strategy and Planning',
-    'Business, Corporate & Legal Affairs'
-  ];
-
   UpdateQuizBankScreen({super.key});
 
   @override

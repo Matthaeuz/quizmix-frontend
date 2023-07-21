@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
@@ -12,6 +10,9 @@ import 'package:dio/dio.dart';
 
 part 'rest_client.g.dart';
 
+/// REST CLIENT API
+/// Is only good for handling purely JSON-related data. Multipart-form data is not supported
+/// in Flutter Web; custom API endpoints for form handling is found in api/utils/.
 @RestApi(baseUrl: "http://127.0.0.1:8000")
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
@@ -85,12 +86,13 @@ abstract class RestClient {
     @Body() Question newQuestion,
   );
 
-  @POST("/questions/create_questions_from_pdf/")
-  Future<List<Question>> createQuestionsFromPdf(
-    @Header("Authorization") String token,
-    @Part() File aFile,
-    @Part() File qFile,
-  );
+  // @POST("/questions/create_questions_from_pdf/")
+  // @MultiPart()
+  // Future<List<Question>> createQuestionsFromPdf(
+  //   @Header("Authorization") String token,
+  //   @Part(name: 'a_file') MultipartFile aFile,
+  //   @Part(name: 'q_file') MultipartFile qFile,
+  // );
 
   @GET("/questions/")
   Future<List<Question>> getQuestions(@Header("Authorization") String token);
