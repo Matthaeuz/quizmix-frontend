@@ -70,6 +70,7 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/images/profile_pictures/
+    - lib/assets/images/questions/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
