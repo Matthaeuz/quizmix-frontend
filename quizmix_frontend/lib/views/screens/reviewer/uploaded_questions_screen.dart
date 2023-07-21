@@ -6,19 +6,6 @@ import 'package:quizmix_frontend/views/widgets/uploaded_question_item_container.
 class UploadedQuestionsScreen extends StatelessWidget {
   UploadedQuestionsScreen({Key? key}) : super(key: key);
 
-  // final List<String> categories = [
-  //   'Algorithms and Programming',
-  //   'Computer Components and Hardware',
-  //   'System Components',
-  //   'Software',
-  //   'Development Technology and Management',
-  //   'Database',
-  //   'Network',
-  //   'Security',
-  //   'System Audit, Strategy and Planning',
-  //   'Business, Corporate & Legal Affairs'
-  // ];
-
   final List<QuestionDetails> questionDetails = [
     QuestionDetails(
         category: 'Algorithms and Programming',

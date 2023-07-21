@@ -1,11 +1,14 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/file_picker/pdf_file_provider.dart';
 
-class PdfInputButton extends StatefulWidget {
+class PdfInputButton extends ConsumerStatefulWidget {
   final String buttonText;
   final IconData buttonIcon;
   final double buttonTextSize;
   final double buttonIconSize;
+  final String type;
 
   const PdfInputButton({
     super.key,
@@ -13,13 +16,14 @@ class PdfInputButton extends StatefulWidget {
     required this.buttonIcon,
     required this.buttonTextSize,
     required this.buttonIconSize,
+    required this.type,
   });
 
   @override
-  State<PdfInputButton> createState() => _PdfInputButtonState();
+  ConsumerState<PdfInputButton> createState() => _PdfInputButtonState();
 }
 
-class _PdfInputButtonState extends State<PdfInputButton> {
+class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
   bool isPdfUploaded = false;
   String pdfFileName = '';
 
@@ -30,6 +34,7 @@ class _PdfInputButtonState extends State<PdfInputButton> {
     );
 
     if (result != null) {
+      ref.read(pdfFileProvider(widget.type)).state = result.files.single;
       setState(() {
         isPdfUploaded = true;
         pdfFileName = result.files.single.name;

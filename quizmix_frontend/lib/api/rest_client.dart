@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
@@ -85,12 +83,13 @@ abstract class RestClient {
     @Body() Question newQuestion,
   );
 
-  @POST("/questions/create_questions_from_pdf/")
-  Future<List<Question>> createQuestionsFromPdf(
-    @Header("Authorization") String token,
-    @Part() File aFile,
-    @Part() File qFile,
-  );
+  // @POST("/questions/create_questions_from_pdf/")
+  // @MultiPart()
+  // Future<List<Question>> createQuestionsFromPdf(
+  //   @Header("Authorization") String token,
+  //   @Part(name: 'a_file') MultipartFile aFile,
+  //   @Part(name: 'q_file') MultipartFile qFile,
+  // );
 
   @GET("/questions/")
   Future<List<Question>> getQuestions(@Header("Authorization") String token);
