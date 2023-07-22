@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
 
-class RevieweesListScreen extends StatelessWidget {
+class RevieweesListScreen extends ConsumerWidget {
   const RevieweesListScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final revieweesAsyncValue = ref.watch(unassignedRevieweesProvider);
+
     return Scaffold(
       body: Row(
         children: [
@@ -45,8 +49,8 @@ class RevieweesListScreen extends StatelessWidget {
                     Flexible(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 25),
-                        child: Align(
-                          child: GridView.builder(
+                        child: revieweesAsyncValue.when(
+                          data: (reviewees) => GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -54,15 +58,16 @@ class RevieweesListScreen extends StatelessWidget {
                               mainAxisSpacing: 25,
                               mainAxisExtent: 125,
                             ),
-                            itemCount: 20,
+                            itemCount: reviewees.length,
                             itemBuilder: (context, index) {
-                              return const RevieweeListCard(
-                                text: 'Alcuitas, Aaron Benjmin',
-                                imageAsset:
-                                    "lib/assets/images/profile_pictures/aaron.jpg",
+                              return RevieweeListCard(
+                                revieweeDetails: reviewees[index],
                               );
                             },
                           ),
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (err, stack) => Text('Error: $err'),
                         ),
                       ),
                     ),

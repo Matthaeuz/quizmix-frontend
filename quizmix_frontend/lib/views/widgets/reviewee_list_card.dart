@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 
 class RevieweeListCard extends StatelessWidget {
-  final String text;
-  final String imageAsset;
+  final Reviewee revieweeDetails;
 
   const RevieweeListCard({
     Key? key,
-    required this.text,
-    required this.imageAsset,
+    required this.revieweeDetails,
   }) : super(key: key);
 
   @override
@@ -25,18 +24,22 @@ class RevieweeListCard extends StatelessWidget {
             children: [
               // 1st column - Picture
               SizedBox(
-                width: 75,
-                height: 75,
-                child: Image.asset(
-                  imageAsset,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  width: 75,
+                  height: 75,
+                  child: revieweeDetails.user.image != null
+                      ? Image.network(
+                          revieweeDetails.user.image!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'lib/assets/images/default_pic.png',
+                          fit: BoxFit.cover,
+                        )),
               const SizedBox(width: 25),
               // 2nd column - Text
               Expanded(
                 child: Text(
-                  text,
+                  revieweeDetails.user.fullName,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
