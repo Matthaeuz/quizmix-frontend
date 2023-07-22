@@ -338,7 +338,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              '/reviewees/?belongs_to=null',
+              '/reviewees/?belongs_to=',
               queryParameters: queryParameters,
               data: _data,
             )
