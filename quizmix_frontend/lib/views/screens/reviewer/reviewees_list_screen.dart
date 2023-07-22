@@ -9,7 +9,7 @@ class RevieweesListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final revieweesAsyncValue = ref.watch(unassignedRevieweesProvider);
+    final reviewees = ref.watch(unassignedRevieweesProvider);
 
     return Scaffold(
       body: Row(
@@ -49,7 +49,7 @@ class RevieweesListScreen extends ConsumerWidget {
                     Flexible(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 25),
-                        child: revieweesAsyncValue.when(
+                        child: reviewees.when(
                           data: (reviewees) => GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -67,7 +67,7 @@ class RevieweesListScreen extends ConsumerWidget {
                           ),
                           loading: () =>
                               const Center(child: CircularProgressIndicator()),
-                          error: (err, stack) => Text('Error: $err'),
+                          error: (err, stack) => Text('Error Found: $err'),
                         ),
                       ),
                     ),

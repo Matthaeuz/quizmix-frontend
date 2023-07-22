@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard_item_list_container.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_reviewees_list.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Row(
         children: [
@@ -24,8 +26,7 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     DashboardItemListContainer(myQuizzesText: 'My Quizzes'),
                     SizedBox(height: 25),
-                    DashboardItemListContainer(
-                        myQuizzesText: 'My Reviewees', useImages: true),
+                    MyRevieweesList(),
                   ],
                 )),
           ),

@@ -9,9 +9,11 @@ part of 'reviewee.dart';
 Reviewee _$RevieweeFromJson(Map<String, dynamic> json) => Reviewee(
       id: json['id'] as int,
       user: User.fromJson(json['user'] as Map<String, dynamic>),
-      belongsTo: json['belongs_to'] as int?,
+      belongsTo: json['belongs_to'] == null
+          ? null
+          : Reviewer.fromJson(json['belongs_to'] as Map<String, dynamic>),
       categoryScores: (json['category_scores'] as List<dynamic>)
-          .map((e) => e as int)
+          .map((e) => (e as num).toDouble())
           .toList(),
     );
 

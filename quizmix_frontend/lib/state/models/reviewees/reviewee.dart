@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
 
 part 'reviewee.g.dart';
@@ -19,16 +20,16 @@ class Reviewee {
   final User user;
 
   @JsonKey(name: 'belongs_to')
-  final int? belongsTo;
+  final Reviewer? belongsTo;
 
   @JsonKey(name: 'category_scores')
-  final List<int> categoryScores;
+  final List<double> categoryScores;
 
   /// Base reviewee creation; call this if you need to reference an empty reviewee.
   Reviewee.base()
       : id = 0,
         user = User.base(),
-        belongsTo = 0,
+        belongsTo = Reviewer.base(),
         categoryScores = [];
 
   factory Reviewee.fromJson(Map<String, dynamic> json) => _$RevieweeFromJson(json);
