@@ -111,7 +111,7 @@ class UpdateQuizBankScreen extends ConsumerWidget {
                                         UpdateQuizBankDetailsScreen(
                                           categoryColor:
                                               getCategoryColor(index),
-                                          categoryTitle: categories[index],
+                                          title: categories[index],
                                         )));
                           },
                           style: ElevatedButton.styleFrom(
