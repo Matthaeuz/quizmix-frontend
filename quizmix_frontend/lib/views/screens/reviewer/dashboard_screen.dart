@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/views/widgets/dashboard.dart';
-import 'package:quizmix_frontend/views/widgets/dashboard_item_list_container.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard_item_list_container.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_reviewees_list.dart';
 
 class DashboardScreen extends ConsumerWidget {

@@ -14,10 +14,6 @@ class QuestionBankQuestion extends ConsumerWidget {
       flex: 5,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          // final selectedQuestion = selectedQuestionIndex != null
-          //     ? questionDetails[selectedQuestionIndex!]
-          //     : null;
-
           return Container(
             color: const Color(0xFF90E0EF),
             height: constraints.maxHeight,

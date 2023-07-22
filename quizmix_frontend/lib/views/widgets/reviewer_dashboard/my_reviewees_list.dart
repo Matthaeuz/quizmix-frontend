@@ -15,7 +15,6 @@ class MyRevieweesList extends ConsumerWidget {
 
     return Column(
       children: [
-        // First Row
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -42,7 +41,6 @@ class MyRevieweesList extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 20),
-        // Second Row
         reviewees.when(
           data: (revieweesData) => SizedBox(
             height: 200,
@@ -51,10 +49,8 @@ class MyRevieweesList extends ConsumerWidget {
               itemCount: revieweesData.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  // Render add button
                   return const AddCard();
                 } else {
-                  // Render reviewees
                   final reviewee = revieweesData[index - 1];
                   final String name = reviewee.user.fullName;
                   final String? profilePicture = reviewee.user.image;

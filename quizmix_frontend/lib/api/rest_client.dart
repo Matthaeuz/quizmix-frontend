@@ -86,6 +86,7 @@ abstract class RestClient {
     @Body() Question newQuestion,
   );
 
+  // Save for future use; could be used in a mobile setting or when Retrofit updates
   // @POST("/questions/create_questions_from_pdf/")
   // @MultiPart()
   // Future<List<Question>> createQuestionsFromPdf(
@@ -96,4 +97,10 @@ abstract class RestClient {
 
   @GET("/questions/")
   Future<List<Question>> getQuestions(@Header("Authorization") String token);
+
+  @GET("/questions/?category={}")
+  Future<List<Question>> getQuestionsByCategory(
+    @Header("Authorization") String token,
+    @Query("category") String category,
+  );
 }
