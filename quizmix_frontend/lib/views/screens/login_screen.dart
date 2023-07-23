@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/api/utils/sign_in.helper.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
@@ -106,18 +107,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       );
                                     },
                                     style: TextButton.styleFrom(
-                                      foregroundColor: const Color(0xFF03045E),
+                                      foregroundColor: AppColors.mainColor,
                                       alignment: Alignment.centerRight,
                                     ),
                                     child: const Text('Forgot Password'),
                                   ),
                                 ),
                                 const SizedBox(height: 40.0),
-                                ButtonSolid(
+                                SolidButton(
                                   text: 'Login',
                                   onPressed: () {
                                     AuthDetails details = AuthDetails(
-                                      email: emailController.text,
+                                      email: emailController.text.toLowerCase(),
                                       password: passwordController.text,
                                     );
 

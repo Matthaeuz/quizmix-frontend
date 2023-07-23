@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/categories.constants.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 // import 'package:quizmix_frontend/views/screens/Reviewer/add_question_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_details_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_question_screen.dart';
@@ -60,7 +61,7 @@ class UpdateQuizBankScreen extends StatelessWidget {
                 TinySolidButton(
                   text: 'Add Question',
                   icon: Icons.add,
-                  buttonColor: const Color(0xFF03045E),
+                  buttonColor: AppColors.mainColor,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -74,7 +75,7 @@ class UpdateQuizBankScreen extends StatelessWidget {
                 TinySolidButton(
                   text: 'Add Category',
                   icon: Icons.add,
-                  buttonColor: const Color(0xFF03045E),
+                  buttonColor: AppColors.mainColor,
                   onPressed: () {
                     // Handle Add Category press
                   },

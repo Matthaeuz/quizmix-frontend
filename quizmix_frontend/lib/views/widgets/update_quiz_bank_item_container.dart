@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 import 'package:quizmix_frontend/models/question_details.dart';
 
@@ -51,7 +52,7 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF03045E)),
+        border: Border.all(color: AppColors.mainColor),
       ),
       child: Column(
         children: [
@@ -82,7 +83,7 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
               const Spacer(),
               TinySolidButton(
                 text: 'Edit',
-                buttonColor: const Color(0xFF03045E),
+                buttonColor: AppColors.mainColor,
                 onPressed: () {
                   // Handle edit button press
                 },

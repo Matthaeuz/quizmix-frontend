@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.dart';
@@ -28,7 +29,7 @@ class DashboardWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   color: selectedOption == 'Dashboard'
-                      ? const Color(0xFF03045E)
+                      ? AppColors.mainColor
                       : null,
                   child: ListTile(
                     leading: Icon(
@@ -60,7 +61,7 @@ class DashboardWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   color: selectedOption == 'Reviewees'
-                      ? const Color(0xFF03045E)
+                      ? AppColors.mainColor
                       : null,
                   child: ListTile(
                     leading: Icon(
@@ -92,7 +93,7 @@ class DashboardWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   color: selectedOption == 'Quizzes'
-                      ? const Color(0xFF03045E)
+                      ? AppColors.mainColor
                       : null,
                   child: ListTile(
                     leading: Icon(
@@ -123,7 +124,7 @@ class DashboardWidget extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   color: selectedOption == 'Question Bank'
-                      ? const Color(0xFF03045E)
+                      ? AppColors.mainColor
                       : null,
                   child: ListTile(
                     leading: Icon(

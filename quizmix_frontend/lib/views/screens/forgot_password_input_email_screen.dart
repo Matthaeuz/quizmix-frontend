@@ -48,7 +48,7 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            ButtonSolid(
+                            SolidButton(
                               text: 'Cancel',
                               width: 200,
                               onPressed: () {
@@ -56,7 +56,7 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
                               },
                             ),
                             const SizedBox(width: 25),
-                            ButtonSolid(
+                            SolidButton(
                               text: 'Continue',
                               width: 200,
                               onPressed: () {

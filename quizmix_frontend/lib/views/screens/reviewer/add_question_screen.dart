@@ -43,7 +43,7 @@ class AddQuestionScreen extends ConsumerWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              ButtonSolid(
+                              SolidButton(
                                 text: 'Cancel',
                                 width: 200,
                                 onPressed: () {
@@ -51,7 +51,7 @@ class AddQuestionScreen extends ConsumerWidget {
                                 },
                               ),
                               const SizedBox(width: 25),
-                              ButtonSolid(
+                              SolidButton(
                                 text: 'Continue',
                                 width: 200,
                                 onPressed: () {

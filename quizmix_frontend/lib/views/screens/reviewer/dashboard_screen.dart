@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/dashboard_item_list_container.dart';
 
@@ -18,7 +19,7 @@ class DashboardScreen extends StatelessWidget {
           Expanded(
             flex: 8,
             child: Container(
-                color: const Color(0xFFCAF0F8),
+                color: AppColors.fifthColor,
                 padding: const EdgeInsets.all(25),
                 child: const Column(
                   children: [

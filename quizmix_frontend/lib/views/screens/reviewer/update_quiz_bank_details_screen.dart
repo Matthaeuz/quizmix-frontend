@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/update_quiz_bank_item_container.dart';
 import 'package:quizmix_frontend/models/question_details.dart';
@@ -151,7 +152,7 @@ Therefore, the correct decimal fraction equivalent to the hexadecimal fraction 0
                 const Spacer(),
                 TinySolidButton(
                   text: 'Add Question',
-                  buttonColor: const Color(0xFF03045E),
+                  buttonColor: AppColors.mainColor,
                   onPressed: () {
                     // Handle Add Question press
                   },

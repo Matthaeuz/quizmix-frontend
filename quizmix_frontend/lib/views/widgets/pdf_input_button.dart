@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/file_picker/pdf_file_provider.dart';
 
 class PdfInputButton extends ConsumerStatefulWidget {
@@ -49,8 +50,8 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
         _pickPdfFile();
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: const Color(0xFF03045E),
-        backgroundColor: const Color(0xFFCAF0F8),
+        foregroundColor: AppColors.mainColor,
+        backgroundColor: AppColors.fifthColor,
         padding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -65,14 +66,14 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
               Icon(
                 isPdfUploaded ? Icons.picture_as_pdf : widget.buttonIcon,
                 size: widget.buttonIconSize,
-                color: const Color(0xFF03045E),
+                color: AppColors.mainColor,
               ),
               const SizedBox(height: 8),
               Text(
                 isPdfUploaded ? pdfFileName : widget.buttonText,
                 style: TextStyle(
                   fontSize: widget.buttonTextSize,
-                  color: const Color(0xFF03045E),
+                  color: AppColors.mainColor,
                 ),
               ),
             ],

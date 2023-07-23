@@ -24,7 +24,7 @@ class QuestionBankCard extends ConsumerWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-            color: const Color(0xFF03045E),
+            color: AppColors.mainColor,
           ),
         ),
         child: Column(

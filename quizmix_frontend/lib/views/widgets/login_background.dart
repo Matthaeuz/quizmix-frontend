@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
@@ -93,14 +94,14 @@ class _LoginBackgroundState extends State<LoginBackground> {
                                   child: TextButton(
                                     onPressed: () {},
                                     style: TextButton.styleFrom(
-                                      foregroundColor: const Color(0xFF03045E),
+                                      foregroundColor: AppColors.mainColor,
                                       alignment: Alignment.centerRight,
                                     ),
                                     child: const Text('Forgot Password'),
                                   ),
                                 ),
                                 const SizedBox(height: 40.0),
-                                ButtonSolid(
+                                SolidButton(
                                   text: 'Login',
                                   onPressed: () {
                                     // TODO: Implement login functionality
