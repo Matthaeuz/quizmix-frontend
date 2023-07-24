@@ -1,47 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/constants/categories.constants.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
+import 'package:quizmix_frontend/state/models/quizzes/tos_data.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:flutter/services.dart';
 
-class CategoryData {
-  int? numberOfQuestions;
-  int? difficulty;
-
-  CategoryData({
-    this.numberOfQuestions,
-    this.difficulty,
-  });
-}
-
-class TosModalScreen extends StatefulWidget {
+class TosModalScreen extends ConsumerStatefulWidget {
   const TosModalScreen({Key? key}) : super(key: key);
 
   @override
-  State<TosModalScreen> createState() => _TosModalScreenState();
+  ConsumerState<TosModalScreen> createState() => _TosModalScreenState();
 }
 
-class _TosModalScreenState extends State<TosModalScreen> {
-  List<String> currentCategories = [];
+class _TosModalScreenState extends ConsumerState<TosModalScreen> {
+  List<String> categories = [];
   String selectedCategory = "No Categories Added";
   Map<String, CategoryData> categoryDataMap = {};
   String quizName = '';
 
-  List<String> allCategories = categories;
+  List<String> allCategories = [
+    'Basic Theories',
+    'Algorithms and Programming',
+    'Computer Components and Hardware',
+    'System Components',
+    'Software',
+    'Development Technology and Management',
+    'Database',
+    'Network',
+    'Security',
+    'System Audit, Strategy and Planning',
+    'Business, Corporate & Legal Affairs'
+  ];
 
   void _showCategoryDropdown(BuildContext context) {
     if (allCategories.isEmpty) {
-      // Show a snackbar or any other UI to indicate no more available currentCategories
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No more available currentCategories")),
+        const SnackBar(content: Text("No more available categories")),
       );
     } else {
-      // Get the position of the "Add Category" button
       RenderBox button = context.findRenderObject() as RenderBox;
       Offset offset = button.localToGlobal(Offset.zero);
 
-      // Show the dropdown menu
       showMenu(
         context: context,
         position: RelativeRect.fromLTRB(
@@ -57,14 +61,10 @@ class _TosModalScreenState extends State<TosModalScreen> {
           );
         }).toList(),
       ).then((selectedValue) {
-        // Update the selected category when a value is selected from the dropdown
         if (selectedValue != null) {
           setState(() {
-            // Remove the selected category from the dropdown list
             allCategories.remove(selectedValue);
-
-            // Add the selected category to the list
-            currentCategories.add(selectedValue);
+            categories.add(selectedValue);
             selectedCategory = selectedValue;
           });
         }
@@ -74,6 +74,10 @@ class _TosModalScreenState extends State<TosModalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
+    final reviewerId = ref.watch(reviewerProvider).id;
+
     return Stack(
       children: [
         const DashboardScreen(),
@@ -112,7 +116,6 @@ class _TosModalScreenState extends State<TosModalScreen> {
                           ),
                           onChanged: (value) {
                             setState(() {
-                              // Update the quizName whenever the text in the TextFormField changes
                               quizName = value;
                             });
                           },
@@ -121,7 +124,6 @@ class _TosModalScreenState extends State<TosModalScreen> {
                         SolidButton(
                           text: "Add Category",
                           onPressed: () {
-                            // Show the dropdown menu when the "Add Category" button is pressed
                             _showCategoryDropdown(context);
                           },
                           icon: const Icon(Icons.add),
@@ -173,19 +175,18 @@ class _TosModalScreenState extends State<TosModalScreen> {
                           height: 200,
                           child: ListView.builder(
                             itemCount:
-                                currentCategories.isEmpty ? 1 : currentCategories.length,
+                                categories.isEmpty ? 1 : categories.length,
                             itemBuilder: (context, index) {
-                              if (currentCategories.isEmpty) {
+                              if (categories.isEmpty) {
                                 return const Center(
                                   child: Text("No Categories Added"),
                                 );
                               } else {
-                                String category = currentCategories[index];
+                                String category = categories[index];
                                 return Row(
                                   children: [
                                     Expanded(
                                       flex: 3,
-                                      // Category
                                       child: Text(
                                         category,
                                         style: const TextStyle(
@@ -198,67 +199,32 @@ class _TosModalScreenState extends State<TosModalScreen> {
                                     const SizedBox(width: 25),
                                     Expanded(
                                       flex: 2,
-                                      child: TextFormField(
+                                      child: buildCategoryFormField(
                                         initialValue: categoryDataMap[category]
                                             ?.numberOfQuestions
                                             .toString(),
-                                        decoration: const InputDecoration(
-                                          hintText: "",
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'^[0-9]*$')),
-                                        ],
                                         onChanged: (value) {
-                                          // Update the number of questions for the category
-                                          categoryDataMap[category] ??=
-                                              CategoryData();
-                                          categoryDataMap[category]
-                                                  ?.numberOfQuestions =
-                                              int.parse(value);
-                                          // Print the categoryDataMap for debugging purposes
-                                          debugPrint("");
-                                          debugPrint("Quiz Name: $quizName");
-                                          debugPrint("Category: $category");
-                                          debugPrint(
-                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
-                                          debugPrint(
-                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
+                                          updateCategoryData(
+                                            category: category,
+                                            number: int.parse(value),
+                                            isDifficulty: false,
+                                          );
                                         },
                                       ),
                                     ),
                                     const SizedBox(width: 25),
                                     Expanded(
                                       flex: 2,
-                                      child: TextFormField(
+                                      child: buildCategoryFormField(
                                         initialValue: categoryDataMap[category]
                                             ?.difficulty
                                             .toString(),
-                                        decoration: const InputDecoration(
-                                          hintText: "",
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'^[0-9]*$')),
-                                        ],
                                         onChanged: (value) {
-                                          // Update the difficulty for the category
-                                          categoryDataMap[category] ??=
-                                              CategoryData();
-                                          categoryDataMap[category]
-                                              ?.difficulty = int.parse(value);
-                                          // Print the values for debugging purposes
-                                          debugPrint("");
-                                          debugPrint("Quiz Name: $quizName");
-                                          debugPrint("Category: $category");
-                                          debugPrint(
-                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
-                                          debugPrint(
-                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
+                                          updateCategoryData(
+                                            category: category,
+                                            number: int.parse(value),
+                                            isDifficulty: true,
+                                          );
                                         },
                                       ),
                                     ),
@@ -268,7 +234,7 @@ class _TosModalScreenState extends State<TosModalScreen> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 25),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -287,7 +253,19 @@ class _TosModalScreenState extends State<TosModalScreen> {
                               child: SolidButton(
                                 text: "Save",
                                 onPressed: () {
-                                  // Add your code for handling "Save" button press here
+                                  final TOS tos = TOS(
+                                    madeBy: reviewerId, // replace this with the correct value
+                                    title: quizName,
+                                    categories: categories,
+                                    quantities: categories.map((category) => categoryDataMap[category]?.numberOfQuestions ?? 0).toList(),
+                                    difficulties: categories.map((category) => categoryDataMap[category]?.difficulty ?? 0).toList(),
+                                  );
+
+                                  debugPrint('${tos.toJson()}');
+
+                                  client.createQuizFromTOS(token, tos).then((value) => {
+                                    Navigator.pop(context)
+                                  });
                                 },
                               ),
                             ),
@@ -303,5 +281,35 @@ class _TosModalScreenState extends State<TosModalScreen> {
         ),
       ],
     );
+  }
+
+  TextFormField buildCategoryFormField(
+      {required String? initialValue, required Function(String) onChanged}) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: const InputDecoration(
+        hintText: "",
+      ),
+      textAlign: TextAlign.center,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
+      ],
+      onChanged: onChanged,
+    );
+  }
+
+  void updateCategoryData({
+    required String category,
+    required int number,
+    required bool isDifficulty,
+  }) {
+    categoryDataMap[category] ??= CategoryData();
+
+    if (isDifficulty) {
+      categoryDataMap[category]?.difficulty = number;
+    } else {
+      categoryDataMap[category]?.numberOfQuestions = number;
+    }
   }
 }
