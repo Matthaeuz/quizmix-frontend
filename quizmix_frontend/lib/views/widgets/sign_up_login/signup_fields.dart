@@ -88,6 +88,10 @@ class _SignUpFieldsState extends ConsumerState<SignUpFields> {
                       password: passwordController.text,
                     );
 
+                    if (middleNameController.text.isNotEmpty) {
+                      details.middleName = middleNameController.text;
+                    }
+
                     signUp(details, ref).then((value) => {
                           Navigator.push(
                               context,

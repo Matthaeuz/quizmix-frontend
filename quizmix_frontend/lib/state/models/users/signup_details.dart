@@ -4,7 +4,7 @@ part 'signup_details.g.dart';
 
 @JsonSerializable()
 class SignUpDetails {
-  const SignUpDetails({
+  SignUpDetails({
     required this.email,
     required this.firstName,
     this.middleName,
@@ -19,7 +19,7 @@ class SignUpDetails {
   final String firstName;
   
   @JsonKey(name: 'middle_name')
-  final String? middleName;
+  late final String? middleName;
   
   @JsonKey(name: 'last_name')
   final String lastName;
