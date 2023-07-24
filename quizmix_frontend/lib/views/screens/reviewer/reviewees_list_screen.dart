@@ -16,7 +16,7 @@ class RevieweesListScreen extends ConsumerWidget {
       body: Row(
         children: [
           // Left Side - Dashboard
-          const DashboardWidget(
+          const ReviewerDashboardWidget(
             selectedOption: 'Reviewees',
           ),
           // Right Side - Background Color

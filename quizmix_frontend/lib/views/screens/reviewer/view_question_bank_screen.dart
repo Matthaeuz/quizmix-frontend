@@ -29,7 +29,7 @@ class ViewQuestionBankScreen extends ConsumerWidget {
               child: const Column(
                 children: [
                   // Left Side - Dashboard
-                  DashboardWidget(
+                  ReviewerDashboardWidget(
                     selectedOption: 'Question Bank',
                   ),
                 ],

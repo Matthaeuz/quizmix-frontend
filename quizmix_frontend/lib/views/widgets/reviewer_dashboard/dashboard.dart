@@ -6,10 +6,10 @@ import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.da
 import 'package:quizmix_frontend/views/screens/reviewer/view_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 
-class DashboardWidget extends StatelessWidget {
+class ReviewerDashboardWidget extends StatelessWidget {
   final String selectedOption;
 
-  const DashboardWidget({Key? key, required this.selectedOption})
+  const ReviewerDashboardWidget({Key? key, required this.selectedOption})
       : super(key: key);
 
   @override
