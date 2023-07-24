@@ -3,7 +3,7 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/elevated_button.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
-import 'package:quizmix_frontend/views/widgets/text_field.dart';
+import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
 
 class LoginBackground extends StatefulWidget {
   const LoginBackground({Key? key}) : super(key: key);
