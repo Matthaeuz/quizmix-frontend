@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/views/screens/login_screen.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-import '../widgets/login_background.dart';
-import '../widgets/solid_button.dart';
 
 class ForgotPasswordInputEmailScreen extends StatelessWidget {
   const ForgotPasswordInputEmailScreen({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const LoginBackground(),
+        const LoginScreen(),
         Container(
           color: const Color(0x800077B6),
         ),
