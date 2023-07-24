@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard_item_list_container.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_quizzes_list.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_reviewees_list.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 
@@ -25,7 +25,7 @@ class DashboardScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(25),
                 child: const Column(
                   children: [
-                    DashboardItemListContainer(myQuizzesText: 'My Quizzes'),
+                    MyQuizzesList(),
                     SizedBox(height: 25),
                     MyRevieweesList(),
                   ],

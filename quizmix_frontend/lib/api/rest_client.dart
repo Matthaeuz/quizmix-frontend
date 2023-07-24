@@ -1,6 +1,7 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
@@ -102,5 +103,13 @@ abstract class RestClient {
   Future<List<Question>> getQuestionsByCategory(
     @Header("Authorization") String token,
     @Query("category") String category,
+  );
+
+  /// QUIZ API
+
+  @GET("/quizzes/?made_by={madeBy}")
+  Future<List<Quiz>> getMadeByQuizzes(
+    @Header("Authorization") String token,
+    @Path("madeBy") int madeBy,
   );
 }

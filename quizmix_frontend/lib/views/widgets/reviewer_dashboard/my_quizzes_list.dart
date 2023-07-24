@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/add_card.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewee_detail_card.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/quiz_detail_card.dart';
 
-class MyRevieweesList extends ConsumerWidget {
-  const MyRevieweesList({
+class MyQuizzesList extends ConsumerWidget {
+  const MyQuizzesList({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewees = ref.watch(reviewerRevieweesProvider);
+    final quizzes = ref.watch(reviewerQuizzesProvider);
 
     return Column(
       children: [
@@ -20,7 +20,7 @@ class MyRevieweesList extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              "My Reviewees",
+              "My Quizzes",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -42,20 +42,18 @@ class MyRevieweesList extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 20),
-        reviewees.when(
-          data: (revieweesData) => SizedBox(
+        quizzes.when(
+          data: (quizzesData) => SizedBox(
             height: 200,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: revieweesData.length + 1,
+              itemCount: quizzesData.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return const AddCard();
                 } else {
-                  final reviewee = revieweesData[index - 1];
-                  final String name = reviewee.user.fullName;
-                  final String? profilePicture = reviewee.user.image;
-                  return RevieweeDetailCard(title: name, image: profilePicture);
+                  final quiz = quizzesData[index - 1];
+                  return QuizDetailCard(title: quiz.title, image: quiz.image);
                 }
               },
             ),

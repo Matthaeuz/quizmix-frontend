@@ -148,7 +148,7 @@ class DashboardWidget extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ViewQuestionBankScreen(),
+                            builder: (context) => const ViewQuestionBankScreen(),
                           ),
                         );
                       }

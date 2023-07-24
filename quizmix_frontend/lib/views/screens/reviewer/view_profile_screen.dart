@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_quiz_item_container.dart';
+import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_view_profile/reviewer_quizzes_list.dart';
 
-class ViewProfileScreen extends StatelessWidget {
+class ViewProfileScreen extends ConsumerWidget {
   const ViewProfileScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewerDetails = ref.watch(reviewerProvider);
+    ImageProvider? imageProvider;
+    if (reviewerDetails.user.image != null && reviewerDetails.user.image!.isNotEmpty) {
+        imageProvider = NetworkImage(reviewerDetails.user.image!);
+    } else {
+        imageProvider = const AssetImage("lib/assets/images/default_pic.png");
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -38,17 +48,15 @@ class ViewProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Circle Picture
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 90,
-                    backgroundImage: AssetImage(
-                      "lib/assets/images/profile_pictures/aloysius.jpg",
-                    ),
+                    backgroundImage: imageProvider,
                   ),
                   const SizedBox(height: 25),
                   // Name
-                  const Text(
-                    'Aloysius Matthew A. Beronque',
-                    style: TextStyle(
+                  Text(
+                    reviewerDetails.user.fullName,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -85,7 +93,7 @@ class ViewProfileScreen extends StatelessWidget {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Quiz name',
+                                        'Quiz Name',
                                         style: TextStyle(fontSize: 20),
                                       ),
                                     ],
@@ -97,7 +105,7 @@ class ViewProfileScreen extends StatelessWidget {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Total Score',
+                                        'Total Items',
                                         style: TextStyle(fontSize: 20),
                                       ),
                                     ],
@@ -131,26 +139,7 @@ class ViewProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 25),
                             // Quiz Items
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: 7,
-                                itemBuilder: (context, index) {
-                                  return Column(children: [
-                                    ReviewerQuizItemContainer(
-                                      quizName: 'Algorithms and Programming',
-                                      totalScore: '80/80',
-                                      onViewQuizPressed: () {
-                                        // Add your code for "View Quiz" button pressed
-                                      },
-                                      onViewHistoryPressed: () {
-                                        // Add your code for "View History" button pressed
-                                      },
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ]);
-                                },
-                              ),
-                            ),
+                            const ReviewerQuizzesList(),
                           ],
                         ),
                       ),
