@@ -230,13 +230,6 @@ class _TosModalScreenState extends State<TosModalScreen> {
                                                   ?.numberOfQuestions =
                                               int.parse(value);
                                           // Print the categoryDataMap for debugging purposes
-                                          print("");
-                                          print("Quiz Name: $quizName");
-                                          print("Category: $category");
-                                          print(
-                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
-                                          print(
-                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
                                         },
                                       ),
                                     ),
@@ -262,14 +255,6 @@ class _TosModalScreenState extends State<TosModalScreen> {
                                               CategoryData();
                                           categoryDataMap[category]
                                               ?.difficulty = int.parse(value);
-                                          // Print the values for debugging purposes
-                                          print("");
-                                          print("Quiz Name: $quizName");
-                                          print("Category: $category");
-                                          print(
-                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
-                                          print(
-                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
                                         },
                                       ),
                                     ),
