@@ -200,7 +200,6 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                     width: 25,
                                   ),
                                   // Right Area
-                                  // Right Area
                                   Expanded(
                                     child: FutureBuilder<List<int>>(
                                       future: getImageHeights(),
@@ -243,7 +242,8 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                             }
                                           }
 
-                                          return Align(
+                                          return Expanded(
+                                              child: Align(
                                             alignment: Alignment.topCenter,
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -255,88 +255,85 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                               ),
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Expanded(
-                                                child: LayoutBuilder(
-                                                  builder:
-                                                      (context, constraints) {
-                                                    // Calculate the height and width based on percentage of the available space
-                                                    double gridHeight =
-                                                        constraints.maxHeight *
-                                                            .5;
-                                                    double gridWidth =
-                                                        constraints.maxWidth *
-                                                            .9;
+                                              child: LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  // Calculate the height and width based on percentage of the available space
+                                                  double gridHeight =
+                                                      constraints.maxHeight *
+                                                          .5;
+                                                  double gridWidth =
+                                                      constraints.maxWidth * .9;
 
-                                                    return GridView.builder(
-                                                      gridDelegate:
-                                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 5,
-                                                        crossAxisSpacing: 8.0,
-                                                        mainAxisSpacing: 12.0,
-                                                        childAspectRatio:
-                                                            gridWidth /
-                                                                gridHeight,
-                                                      ),
-                                                      itemCount: 7,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Column(
-                                                          children: [
-                                                            Text(
-                                                              '${index + 1}',
+                                                  return GridView.builder(
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 5,
+                                                      crossAxisSpacing: 12.0,
+                                                      mainAxisSpacing: 12,
+                                                      childAspectRatio:
+                                                          gridWidth /
+                                                              gridHeight,
+                                                    ),
+                                                    itemCount: 7,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Column(
+                                                        children: [
+                                                          Text(
+                                                            '${index + 1}',
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        16),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 6,
+                                                          ),
+                                                          Container(
+                                                            // height: 28,
+                                                            // width: 28,
+                                                            color: AppColors
+                                                                .fifthColor, // Set the desired color
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                print(
+                                                                    "Question ${index + 1} = ${totalHeights[index]}");
+                                                                _scrollController
+                                                                    .animateTo(
+                                                                  totalHeights[
+                                                                      index],
+                                                                  duration: const Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                                  curve: Curves
+                                                                      .easeInOut,
+                                                                );
+                                                              },
                                                               style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          16),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 6,
-                                                            ),
-                                                            Container(
-                                                              height: 28,
-                                                              width: 28,
-                                                              color: AppColors
-                                                                  .fifthColor, // Set the desired color
-                                                              child:
-                                                                  ElevatedButton(
-                                                                onPressed: () {
-                                                                  print(
-                                                                      "Question ${index + 1} = ${totalHeights[index]}");
-                                                                  _scrollController
-                                                                      .animateTo(
-                                                                    totalHeights[
-                                                                        index],
-                                                                    duration: const Duration(
-                                                                        milliseconds:
-                                                                            500),
-                                                                    curve: Curves
-                                                                        .easeInOut,
-                                                                  );
-                                                                },
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  primary: AppColors
-                                                                      .fourthColor, // Make the ElevatedButton transparent
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .zero, // Remove padding inside the ElevatedButton
-                                                                ),
-                                                                child: const SizedBox
-                                                                    .shrink(), // Remove text and shrink the ElevatedButton
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                primary: AppColors
+                                                                    .fourthColor, // Make the ElevatedButton transparent
+                                                                padding: EdgeInsets
+                                                                    .zero, // Remove padding inside the ElevatedButton
                                                               ),
+                                                              child: const SizedBox
+                                                                  .shrink(), // Remove text and shrink the ElevatedButton
                                                             ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                               ),
                                             ),
-                                          );
+                                          ));
                                         } else {
                                           // Show a loading indicator while waiting for the future to complete
                                           return const Center(
