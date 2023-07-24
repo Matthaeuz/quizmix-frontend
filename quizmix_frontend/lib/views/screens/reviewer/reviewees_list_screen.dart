@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
@@ -22,7 +23,7 @@ class RevieweesListScreen extends ConsumerWidget {
           Expanded(
             flex: 8,
             child: Container(
-              color: const Color(0xFFCAF0F8),
+              color: AppColors.fifthColor,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
                 child: Column(

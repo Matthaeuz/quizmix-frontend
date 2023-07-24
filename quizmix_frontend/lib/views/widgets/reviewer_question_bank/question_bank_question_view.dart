@@ -15,7 +15,7 @@ class QuestionBankQuestion extends ConsumerWidget {
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
-            color: const Color(0xFF90E0EF),
+            color: AppColors.fourthColor,
             height: constraints.maxHeight,
             child: SingleChildScrollView(
               child: Column(

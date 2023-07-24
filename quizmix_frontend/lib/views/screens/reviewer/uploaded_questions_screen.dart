@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_uploaded_questions/uploaded_question_list.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
@@ -59,7 +60,7 @@ class UploadedQuestionsScreen extends ConsumerWidget {
                 const Spacer(),
                 TinySolidButton(
                   text: 'Add Question',
-                  buttonColor: const Color(0xFF03045E),
+                  buttonColor: AppColors.mainColor,
                   onPressed: () {
                     // Handle Add Question press
                   },

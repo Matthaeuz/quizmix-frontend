@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 
 class ButtonElevated extends StatelessWidget {
   final String text;
@@ -16,7 +17,7 @@ class ButtonElevated extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
-        backgroundColor: const Color(0xFF03045E), // Button background color
+        backgroundColor: AppColors.mainColor, // Button background color
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0), // Border radius

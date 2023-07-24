@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
 /// Remember to remove this screen later.
 class DashboardItemListContainer extends StatelessWidget {
   final String myQuizzesText;
@@ -24,14 +25,38 @@ class DashboardItemListContainer extends StatelessWidget {
     ];
 
     final List<Map<String, String>> reviewees = [
-      {'name': 'Alcuitas, Aaron Benjmin', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Alunan, Ron Matthew', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Adaya, Jerico Jan', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Lim, Garfield Greg', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Tenerife, Jillian Joy', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Sumampong, Alloyd', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Cumayas, Jerick', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
-      {'name': 'Nabua, Edvil Clark', 'profile_picture' : 'lib/assets/images/profile_pictures/aaron.jpg'},
+      {
+        'name': 'Alcuitas, Aaron Benjmin',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Alunan, Ron Matthew',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Adaya, Jerico Jan',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Lim, Garfield Greg',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Tenerife, Jillian Joy',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Sumampong, Alloyd',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Cumayas, Jerick',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
+      {
+        'name': 'Nabua, Edvil Clark',
+        'profile_picture': 'lib/assets/images/profile_pictures/aaron.jpg'
+      },
     ];
 
     return Column(
@@ -82,13 +107,15 @@ class DashboardItemListContainer extends StatelessWidget {
                   final Map<String, String> quiz = entry.value;
                   final String title = useImages ? '' : quiz['title']!;
                   final String firstLetter = title.isNotEmpty ? title[0] : '';
-                  final String name = useImages
-                      ? reviewees[index]['name']!
-                      : '';
+                  final String name =
+                      useImages ? reviewees[index]['name']! : '';
 
                   return GestureDetector(
                     onTap: () {
-                      // Handle quiz box onPress
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewQuizScreen()));
                     },
                     child: Container(
                       width: 200,

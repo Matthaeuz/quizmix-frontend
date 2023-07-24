@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_category_questions/category_questions_list.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
@@ -85,7 +86,7 @@ class UpdateQuizBankDetailsScreen extends ConsumerWidget {
                 const Spacer(),
                 TinySolidButton(
                   text: 'Add Question',
-                  buttonColor: const Color(0xFF03045E),
+                  buttonColor: AppColors.mainColor,
                   onPressed: () {
                     // Handle Add Question press
                   },

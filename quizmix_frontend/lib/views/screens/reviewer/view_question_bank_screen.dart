@@ -3,6 +3,7 @@
 /// questions.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 // import 'package:quizmix_frontend/models/question_details.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard.dart';
@@ -40,7 +41,7 @@ class ViewQuestionBankScreen extends ConsumerWidget {
           Expanded(
             flex: 3,
             child: Container(
-              color: const Color(0xFFCAF0F8),
+              color: AppColors.fifthColor,
               child: Column(
                 children: [
                   Padding(
@@ -71,7 +72,7 @@ class ViewQuestionBankScreen extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          ButtonSolid(
+                          SolidButton(
                             text: 'Update',
                             onPressed: () {
                               Navigator.push(

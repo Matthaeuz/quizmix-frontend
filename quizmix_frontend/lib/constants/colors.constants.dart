@@ -33,3 +33,12 @@ Color getCategoryColor(String category) {
           .withOpacity(1.0);
   }
 }
+
+class AppColors {
+  static const Color mainColor = Color(0xFF03045E);
+  static const Color secondaryColor = Color(0xFF0077B6);
+  static const Color thirdColor = Color(0xFF00B4D8);
+  static const Color fourthColor = Color(0xFF90E0EF);
+  static const Color fifthColor = Color(0xFFCAF0F8);
+  static const Color lightBackgroundColor = Color(0xFFF5F5F5);
+}

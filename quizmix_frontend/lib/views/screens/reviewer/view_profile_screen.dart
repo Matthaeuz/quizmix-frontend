@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_quiz_item_container.dart';
 
 class ViewProfileScreen extends StatelessWidget {
@@ -59,7 +60,7 @@ class ViewProfileScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.8,
                       margin: const EdgeInsets.only(bottom: 50),
                       decoration: BoxDecoration(
-                          color: const Color(0xFFCAF0F8),
+                          color: AppColors.fifthColor,
                           borderRadius: BorderRadius.circular(16)),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),

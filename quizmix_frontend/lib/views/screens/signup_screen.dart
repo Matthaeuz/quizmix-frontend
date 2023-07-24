@@ -112,11 +112,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   controller: passwordController,
                                 ),
                                 const SizedBox(height: 40.0),
-                                ButtonSolid(
+                                SolidButton(
                                   text: 'Create account',
                                   onPressed: () {
                                     SignUpDetails details = SignUpDetails(
-                                      email: emailController.text,
+                                      email: emailController.text.toLowerCase(),
                                       firstName: firstNameController.text,
                                       lastName: lastNameController.text,
                                       password: passwordController.text,
