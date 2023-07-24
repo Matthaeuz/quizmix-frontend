@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/categories.constants.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -22,30 +23,18 @@ class TosModalScreen extends StatefulWidget {
 }
 
 class _TosModalScreenState extends State<TosModalScreen> {
-  List<String> categories = [];
+  List<String> currentCategories = [];
   String selectedCategory = "No Categories Added";
   Map<String, CategoryData> categoryDataMap = {};
   String quizName = '';
 
-  List<String> allCategories = [
-    'Basic Theories',
-    'Algorithms and Programming',
-    'Computer Components and Hardware',
-    'System Components',
-    'Software',
-    'Development Technology and Management',
-    'Database',
-    'Network',
-    'Security',
-    'System Audit, Strategy and Planning',
-    'Business, Corporate & Legal Affairs'
-  ];
+  List<String> allCategories = categories;
 
   void _showCategoryDropdown(BuildContext context) {
     if (allCategories.isEmpty) {
-      // Show a snackbar or any other UI to indicate no more available categories
+      // Show a snackbar or any other UI to indicate no more available currentCategories
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No more available categories")),
+        const SnackBar(content: Text("No more available currentCategories")),
       );
     } else {
       // Get the position of the "Add Category" button
@@ -75,7 +64,7 @@ class _TosModalScreenState extends State<TosModalScreen> {
             allCategories.remove(selectedValue);
 
             // Add the selected category to the list
-            categories.add(selectedValue);
+            currentCategories.add(selectedValue);
             selectedCategory = selectedValue;
           });
         }
@@ -184,14 +173,14 @@ class _TosModalScreenState extends State<TosModalScreen> {
                           height: 200,
                           child: ListView.builder(
                             itemCount:
-                                categories.isEmpty ? 1 : categories.length,
+                                currentCategories.isEmpty ? 1 : currentCategories.length,
                             itemBuilder: (context, index) {
-                              if (categories.isEmpty) {
+                              if (currentCategories.isEmpty) {
                                 return const Center(
                                   child: Text("No Categories Added"),
                                 );
                               } else {
-                                String category = categories[index];
+                                String category = currentCategories[index];
                                 return Row(
                                   children: [
                                     Expanded(
@@ -230,6 +219,13 @@ class _TosModalScreenState extends State<TosModalScreen> {
                                                   ?.numberOfQuestions =
                                               int.parse(value);
                                           // Print the categoryDataMap for debugging purposes
+                                          debugPrint("");
+                                          debugPrint("Quiz Name: $quizName");
+                                          debugPrint("Category: $category");
+                                          debugPrint(
+                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
+                                          debugPrint(
+                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
                                         },
                                       ),
                                     ),
@@ -255,6 +251,14 @@ class _TosModalScreenState extends State<TosModalScreen> {
                                               CategoryData();
                                           categoryDataMap[category]
                                               ?.difficulty = int.parse(value);
+                                          // Print the values for debugging purposes
+                                          debugPrint("");
+                                          debugPrint("Quiz Name: $quizName");
+                                          debugPrint("Category: $category");
+                                          debugPrint(
+                                              "No. of questions: ${categoryDataMap[category]?.numberOfQuestions}");
+                                          debugPrint(
+                                              "Difficulty: ${categoryDataMap[category]?.difficulty}");
                                         },
                                       ),
                                     ),

@@ -2,6 +2,7 @@ import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
@@ -106,6 +107,9 @@ abstract class RestClient {
   );
 
   /// QUIZ API
+  
+  @POST("/quizzes/create_quiz/")
+  Future<Quiz> createQuizFromTOS(@Header("Authorization") String token, @Body() TOS tos);
 
   @GET("/quizzes/?made_by={madeBy}")
   Future<List<Quiz>> getMadeByQuizzes(
