@@ -9,7 +9,7 @@ class AddCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TosModalScreen()));
+            context, MaterialPageRoute(builder: (context) => const TosModalScreen()));
       },
       child: Container(
         width: 200,

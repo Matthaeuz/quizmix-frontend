@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_quiz_item_container.dart';
 
 class ReviewerQuizzesList extends ConsumerWidget {
@@ -24,7 +26,14 @@ class ReviewerQuizzesList extends ConsumerWidget {
                     .title, // Adjust these fields according to your data model
                 totalScore: totalScore.toString(),
                 onViewQuizPressed: () {
-                  // Add your code for "View Quiz" button pressed
+                  ref
+                      .read(currentQuizViewedProvider.notifier)
+                      .updateCurrentQuiz(quiz);
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ViewQuizScreen()));
                 },
                 onViewHistoryPressed: () {
                   // Add your code for "View History" button pressed
