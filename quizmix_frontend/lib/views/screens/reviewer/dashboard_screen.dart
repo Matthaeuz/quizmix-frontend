@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_quizzes_list.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_reviewees_list.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
@@ -14,7 +14,7 @@ class DashboardScreen extends ConsumerWidget {
       body: Row(
         children: [
           // Left Side - Dashboard
-          const DashboardWidget(
+          const ReviewerDashboardWidget(
             selectedOption: 'Dashboard',
           ),
           // Right Side - Background Color
