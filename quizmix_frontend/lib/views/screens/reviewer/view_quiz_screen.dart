@@ -213,7 +213,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                             ConnectionState.done) {
                                           List<int> imageHeights =
                                               snapshot.data ?? [];
-                                          int numberOfItems = 5;
+                                          int numberOfItems = 4;
 
                                           const double defaultFontSize = 16.0;
                                           const double paddingSize = 12.0;
@@ -242,8 +242,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                             }
                                           }
 
-                                          return Expanded(
-                                              child: Align(
+                                          return Align(
                                             alignment: Alignment.topCenter,
                                             child: Container(
                                               decoration: BoxDecoration(
@@ -254,26 +253,26 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                 color: Colors.white,
                                               ),
                                               padding:
-                                                  const EdgeInsets.all(8.0),
+                                                  const EdgeInsets.fromLTRB(
+                                                      12, 12, 12, 3),
                                               child: LayoutBuilder(
                                                 builder:
                                                     (context, constraints) {
-                                                  // Calculate the height and width based on percentage of the available space
-                                                  double gridHeight =
-                                                      constraints.maxHeight *
-                                                          .5;
+                                                  // Calculate the width and height based on percentage of the available space
                                                   double gridWidth =
-                                                      constraints.maxWidth * .9;
+                                                      constraints.maxWidth *
+                                                          0.1;
 
                                                   return GridView.builder(
                                                     gridDelegate:
-                                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 5,
-                                                      crossAxisSpacing: 12.0,
-                                                      mainAxisSpacing: 12,
+                                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                      maxCrossAxisExtent: 50,
+                                                      crossAxisSpacing:
+                                                          12.0, // The horizontal spacing between each child in pixel.
+                                                      mainAxisSpacing:
+                                                          12.0, // The vertical spacing between each child in pixel.
                                                       childAspectRatio:
-                                                          gridWidth /
-                                                              gridHeight,
+                                                          1.0, // The ratio of the height to the main-axis extent of each child.
                                                     ),
                                                     itemCount: 7,
                                                     physics:
@@ -281,59 +280,61 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                     shrinkWrap: true,
                                                     itemBuilder:
                                                         (context, index) {
-                                                      return Column(
-                                                        children: [
-                                                          Text(
-                                                            '${index + 1}',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        16),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 6,
-                                                          ),
-                                                          Container(
-                                                            // height: 28,
-                                                            // width: 28,
-                                                            color: AppColors
-                                                                .fifthColor, // Set the desired color
-                                                            child:
-                                                                ElevatedButton(
-                                                              onPressed: () {
-                                                                print(
-                                                                    "Question ${index + 1} = ${totalHeights[index]}");
-                                                                _scrollController
-                                                                    .animateTo(
-                                                                  totalHeights[
-                                                                      index],
-                                                                  duration: const Duration(
-                                                                      milliseconds:
-                                                                          500),
-                                                                  curve: Curves
-                                                                      .easeInOut,
-                                                                );
-                                                              },
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                primary: AppColors
-                                                                    .fourthColor, // Make the ElevatedButton transparent
-                                                                padding: EdgeInsets
-                                                                    .zero, // Remove padding inside the ElevatedButton
+                                                      return SizedBox(
+                                                        height: gridWidth,
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              width: gridWidth,
+                                                              height: gridWidth,
+                                                              color: AppColors
+                                                                  .fifthColor, // Set the desired color
+                                                              child:
+                                                                  ElevatedButton(
+                                                                onPressed: () {
+                                                                  print(
+                                                                      "Question ${index + 1} = ${totalHeights[index]}");
+                                                                  _scrollController
+                                                                      .animateTo(
+                                                                    totalHeights[
+                                                                        index],
+                                                                    duration: const Duration(
+                                                                        milliseconds:
+                                                                            500),
+                                                                    curve: Curves
+                                                                        .easeInOut,
+                                                                  );
+                                                                },
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  primary: AppColors
+                                                                      .fifthColor,
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${index + 1}',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            MediaQuery.of(context).size.width *
+                                                                                0.01,
+                                                                        color: AppColors
+                                                                            .mainColor),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              child: const SizedBox
-                                                                  .shrink(), // Remove text and shrink the ElevatedButton
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       );
                                                     },
                                                   );
                                                 },
                                               ),
                                             ),
-                                          ));
+                                          );
                                         } else {
                                           // Show a loading indicator while waiting for the future to complete
                                           return const Center(
