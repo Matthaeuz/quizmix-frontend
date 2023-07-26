@@ -4,7 +4,7 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 class AnswerQuizItem extends StatelessWidget {
   final String question;
   final String image;
-  final String choices;
+  final List<String> choices;
   final bool? allQuestionsAnswered;
 
   AnswerQuizItem({
@@ -70,14 +70,18 @@ class AnswerQuizItem extends StatelessWidget {
                   const SizedBox(
                     height: 12,
                   ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      choices,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: choices.length,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        choices[index],
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
