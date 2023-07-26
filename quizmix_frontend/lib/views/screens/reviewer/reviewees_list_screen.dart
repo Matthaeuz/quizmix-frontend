@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
-import 'package:quizmix_frontend/views/widgets/dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
+import 'package:quizmix_frontend/views/widgets/search_input.dart';
 
 class RevieweesListScreen extends ConsumerWidget {
   const RevieweesListScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class RevieweesListScreen extends ConsumerWidget {
       body: Row(
         children: [
           // Left Side - Dashboard
-          const DashboardWidget(
+          const ReviewerDashboardWidget(
             selectedOption: 'Reviewees',
           ),
           // Right Side - Background Color
@@ -29,22 +30,10 @@ class RevieweesListScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const FractionallySizedBox(
-                      widthFactor: 0.4,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'Search',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        ),
-                      ),
+                    SearchInput(
+                      onChanged: (value) {
+                        // Handle search input changes
+                      },
                     ),
                     // List
                     Flexible(
