@@ -19,37 +19,63 @@ class AnswerQuizScreen extends StatefulWidget {
 class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
   int currentQuestionIndex = 0;
   bool allQuestionsAnswered = false;
+  
 
   final List<Map<String, dynamic>> questionsData = [
     {
       'question':
           'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
       'image': 'lib/assets/images/questions/q1.jpg',
-      'choices': 'a) 31/32     b) 31/125     c) 31/512     d) 73/512',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
     },
     {
       'question':
           'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
       'image': 'lib/assets/images/questions/q2.jpg',
-      'choices': 'a) 31/32     b) 31/125     c) 31/512     d) 73/512',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
     },
     {
       'question':
           'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
       'image': 'lib/assets/images/questions/q3.jpg',
-      'choices': 'a) 31/32     b) 31/125     c) 31/512     d) 73/512',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
     },
     {
       'question':
           'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
       'image': 'lib/assets/images/questions/q4.jpg',
-      'choices': 'a) 31/32     b) 31/125     c) 31/512     d) 73/512',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
     },
     {
       'question':
           'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
       'image': 'lib/assets/images/questions/q5.jpg',
-      'choices': 'a) 31/32     b) 31/125     c) 31/512     d) 73/512',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
     },
   ];
 
