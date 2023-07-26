@@ -8,7 +8,7 @@ import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_prov
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 /// Used to sign in. Provide [AuthDetails] with a valid email and password.
-Future<void> signIn(AuthDetails details, WidgetRef ref) async {
+Future<String> signIn(AuthDetails details, WidgetRef ref) async {
   // Define rest client
   final client = ref.watch(restClientProvider); 
 
@@ -31,6 +31,8 @@ Future<void> signIn(AuthDetails details, WidgetRef ref) async {
       final reviewer = await client.getReviewerByUserId(token.accessToken, user[0].id);
       ref.read(reviewerProvider.notifier).updateReviewee(reviewer[0]);
     }
+
+    return userType;
   } on DioException catch (_) {
     rethrow;
   }

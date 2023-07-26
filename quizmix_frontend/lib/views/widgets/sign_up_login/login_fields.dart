@@ -4,6 +4,7 @@ import 'package:quizmix_frontend/api/utils/sign_in.helper.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
 import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
@@ -89,11 +90,21 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                     );
 
                     signIn(details, ref).then((value) => {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DashboardScreen()))
+                          if (value == 'reviewer')
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DashboardScreen()))
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyQuizzesScreen()))
+                            }
                         });
                   },
                 ),

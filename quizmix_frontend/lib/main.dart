@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/views/screens/login_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyQuizzesScreen(),
+      home: const LoginScreen(),
     );
   }
 }
