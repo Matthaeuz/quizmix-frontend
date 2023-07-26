@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/view_quiz_container.dart';
 import 'dart:async';
 
-class ViewQuizScreen extends StatefulWidget {
+class ViewQuizScreen extends ConsumerStatefulWidget {
   const ViewQuizScreen({Key? key}) : super(key: key);
 
   @override
-  State<ViewQuizScreen> createState() => _ViewQuizScreenState();
+  ConsumerState<ViewQuizScreen> createState() => _ViewQuizScreenState();
 }
 
-class _ViewQuizScreenState extends State<ViewQuizScreen> {
+class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  Future<List<int>> getImageHeights() async {
-    List<String> imagePaths = [
-      'lib/assets/images/questions/q1.jpg',
-      'lib/assets/images/questions/q2.jpg',
-      'lib/assets/images/questions/q3.jpg',
-      'lib/assets/images/questions/q4.jpg',
-      'lib/assets/images/questions/q5.jpg',
-    ];
-
+  Future<List<int>> getImageHeights(List<String> imagePaths) async {
     List<int> imageHeights = [];
 
     // Use Future.wait to wait for all the image loading operations to complete
@@ -50,10 +45,17 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
     return imageHeights;
   }
 
-  List<double> listViewItemHeights = List.filled(5, 0.0);
-
   @override
   Widget build(BuildContext context) {
+    final baseUrl = ref.watch(baseUrlProvider);
+    final currentQuiz = ref.watch(currentQuizViewedProvider);
+    final questions = currentQuiz.questions;
+    List<String> imageUrls = currentQuiz.questions
+        .map((question) => baseUrl + question.image!)
+        .toList();
+    List<double> listViewItemHeights = List.filled(questions.length, 0.0);
+    final firstLetter = currentQuiz.title[0];
+
     return Scaffold(
       body: Row(
         children: [
@@ -77,20 +79,22 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                               width: 150,
                               height: 150,
                               color: Colors.white,
-                              child: const Center(
-                                child: Text(
-                                  'A',
-                                  style: TextStyle(
-                                    fontSize: 60,
-                                    color: AppColors.mainColor,
-                                  ),
-                                ),
+                              child: Center(
+                                child: currentQuiz.image != null
+                                    ? Image.network(currentQuiz.image!)
+                                    : Text(
+                                        firstLetter,
+                                        style: const TextStyle(
+                                          fontSize: 60,
+                                          color: AppColors.mainColor,
+                                        ),
+                                      ),
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Algorithms and Programming',
-                              style: TextStyle(fontSize: 24),
+                            Text(
+                              currentQuiz.title,
+                              style: const TextStyle(fontSize: 24),
                             ),
                             const SizedBox(height: 16),
                             Row(
@@ -98,9 +102,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                               children: [
                                 SolidButton(
                                   text: 'View Statistics',
-                                  onPressed: () {
-                                    getImageHeights();
-                                  },
+                                  onPressed: () {},
                                   icon: const Icon(Icons.bar_chart),
                                 ),
                                 const SizedBox(width: 25),
@@ -131,11 +133,11 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                     child: SizedBox(
                                       child: ListView.builder(
                                         controller: _scrollController,
-                                        itemCount: 5,
+                                        itemCount: questions.length,
                                         itemBuilder: (context, index) {
+                                          final question = questions[index];
                                           final int questionNumber = index + 1;
-                                          final String imageFileName =
-                                              'q$questionNumber.jpg';
+                                          final image = baseUrl + question.image!;
                                           return Column(
                                             children: [
                                               LayoutBuilder(
@@ -178,8 +180,8 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                               width: 1.0,
                                                             ),
                                                           ),
-                                                          child: Image.asset(
-                                                            'lib/assets/images/questions/$imageFileName',
+                                                          child: Image.network(
+                                                            image,
                                                           ),
                                                         ),
                                                       ],
@@ -200,10 +202,9 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                     width: 25,
                                   ),
                                   // Right Area
-                                  // Right Area
                                   Expanded(
                                     child: FutureBuilder<List<int>>(
-                                      future: getImageHeights(),
+                                      future: getImageHeights(imageUrls),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
@@ -212,9 +213,10 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                   CircularProgressIndicator());
                                         } else if (snapshot.connectionState ==
                                             ConnectionState.done) {
-                                          List<int> imageHeights =
+                                          final List<int> imageHeights =
                                               snapshot.data ?? [];
-                                          int numberOfItems = 5;
+                                          final numberOfItems =
+                                              questions.length;
 
                                           const double defaultFontSize = 16.0;
                                           const double paddingSize = 12.0;
@@ -254,50 +256,40 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                 color: Colors.white,
                                               ),
                                               padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Expanded(
-                                                child: LayoutBuilder(
-                                                  builder:
-                                                      (context, constraints) {
-                                                    // Calculate the height and width based on percentage of the available space
-                                                    double gridHeight =
-                                                        constraints.maxHeight *
-                                                            .5;
-                                                    double gridWidth =
-                                                        constraints.maxWidth *
-                                                            .9;
+                                                  const EdgeInsets.fromLTRB(
+                                                      12, 12, 12, 3),
+                                              child: LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  // Calculate the width and height based on percentage of the available space
+                                                  double gridWidth =
+                                                      constraints.maxWidth *
+                                                          0.1;
 
-                                                    return GridView.builder(
-                                                      gridDelegate:
-                                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 5,
-                                                        crossAxisSpacing: 8.0,
-                                                        mainAxisSpacing: 12.0,
-                                                        childAspectRatio:
-                                                            gridWidth /
-                                                                gridHeight,
-                                                      ),
-                                                      itemCount: 7,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Column(
+                                                  return GridView.builder(
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                      maxCrossAxisExtent: 50,
+                                                      crossAxisSpacing:
+                                                          12.0, // The horizontal spacing between each child in pixel.
+                                                      mainAxisSpacing:
+                                                          12.0, // The vertical spacing between each child in pixel.
+                                                      childAspectRatio:
+                                                          1.0, // The ratio of the height to the main-axis extent of each child.
+                                                    ),
+                                                    itemCount: questions.length,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return SizedBox(
+                                                        height: gridWidth,
+                                                        child: Column(
                                                           children: [
-                                                            Text(
-                                                              '${index + 1}',
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          16),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 6,
-                                                            ),
                                                             Container(
-                                                              height: 28,
-                                                              width: 28,
+                                                              width: gridWidth,
+                                                              height: gridWidth,
                                                               color: AppColors
                                                                   .fifthColor, // Set the desired color
                                                               child:
@@ -318,22 +310,32 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                                                                 },
                                                                 style: ElevatedButton
                                                                     .styleFrom(
-                                                                  primary: AppColors
-                                                                      .fourthColor, // Make the ElevatedButton transparent
+                                                                  backgroundColor:
+                                                                      AppColors
+                                                                          .fifthColor,
                                                                   padding:
                                                                       EdgeInsets
-                                                                          .zero, // Remove padding inside the ElevatedButton
+                                                                          .zero,
                                                                 ),
-                                                                child: const SizedBox
-                                                                    .shrink(), // Remove text and shrink the ElevatedButton
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${index + 1}',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            MediaQuery.of(context).size.width *
+                                                                                0.01,
+                                                                        color: AppColors
+                                                                            .mainColor),
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                               ),
                                             ),
                                           );

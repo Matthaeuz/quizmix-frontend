@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-// import 'package:quizmix_frontend/models/question_details.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_question_bank/question_bank_list.dart';
