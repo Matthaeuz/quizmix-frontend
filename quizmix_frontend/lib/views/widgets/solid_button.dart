@@ -3,10 +3,11 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 
 class SolidButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? width;
   final Widget? icon;
   final Color? backgroundColor;
+  final bool? isUnpressable;
 
   const SolidButton({
     super.key,
@@ -15,15 +16,23 @@ class SolidButton extends StatelessWidget {
     this.width,
     this.icon,
     this.backgroundColor,
+    this.isUnpressable,
   });
 
   @override
   Widget build(BuildContext context) {
+    Color? buttonColor = backgroundColor;
+    if (isUnpressable == true) {
+      buttonColor = AppColors.grey;
+    } else {
+      buttonColor = AppColors.mainColor;
+    }
+
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isUnpressable == true ? null : onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
-        backgroundColor: backgroundColor ?? AppColors.mainColor,
+        backgroundColor: buttonColor,
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
