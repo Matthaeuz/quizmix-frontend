@@ -6,10 +6,10 @@ import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.da
 import 'package:quizmix_frontend/views/screens/reviewer/view_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 
-class ReviewerDashboardWidget extends StatelessWidget {
+class RevieweeDashboardWidget extends StatelessWidget {
   final String selectedOption;
 
-  const ReviewerDashboardWidget({Key? key, required this.selectedOption})
+  const RevieweeDashboardWidget({Key? key, required this.selectedOption})
       : super(key: key);
 
   @override
@@ -28,95 +28,53 @@ class ReviewerDashboardWidget extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
                 Container(
-                  color: selectedOption == 'Dashboard'
+                  color: selectedOption == 'My Quizzes'
                       ? AppColors.mainColor
                       : null,
                   child: ListTile(
                     leading: Icon(
-                      Icons.dashboard,
+                      Icons.assignment,
                       color:
-                          selectedOption == 'Dashboard' ? Colors.white : null,
+                          selectedOption == 'My Quizzes' ? Colors.white : null,
                     ),
                     title: Text(
-                      'Dashboard',
+                      'My Quizzes',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color:
-                            selectedOption == 'Dashboard' ? Colors.white : null,
+                        color: selectedOption == 'My Quizzes'
+                            ? Colors.white
+                            : null,
                       ),
                     ),
                     onTap: () {
-                      if (selectedOption != 'Dashboard') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DashboardScreen(),
-                          ),
-                        );
+                      if (selectedOption != 'My Quizzes') {
+                        // Add your logic for handling the onTap action
                       }
                     },
                   ),
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  color: selectedOption == 'Reviewees'
-                      ? AppColors.mainColor
-                      : null,
+                  color:
+                      selectedOption == 'My Mixes' ? AppColors.mainColor : null,
                   child: ListTile(
                     leading: Icon(
-                      Icons.person,
-                      color:
-                          selectedOption == 'Reviewees' ? Colors.white : null,
+                      Icons.shuffle,
+                      color: selectedOption == 'My Mixes' ? Colors.white : null,
                     ),
                     title: Text(
-                      'Reviewees',
+                      'My Mixes',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color:
-                            selectedOption == 'Reviewees' ? Colors.white : null,
+                            selectedOption == 'My Mixes' ? Colors.white : null,
                       ),
                     ),
                     onTap: () {
-                      if (selectedOption != 'Reviewees') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RevieweesListScreen(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  color: selectedOption == 'Quizzes'
-                      ? AppColors.mainColor
-                      : null,
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.quiz,
-                      color: selectedOption == 'Quizzes' ? Colors.white : null,
-                    ),
-                    title: Text(
-                      'Quizzes',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color:
-                            selectedOption == 'Quizzes' ? Colors.white : null,
-                      ),
-                    ),
-                    onTap: () {
-                      if (selectedOption != 'Quizzes') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ViewProfileScreen(),
-                          ),
-                        );
+                      if (selectedOption != 'My Mixes') {
+                        // Add your logic for handling the onTap action
                       }
                     },
                   ),
@@ -145,12 +103,7 @@ class ReviewerDashboardWidget extends StatelessWidget {
                     ),
                     onTap: () {
                       if (selectedOption != 'Question Bank') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ViewQuestionBankScreen(),
-                          ),
-                        );
+                        // Add your logic for handling the onTap action
                       }
                     },
                   ),

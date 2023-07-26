@@ -41,4 +41,5 @@ class AppColors {
   static const Color fourthColor = Color(0xFF90E0EF);
   static const Color fifthColor = Color(0xFFCAF0F8);
   static const Color lightBackgroundColor = Color(0xFFF5F5F5);
+  static const Color black = Color(0xFF333333);
 }
