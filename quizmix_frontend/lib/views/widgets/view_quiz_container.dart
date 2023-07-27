@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -16,13 +15,9 @@ class ViewQuizContainer extends ConsumerWidget {
     final baseUrl = ref.watch(baseUrlProvider);
     final question = ref.watch(currentViewedQuizQuestionProvider);
 
-    debugPrint('${question == Question.base()}');
-    debugPrint('JSON: ${question!.toJson()}');
-    debugPrint('QUESTION: ${Question.base}');
-
     return Expanded(
         flex: 5,
-        child: question.question.isNotEmpty
+        child: question!.question.isNotEmpty
             ? LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
                   return Container(
@@ -59,7 +54,7 @@ class ViewQuizContainer extends ConsumerWidget {
                                               ),
                                               decoration: BoxDecoration(
                                                 color: getCategoryColor(
-                                                    question!.category),
+                                                    question.category),
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
