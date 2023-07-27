@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/view_quiz_container.dart';
@@ -137,7 +139,8 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                         itemBuilder: (context, index) {
                                           final question = questions[index];
                                           final int questionNumber = index + 1;
-                                          final image = baseUrl + question.image!;
+                                          final image =
+                                              baseUrl + question.image!;
                                           return Column(
                                             children: [
                                               LayoutBuilder(
@@ -146,47 +149,60 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                   // Store the height of the current item
                                                   listViewItemHeights[index] =
                                                       constraints.maxHeight;
-                                                  return Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color:
-                                                            AppColors.mainColor,
-                                                        width: 1.0,
-                                                      ),
-                                                      color: Colors.white,
-                                                    ),
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Question $questionNumber',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 16),
+                                                  return InkWell(
+                                                      onTap: () {
+                                                        ref
+                                                            .read(
+                                                                currentViewedQuizQuestionProvider
+                                                                    .notifier)
+                                                            .updateCurrentViewedQuestion(
+                                                                question);
+                                                      },
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .mainColor,
+                                                            width: 1.0,
+                                                          ),
+                                                          color: Colors.white,
                                                         ),
-                                                        const SizedBox(
-                                                            height: 8.0),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                              color: AppColors
-                                                                  .thirdColor,
-                                                              width: 1.0,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Question $questionNumber',
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          16),
                                                             ),
-                                                          ),
-                                                          child: Image.network(
-                                                            image,
-                                                          ),
+                                                            const SizedBox(
+                                                                height: 8.0),
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  color: AppColors
+                                                                      .thirdColor,
+                                                                  width: 1.0,
+                                                                ),
+                                                              ),
+                                                              child:
+                                                                  Image.network(
+                                                                image,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  );
+                                                      ));
                                                 },
                                               ),
                                               const SizedBox(
@@ -240,8 +256,6 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                               totalHeights[i] +=
                                                   imageHeights[i - 1]
                                                       .toDouble();
-                                              print('imageHeights[${i - 1}]');
-                                              print(imageHeights[i - 1]);
                                             }
                                           }
 
@@ -295,8 +309,6 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                               child:
                                                                   ElevatedButton(
                                                                 onPressed: () {
-                                                                  print(
-                                                                      "Question ${index + 1} = ${totalHeights[index]}");
                                                                   _scrollController
                                                                       .animateTo(
                                                                     totalHeights[
@@ -363,6 +375,10 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                             color: Colors.black,
                           ),
                           onPressed: () {
+                            ref
+                                .read(
+                                    currentViewedQuizQuestionProvider.notifier)
+                                .updateCurrentViewedQuestion(Question.base());
                             Navigator.pop(context);
                           },
                         ),
@@ -379,7 +395,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
             flex: 1,
             child: Container(
               color: AppColors.fifthColor,
-              child: const ViewQuizContainer(),
+              child: const ViewQuizContainer(index: 2),
             ),
           ),
         ],
