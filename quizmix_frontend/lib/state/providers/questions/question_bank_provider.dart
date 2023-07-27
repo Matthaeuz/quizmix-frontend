@@ -21,7 +21,6 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
     try {
       var questions = await client.getQuestions(accessToken);
       state = AsyncValue.data(questions);
-      print(questions.length);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
