@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class MyQuizItem extends ConsumerWidget {
@@ -63,7 +65,10 @@ class MyQuizItem extends ConsumerWidget {
           const SizedBox(width: 12),
           SolidButton(
             onPressed: () {
-              // Handle Review Attempts button press
+              ref.read(currentTakenQuizProvider.notifier).updateCurrentQuiz(quiz);
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AnswerQuizScreen()));
             },
             text: 'Answer',
             width: 150,

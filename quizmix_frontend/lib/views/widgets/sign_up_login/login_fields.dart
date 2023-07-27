@@ -103,7 +103,7 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MyQuizzesScreen()))
+                                      builder: (context) => const MyQuizzesScreen()))
                             }
                         });
                   },

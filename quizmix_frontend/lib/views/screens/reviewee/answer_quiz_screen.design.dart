@@ -1,67 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-class AnswerQuizScreen extends ConsumerStatefulWidget {
-  AnswerQuizScreen({Key? key}) : super(key: key);
+class AnswerQuizScreen extends StatefulWidget {
+  final List<Map<String, dynamic>>? questionsData;
+  final int? currentQuestionIndex;
+
+  AnswerQuizScreen({
+    this.questionsData,
+    this.currentQuestionIndex,
+  });
 
   @override
   _AnswerQuizScreenState createState() => _AnswerQuizScreenState();
 }
 
-class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
+class _AnswerQuizScreenState extends State<AnswerQuizScreen> {
   int currentQuestionIndex = 0;
   bool allQuestionsAnswered = false;
+  
 
-  void handleChoicePressed(String choice) {
+  final List<Map<String, dynamic>> questionsData = [
+    {
+      'question':
+          'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
+      'image': 'lib/assets/images/questions/q1.jpg',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
+    },
+    {
+      'question':
+          'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
+      'image': 'lib/assets/images/questions/q2.jpg',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
+    },
+    {
+      'question':
+          'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
+      'image': 'lib/assets/images/questions/q3.jpg',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
+    },
+    {
+      'question':
+          'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
+      'image': 'lib/assets/images/questions/q4.jpg',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
+    },
+    {
+      'question':
+          'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
+      'image': 'lib/assets/images/questions/q5.jpg',
+      'choices': [
+        'a) 31/32',
+        'b) 31/125',
+        'c) 31/512',
+        'd) 73/512',
+      ],
+    },
+  ];
+
+  void handleChoicePressed() {
     setState(() {
-      if (currentQuestionIndex >=
-          ref.read(currentTakenQuizProvider).questions.length - 1) {
+      if (currentQuestionIndex >= questionsData.length - 1) {
+        print("Already at the last question");
         allQuestionsAnswered = true;
-        // Check if the last answer is correct
-        if (ref
-                .read(currentTakenQuizProvider)
-                .questions[currentQuestionIndex]
-                .answer ==
-            choice) {
-          ref
-              .read(currentTakenQuizProvider.notifier)
-              .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
-        }
-        // Display total score
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Quiz Completed!'),
-              content: Text(
-                  'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}'),
-              actions: <Widget>[
-                SolidButton(
-                  text: 'OK',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        // Modify here Rowny so that it will navigate to the next screen for integration
+        Navigator.pop(context);
         return;
       } else {
-        // Check if the current answer is correct
-        if (ref
-                .read(currentTakenQuizProvider)
-                .questions[currentQuestionIndex]
-                .answer ==
-            choice) {
-          ref
-              .read(currentTakenQuizProvider.notifier)
-              .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
-        }
         currentQuestionIndex++;
       }
     });
@@ -69,8 +95,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentQuiz = ref.watch(currentTakenQuizProvider);
-    final currentQuestion = currentQuiz.questions[currentQuestionIndex];
+    Map<String, dynamic> currentQuestion = questionsData[currentQuestionIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -109,16 +134,16 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnswerQuizItem(
-                            question: currentQuestion.question,
-                            image: currentQuestion.image!,
-                            choices: currentQuestion.choices,
+                            question: currentQuestion['question'],
+                            image: currentQuestion['image'],
+                            choices: currentQuestion['choices'],
                             allQuestionsAnswered: allQuestionsAnswered),
                         const SizedBox(height: 25),
                         Row(
                           children: [
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('a'),
+                                onPressed: handleChoicePressed,
                                 isUnpressable: allQuestionsAnswered,
                                 text: 'Choice A',
                               ),
@@ -126,7 +151,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('b'),
+                                onPressed: handleChoicePressed,
                                 isUnpressable: allQuestionsAnswered,
                                 text: 'Choice B',
                               ),
@@ -134,7 +159,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('c'),
+                                onPressed: handleChoicePressed,
                                 isUnpressable: allQuestionsAnswered,
                                 text: 'Choice C',
                               ),
@@ -142,7 +167,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('d'),
+                                onPressed: handleChoicePressed,
                                 isUnpressable: allQuestionsAnswered,
                                 text: 'Choice D',
                               ),
@@ -177,7 +202,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                               crossAxisSpacing: 12.0,
                               mainAxisSpacing: 12.0,
                             ),
-                            itemCount: currentQuiz.questions.length,
+                            itemCount: questionsData.length,
                             itemBuilder: (context, index) {
                               return SizedBox(
                                 height: gridWidth,
@@ -234,17 +259,17 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                 ],
               ),
             ),
-            // Expanded(
-            //   flex: 1,
-            //   child: Align(
-            //     alignment: Alignment.bottomRight,
-            //     child: SolidButton(
-            //       onPressed: () {},
-            //       text: 'Submit',
-            //       width: 150,
-            //     ),
-            //   ),
-            // )
+            Expanded(
+              flex: 1,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: SolidButton(
+                  onPressed: () {},
+                  text: 'Submit',
+                  width: 150,
+                ),
+              ),
+            )
           ],
         ),
       ),

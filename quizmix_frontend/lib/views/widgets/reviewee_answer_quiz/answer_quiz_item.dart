@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 
-class AnswerQuizItem extends StatelessWidget {
+class AnswerQuizItem extends ConsumerWidget {
   final String question;
   final String image;
   final List<String> choices;
@@ -15,7 +17,9 @@ class AnswerQuizItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.watch(baseUrlProvider);
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -46,11 +50,11 @@ class AnswerQuizItem extends StatelessWidget {
                   ),
                   Container(
                     constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.5,
+                      maxHeight: MediaQuery.of(context).size.height * 0.1,
                     ),
                     child: SingleChildScrollView(
                       child: Image.network(
-                        image,
+                        baseUrl + image,
                       ),
                     ),
                   ),
