@@ -53,7 +53,7 @@ class MyQuizzesList extends ConsumerWidget {
                   return const AddCard();
                 } else {
                   final quiz = quizzesData[index - 1];
-                  return QuizDetailCard(title: quiz.title, image: quiz.image);
+                  return QuizDetailCard(quiz: quiz);
                 }
               },
             ),

@@ -5,10 +5,7 @@ class AuthTokenNotifier extends StateNotifier<AuthToken> {
   AuthTokenNotifier(AuthToken token) : super(token);
 
   void updateToken(AuthToken authDetails) {
-    state = AuthToken(
-      access: authDetails.access,
-      refresh: authDetails.refresh,
-    );
+    state = authDetails;
   }
 }
 

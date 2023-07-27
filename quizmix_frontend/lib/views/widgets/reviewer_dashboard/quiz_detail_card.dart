@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
 
-class QuizDetailCard extends StatelessWidget {
-  final String title;
-  final String? image;
+class QuizDetailCard extends ConsumerWidget {
+  final Quiz quiz;
 
-  const QuizDetailCard({super.key, required this.title, required this.image});
+  const QuizDetailCard({super.key, required this.quiz});
 
   @override
-  Widget build(BuildContext context) {
-    final String firstLetter = title[0];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final String firstLetter = quiz.title[0];
 
     return GestureDetector(
       onTap: () {
-        // Handle box onPress
+        ref.read(currentQuizViewedProvider.notifier).updateCurrentQuiz(quiz);
+
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ViewQuizScreen()));
       },
       child: Container(
         width: 200,
@@ -28,7 +34,7 @@ class QuizDetailCard extends StatelessWidget {
               Expanded(
                 child: Align(
                   alignment: Alignment.center,
-                  child: image == null
+                  child: quiz.image == null
                       ? Text(
                           firstLetter.toUpperCase(),
                           style: const TextStyle(
@@ -38,7 +44,7 @@ class QuizDetailCard extends StatelessWidget {
                           ),
                         )
                       : Image.network(
-                          image!,
+                          quiz.image!,
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
@@ -50,7 +56,7 @@ class QuizDetailCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    title,
+                    quiz.title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 20,

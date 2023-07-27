@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos_data.dart';
-import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
-import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -74,8 +73,7 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final client = ref.watch(restClientProvider);
-    final token = ref.watch(authTokenProvider).accessToken;
+    final notifier = ref.read(reviewerQuizzesProvider.notifier);
     final reviewerId = ref.watch(reviewerProvider).id;
 
     return Stack(
@@ -254,16 +252,15 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                 text: "Save",
                                 onPressed: () {
                                   final TOS tos = TOS(
-                                    madeBy: reviewerId, // replace this with the correct value
+                                    madeBy: reviewerId,
                                     title: quizName,
                                     categories: categories,
                                     quantities: categories.map((category) => categoryDataMap[category]?.numberOfQuestions ?? 0).toList(),
                                     difficulties: categories.map((category) => categoryDataMap[category]?.difficulty ?? 0).toList(),
                                   );
-
-                                  debugPrint('${tos.toJson()}');
-
-                                  client.createQuizFromTOS(token, tos).then((value) => {
+                                  
+                                  // let our notifier know that a change in the api has occured
+                                  notifier.addQuiz(tos).then((value) => {
                                     Navigator.pop(context)
                                   });
                                 },
