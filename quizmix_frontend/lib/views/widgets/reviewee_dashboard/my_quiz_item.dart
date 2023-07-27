@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-class MyQuizItem extends StatelessWidget {
-  final String title;
+class MyQuizItem extends ConsumerWidget {
+  final Quiz quiz;
 
-  MyQuizItem({required this.title});
+  const MyQuizItem({super.key, required this.quiz});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final firstLetter = quiz.title[0];
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -28,8 +32,8 @@ class MyQuizItem extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                title.isNotEmpty ? title[0] : '',
-                style: TextStyle(
+                firstLetter,
+                style: const TextStyle(
                   color: AppColors.black,
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -40,7 +44,7 @@ class MyQuizItem extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              title,
+              quiz.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(

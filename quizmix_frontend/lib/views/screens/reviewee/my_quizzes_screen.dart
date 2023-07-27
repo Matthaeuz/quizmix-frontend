@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/reviewee_quizzes_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/my_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/reviewee_dashboard.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 
-class MyQuizzesScreen extends ConsumerWidget {
-  MyQuizzesScreen({Key? key}) : super(key: key);
-
-  final List<String> titles = [
-    'Algorithms and Programming',
-    'Data Structures',
-    'Object-Oriented Programming',
-    'Algorithms and Programming',
-    'Data Structures',
-    'Object-Oriented Programming',
-    'Algorithms and Programming',
-    'Data Structures',
-    'Object-Oriented Programming',
-    'Algorithms and Programming',
-    'Data Structures',
-    'Object-Oriented Programming',
-  ];
+class MyQuizzesScreen extends ConsumerStatefulWidget {
+  const MyQuizzesScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _MyQuizzesScreenState createState() => _MyQuizzesScreenState();
+}
+
+class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final quizzes = ref.watch(revieweeQuizzesProvider);
+
     return Scaffold(
       body: Row(
         children: [
@@ -49,14 +42,25 @@ class MyQuizzesScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: titles.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            MyQuizItem(title: titles[index]),
-                            const SizedBox(height: 25),
-                          ],
+                    child: Consumer(
+                      builder: (context, watch, child) {
+                        return quizzes.when(
+                          data: (data) {
+                            return ListView.builder(
+                              itemCount: data.length,
+                              itemBuilder: (context, index) {
+                                final quiz = data[index];
+                                return Column(
+                                  children: [
+                                    MyQuizItem(quiz: quiz),
+                                    const SizedBox(height: 25),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          loading: () => const CircularProgressIndicator(),
+                          error: (err, stack) => Text('Error: $err'),
                         );
                       },
                     ),
