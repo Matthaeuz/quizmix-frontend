@@ -15,6 +15,7 @@ class ReviewerQuizzesList extends ConsumerWidget {
     return Expanded(
       child: quizzes.when(
         data: (quizzes) => ListView.builder(
+          reverse: true,
           itemCount: quizzes.length,
           itemBuilder: (context, index) {
             final quiz = quizzes[index];
