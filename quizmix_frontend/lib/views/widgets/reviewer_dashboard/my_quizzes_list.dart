@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
@@ -13,6 +14,7 @@ class MyQuizzesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final quizzes = ref.watch(reviewerQuizzesProvider);
+    final ScrollController controller = ScrollController();
 
     return Column(
       children: [
@@ -45,17 +47,23 @@ class MyQuizzesList extends ConsumerWidget {
         quizzes.when(
           data: (quizzesData) => SizedBox(
             height: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: quizzesData.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return const AddCard();
-                } else {
-                  final quiz = quizzesData[index - 1];
-                  return QuizDetailCard(quiz: quiz);
-                }
-              },
+            child: ScrollConfiguration(
+              behavior: MyCustomScrollBehavior(), // Apply custom scroll behavior
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(), // Disable vertical scrolling
+                scrollDirection: Axis.horizontal,
+                itemCount: quizzesData.length + 1,
+                separatorBuilder: (context, index) => const SizedBox(width: 25),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return const AddCard();
+                  } else {
+                    final quiz = quizzesData[index - 1];
+                    return QuizDetailCard(quiz: quiz);
+                  }
+                },
+              ),
             ),
           ),
           loading: () => const CircularProgressIndicator(),
@@ -64,4 +72,14 @@ class MyQuizzesList extends ConsumerWidget {
       ],
     );
   }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
