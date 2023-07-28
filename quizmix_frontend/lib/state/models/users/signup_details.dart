@@ -19,7 +19,7 @@ class SignUpDetails {
   final String firstName;
   
   @JsonKey(name: 'middle_name')
-  late final String? middleName;
+  String? middleName;
   
   @JsonKey(name: 'last_name')
   final String lastName;

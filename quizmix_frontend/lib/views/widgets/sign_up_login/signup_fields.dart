@@ -92,6 +92,8 @@ class _SignUpFieldsState extends ConsumerState<SignUpFields> {
                       details.middleName = middleNameController.text;
                     }
 
+                    debugPrint('${details.toJson()}');
+
                     signUp(details, ref).then((value) => {
                           Navigator.push(
                               context,
