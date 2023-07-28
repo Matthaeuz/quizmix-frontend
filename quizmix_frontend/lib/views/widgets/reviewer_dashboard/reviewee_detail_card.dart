@@ -17,7 +17,6 @@ class RevieweeDetailCard extends StatelessWidget {
         width: 200,
         height: 200,
         color: Colors.white,
-        margin: const EdgeInsets.only(right: 25),
         padding: const EdgeInsets.all(10),
         child: Padding(
           padding: const EdgeInsets.all(15),
