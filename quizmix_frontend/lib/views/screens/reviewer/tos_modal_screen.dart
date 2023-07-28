@@ -176,9 +176,30 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                 categories.isEmpty ? 1 : categories.length,
                             itemBuilder: (context, index) {
                               if (categories.isEmpty) {
-                                return const Center(
-                                  child: Text("No Categories Added"),
-                                );
+                                return const Expanded(
+                                    child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.category,
+                                        size: 64,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 16),
+                                      Text(
+                                        "No Categories Added",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ));
                               } else {
                                 String category = categories[index];
                                 return Row(
@@ -255,14 +276,23 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                     madeBy: reviewerId,
                                     title: quizName,
                                     categories: categories,
-                                    quantities: categories.map((category) => categoryDataMap[category]?.numberOfQuestions ?? 0).toList(),
-                                    difficulties: categories.map((category) => categoryDataMap[category]?.difficulty ?? 0).toList(),
+                                    quantities: categories
+                                        .map((category) =>
+                                            categoryDataMap[category]
+                                                ?.numberOfQuestions ??
+                                            0)
+                                        .toList(),
+                                    difficulties: categories
+                                        .map((category) =>
+                                            categoryDataMap[category]
+                                                ?.difficulty ??
+                                            0)
+                                        .toList(),
                                   );
-                                  
+
                                   // let our notifier know that a change in the api has occured
-                                  notifier.addQuiz(tos).then((value) => {
-                                    Navigator.pop(context)
-                                  });
+                                  notifier.addQuiz(tos).then(
+                                      (value) => {Navigator.pop(context)});
                                 },
                               ),
                             ),
