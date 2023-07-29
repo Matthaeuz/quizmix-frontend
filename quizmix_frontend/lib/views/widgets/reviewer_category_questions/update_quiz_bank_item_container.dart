@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/edit_question_screen.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
 class UpdateQuizBankItemContainer extends StatelessWidget {
@@ -57,7 +58,11 @@ class UpdateQuizBankItemContainer extends StatelessWidget {
                 text: 'Edit',
                 buttonColor: AppColors.mainColor,
                 onPressed: () {
-                  // Handle edit button press
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditQuestionScreen(
+                              category: questionDetails.category)));
                 },
                 icon: Icons.edit,
               ),

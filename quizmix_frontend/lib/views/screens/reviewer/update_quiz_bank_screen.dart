@@ -111,13 +111,13 @@ class UpdateQuizBankScreen extends ConsumerWidget {
                                     builder: (context) =>
                                         UpdateQuizBankDetailsScreen(
                                           categoryColor:
-                                              getCategoryColor(index),
+                                              getCategoryColor(categories[index]),
                                           title: categories[index],
                                         )));
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: getCategoryColor(index),
+                            backgroundColor: getCategoryColor(categories[index]),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -134,43 +134,6 @@ class UpdateQuizBankScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Color getCategoryColor(int index) {
-    switch (index) {
-      case 0:
-        return const Color(0xFF9854B2);
-      case 1:
-        return const Color(0xFFCF4321);
-      case 2:
-        return const Color(0xFFC92D5C);
-      case 3:
-        return const Color(0xFF0D2916);
-      case 4:
-        return const Color(0xFF3371E4);
-      case 5:
-        return const Color(0xFF75A768);
-      case 6:
-        return const Color(0xFF8768A7);
-      case 7:
-        return const Color(0xFF223160);
-      case 8:
-        return const Color(0xFF678026);
-      case 9:
-        return const Color(0xFF282680);
-      default:
-        return getRandomColor();
-    }
-  }
-
-  Color getRandomColor() {
-    final random = Random();
-    return Color.fromRGBO(
-      random.nextInt(256),
-      random.nextInt(256),
-      random.nextInt(256),
-      1,
     );
   }
 }
