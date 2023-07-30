@@ -48,10 +48,11 @@ class MyQuizzesList extends ConsumerWidget {
           data: (quizzesData) => SizedBox(
             height: 200,
             child: ScrollConfiguration(
-              behavior: MyCustomScrollBehavior(), // Apply custom scroll behavior
+              behavior:
+                  MyCustomScrollBehavior(), // Apply custom scroll behavior
               child: ListView.separated(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(), // Disable vertical scrolling
+                physics:
+                    const ClampingScrollPhysics(), // Disable vertical scrolling
                 scrollDirection: Axis.horizontal,
                 itemCount: quizzesData.length + 1,
                 separatorBuilder: (context, index) => const SizedBox(width: 25),
