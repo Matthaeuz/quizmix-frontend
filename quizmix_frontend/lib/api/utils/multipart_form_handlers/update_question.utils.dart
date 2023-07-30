@@ -5,7 +5,9 @@ import 'package:quizmix_frontend/api/helpers/platform_to_multipart_file.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/dio_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/questions/category_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/current_edited_question_provider.dart';
+import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
 
 Future<Question> updateQuestion(Question question, PlatformFile? imageFile, WidgetRef ref) async {
   final dio = ref.watch(dioProvider);
@@ -38,7 +40,8 @@ Future<Question> updateQuestion(Question question, PlatformFile? imageFile, Widg
       
       // Update the provider
       ref.read(currentEditedQuestionProvider.notifier).updateCurrentEditedQuestion(updatedQuestion);
-      
+      ref.read(questionBankProvider.notifier).fetchQuestions();
+      ref.read(categoryQuestionsProvider(question.category).notifier).fetchQuestionsByCategory();
       print('${updatedQuestion.id} has been updated.');
 
       return updatedQuestion;
