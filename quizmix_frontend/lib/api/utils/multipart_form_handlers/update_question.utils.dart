@@ -25,9 +25,11 @@ Future<Question> updateQuestion(Question question, PlatformFile? imageFile, Widg
       "image": image,
     });
     dataToSend = formData;
+  } else {
+    dataToSend.remove('image');
   }
-
-  try {
+  
+ try {
     var response = await dio.put("http://127.0.0.1:8000/questions/${question.id}/", data: dataToSend);
 
     if(response.statusCode == 200) {

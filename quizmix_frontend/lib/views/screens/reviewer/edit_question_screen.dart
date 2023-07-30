@@ -44,6 +44,12 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
   @override
   void initState() {
     super.initState();
+    questionController.text = ref.read(currentEditedQuestionProvider)!.question;
+    explanationController.text = ref.read(currentEditedQuestionProvider)!.solution ?? '';
+    choiceAController.text = ref.read(currentEditedQuestionProvider)!.choices[0];
+    choiceBController.text = ref.read(currentEditedQuestionProvider)!.choices[1];
+    choiceCController.text = ref.read(currentEditedQuestionProvider)!.choices[2];
+    choiceDController.text = ref.read(currentEditedQuestionProvider)!.choices[3];
     _selectedAnswer = ref.read(currentEditedQuestionProvider)!.answer;
     dropdownValue = ref.read(currentEditedQuestionProvider)!.category;
   }
@@ -65,12 +71,6 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     final question = ref.watch(currentEditedQuestionProvider)!;
-    questionController.text = question.question;
-    explanationController.text = question.solution ?? '';
-    choiceAController.text = question.choices[0];
-    choiceBController.text = question.choices[1];
-    choiceCController.text = question.choices[2];
-    choiceDController.text = question.choices[3];
 
     return Scaffold(
       appBar: AppBar(
