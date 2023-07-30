@@ -108,22 +108,27 @@ class UploadedQuestionItemContainer extends StatelessWidget {
                   'Choices: ',
                   style: TextStyle(fontSize: 20),
                 ),
-                Row(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Text(questionDetails.choices[0],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
-                      width: 12,
+                      height: 12,
                     ),
                     Text(questionDetails.choices[1],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
-                      width: 12,
+                      height: 12,
                     ),
                     Text(questionDetails.choices[2],
                         style: const TextStyle(fontSize: 16)),
                     const SizedBox(
-                      width: 12,
+                      height: 12,
                     ),
                     Text(questionDetails.choices[3],
                         style: const TextStyle(fontSize: 16)),
