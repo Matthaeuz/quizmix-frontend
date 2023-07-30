@@ -1,48 +1,35 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
+import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_question.utils.dart';
 import 'package:quizmix_frontend/constants/categories.constants.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/providers/questions/current_edited_question_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:file_picker/file_picker.dart';
 
-class EditQuestionScreen extends StatefulWidget {
-  final String category;
-
+class EditQuestionScreen extends ConsumerStatefulWidget {
   const EditQuestionScreen({
     Key? key,
-    required this.category,
   }) : super(key: key);
 
   @override
   _EditQuestionScreenState createState() => _EditQuestionScreenState();
 }
 
-class _EditQuestionScreenState extends State<EditQuestionScreen> {
-  String _selectedAnswer = 'A';
+class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
+  late String _selectedAnswer;
   late String dropdownValue;
   Uint8List? selectedImageBytes;
 
-  final TextEditingController questionController = TextEditingController(
-    text:
-        'Which of the following is the correct decimal fraction equal to hexadecimal fraction 0.248?',
-  );
-  final TextEditingController explanationController = TextEditingController(
-    text: 'No Explanation',
-  );
-  final TextEditingController choiceAController = TextEditingController(
-    text: '31/32',
-  );
-  final TextEditingController choiceBController = TextEditingController(
-    text: '31/125',
-  );
-  final TextEditingController choiceCController = TextEditingController(
-    text: '31/512',
-  );
-  final TextEditingController choiceDController = TextEditingController(
-    text: '73/512',
-  );
+  final TextEditingController questionController = TextEditingController();
+  final TextEditingController explanationController = TextEditingController();
+  final TextEditingController choiceAController = TextEditingController();
+  final TextEditingController choiceBController = TextEditingController();
+  final TextEditingController choiceCController = TextEditingController();
+  final TextEditingController choiceDController = TextEditingController();
 
   @override
   void dispose() {
@@ -57,7 +44,14 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
   @override
   void initState() {
     super.initState();
-    dropdownValue = widget.category;
+    questionController.text = ref.read(currentEditedQuestionProvider)!.question;
+    explanationController.text = ref.read(currentEditedQuestionProvider)!.solution ?? '';
+    choiceAController.text = ref.read(currentEditedQuestionProvider)!.choices[0];
+    choiceBController.text = ref.read(currentEditedQuestionProvider)!.choices[1];
+    choiceCController.text = ref.read(currentEditedQuestionProvider)!.choices[2];
+    choiceDController.text = ref.read(currentEditedQuestionProvider)!.choices[3];
+    _selectedAnswer = ref.read(currentEditedQuestionProvider)!.answer;
+    dropdownValue = ref.read(currentEditedQuestionProvider)!.category;
   }
 
   void _selectImage() async {
@@ -69,13 +63,15 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
     if (result != null) {
       PlatformFile file = result.files.first;
       setState(() {
-        selectedImageBytes = file.bytes;
+        selectedImageBytes = file.bytes; // Store the bytes for later use
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final question = ref.watch(currentEditedQuestionProvider)!;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -187,17 +183,19 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                           height: 300,
                           color:
                               Colors.grey[300], // Placeholder background color
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.image,
-                                  size: 50,
-                                  color: Colors.grey), // Placeholder icon
-                              SizedBox(height: 10),
-                              Text('No Image Selected',
-                                  style: TextStyle(color: Colors.grey)),
-                            ],
-                          ),
+                          child: question.image == null
+                              ? const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.image,
+                                        size: 50,
+                                        color: Colors.grey), // Placeholder icon
+                                    SizedBox(height: 10),
+                                    Text('No Image Selected',
+                                        style: TextStyle(color: Colors.grey)),
+                                  ],
+                                )
+                              : Image.network(question.image!),
                         ),
                 ),
               ),
@@ -257,7 +255,7 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                         _selectedAnswer = newValue!;
                       });
                     },
-                    items: ['A', 'B', 'C', 'D']
+                    items: ['a', 'b', 'c', 'd']
                         .map<DropdownMenuItem<String>>((value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -292,7 +290,35 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                     child: SolidButton(
                       text: 'Save Changes',
                       onPressed: () {
-                        // Save Changes logic here
+                        PlatformFile? imageFile;
+                        final newChoices = [
+                          choiceAController.text,
+                          choiceBController.text,
+                          choiceCController.text,
+                          choiceDController.text,
+                        ];
+                        final newQuestion = Question(
+                            id: question.id,
+                            question: questionController.text,
+                            image: question.image,
+                            answer: _selectedAnswer,
+                            choices: newChoices,
+                            category: dropdownValue,
+                            solution: explanationController.text,
+                            // Add reset funcationality later!
+                            parameters: question.parameters,
+                            responses: question.responses,
+                            thetas: question.thetas);
+                        if (selectedImageBytes != null) {
+                          imageFile = bytesToPlatform(selectedImageBytes!);
+                        }
+                        updateQuestion(newQuestion, imageFile, ref)
+                            .then((value) {
+                          ref
+                              .read(currentEditedQuestionProvider.notifier)
+                              .updateCurrentEditedQuestion(Question.base());
+                          Navigator.pop(context);
+                        });
                       },
                     ),
                   ),

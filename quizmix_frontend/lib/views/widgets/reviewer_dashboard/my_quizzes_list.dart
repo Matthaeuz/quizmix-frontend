@@ -14,7 +14,7 @@ class MyQuizzesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final quizzes = ref.watch(reviewerQuizzesProvider);
-    final ScrollController controller = ScrollController();
+    // final ScrollController controller = ScrollController();
 
     return Column(
       children: [
