@@ -9,7 +9,8 @@ import 'package:quizmix_frontend/state/providers/questions/category_questions_pr
 import 'package:quizmix_frontend/state/providers/questions/current_edited_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
 
-Future<Question> updateQuestion(Question question, PlatformFile? imageFile, WidgetRef ref) async {
+Future<Question> updateQuestion(
+    Question question, PlatformFile? imageFile, WidgetRef ref) async {
   final dio = ref.watch(dioProvider);
   final token = ref.watch(authTokenProvider).accessToken;
 
@@ -30,19 +31,24 @@ Future<Question> updateQuestion(Question question, PlatformFile? imageFile, Widg
   } else {
     dataToSend.remove('image');
   }
-  
- try {
-    var response = await dio.put("http://127.0.0.1:8000/questions/${question.id}/", data: dataToSend);
 
-    if(response.statusCode == 200) {
+  try {
+    var response = await dio.put(
+        "http://127.0.0.1:8000/questions/${question.id}/",
+        data: dataToSend);
+
+    if (response.statusCode == 200) {
       // If successful, convert the response body into a question
       Question updatedQuestion = Question.fromJson(response.data);
-      
+
       // Update the provider
-      ref.read(currentEditedQuestionProvider.notifier).updateCurrentEditedQuestion(updatedQuestion);
+      ref
+          .read(currentEditedQuestionProvider.notifier)
+          .updateCurrentEditedQuestion(updatedQuestion);
       ref.read(questionBankProvider.notifier).fetchQuestions();
-      ref.read(categoryQuestionsProvider(question.category).notifier).fetchQuestionsByCategory();
-      print('${updatedQuestion.id} has been updated.');
+      ref
+          .read(categoryQuestionsProvider(question.category).notifier)
+          .fetchQuestionsByCategory();
 
       return updatedQuestion;
     } else {
