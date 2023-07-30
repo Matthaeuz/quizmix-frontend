@@ -235,9 +235,7 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                     Expanded(
                                       flex: 2,
                                       child: buildCategoryFormField(
-                                        initialValue: categoryDataMap[category]
-                                            ?.difficulty
-                                            .toString(),
+                                        initialValue: categoryDataMap[category]?.difficulty.toString() ?? '0',
                                         onChanged: (value) {
                                           updateCategoryData(
                                             category: category,

@@ -35,18 +35,15 @@ class ViewQuizContainer extends ConsumerWidget {
                                     padding: EdgeInsets.zero,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Question $index',
                                           style: const TextStyle(fontSize: 32),
                                         ),
-                                        const SizedBox(width: 15),
-                                        Align(
-                                          // Wrap the Flexible with Align
-                                          alignment: Alignment.centerLeft,
-                                          child: Flexible(
-                                            child: Container(
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                 vertical: 12,
@@ -58,18 +55,20 @@ class ViewQuizContainer extends ConsumerWidget {
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
-                                              child: Text(
-                                                question.category,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  question.category,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ),
+                                              )),
                                         ),
-                                        const Spacer(),
+                                        const SizedBox(width: 25),
                                         SolidButton(
                                           text: 'Remove',
                                           onPressed: () {
