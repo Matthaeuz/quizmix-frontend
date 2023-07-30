@@ -166,6 +166,14 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )),
+                            IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.white,
+                              ),
+                              onPressed: null,
+                              color: Colors.white,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -177,29 +185,31 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                             itemBuilder: (context, index) {
                               if (categories.isEmpty) {
                                 return const Expanded(
-                                    child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.category,
-                                        size: 64,
-                                        color: Colors.grey,
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        "No Categories Added",
-                                        style: TextStyle(
-                                          fontSize: 18,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          size: 64,
                                           color: Colors.grey,
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "No Categories Added",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ));
+                                );
                               } else {
                                 String category = categories[index];
                                 return Row(
@@ -235,7 +245,10 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                     Expanded(
                                       flex: 2,
                                       child: buildCategoryFormField(
-                                        initialValue: categoryDataMap[category]?.difficulty.toString() ?? '0',
+                                        initialValue: categoryDataMap[category]
+                                                ?.difficulty
+                                                .toString() ??
+                                            '0',
                                         onChanged: (value) {
                                           updateCategoryData(
                                             category: category,
@@ -244,6 +257,14 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                           );
                                         },
                                       ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.clear),
+                                      onPressed: () {
+                                        setState(() {
+                                          categories.removeAt(index);
+                                        });
+                                      },
                                     ),
                                   ],
                                 );
