@@ -66,8 +66,7 @@ class UpdateQuizBankItemContainer extends ConsumerWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              EditQuestionScreen()));
+                          builder: (context) => EditQuestionScreen()));
                 },
                 icon: Icons.edit,
               ),
@@ -122,25 +121,53 @@ class UpdateQuizBankItemContainer extends ConsumerWidget {
                   'Choices: ',
                   style: TextStyle(fontSize: 20),
                 ),
-                Row(
+                Column(
                   children: [
-                    Text(questionDetails.choices[0],
-                        style: const TextStyle(fontSize: 16)),
+                    Row(
+                      children: [
+                        const Text("A) "),
+                        Expanded(
+                          child: Text(questionDetails.choices[0],
+                              style: const TextStyle(fontSize: 16)),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices[1],
-                        style: const TextStyle(fontSize: 16)),
+                    Row(
+                      children: [
+                        const Text("B) "),
+                        Expanded(
+                          child: Text(questionDetails.choices[1],
+                              style: const TextStyle(fontSize: 16)),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices[2],
-                        style: const TextStyle(fontSize: 16)),
+                    Row(
+                      children: [
+                        const Text("C) "),
+                        Expanded(
+                          child: Text(questionDetails.choices[2],
+                              style: const TextStyle(fontSize: 16)),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       width: 12,
                     ),
-                    Text(questionDetails.choices[3],
-                        style: const TextStyle(fontSize: 16)),
+                    Row(
+                      children: [
+                        const Text("D) "),
+                        Expanded(
+                          child: Text(questionDetails.choices[3],
+                              style: const TextStyle(fontSize: 16)),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(
