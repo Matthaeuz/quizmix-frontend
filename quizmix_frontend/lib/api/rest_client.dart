@@ -107,13 +107,20 @@ abstract class RestClient {
   );
 
   /// QUIZ API
-  
+
   @POST("/quizzes/create_quiz/")
-  Future<Quiz> createQuizFromTOS(@Header("Authorization") String token, @Body() TOS tos);
+  Future<Quiz> createQuizFromTOS(
+      @Header("Authorization") String token, @Body() TOS tos);
 
   @GET("/quizzes/?made_by={madeBy}")
   Future<List<Quiz>> getMadeByQuizzes(
     @Header("Authorization") String token,
     @Path("madeBy") int madeBy,
+  );
+
+  @POST("/quizzes/process_response/")
+  Future<double> updateScoresAndParams(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> resp,
   );
 }

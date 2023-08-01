@@ -10,7 +10,7 @@ import 'package:quizmix_frontend/state/providers/users/user_details_provider.dar
 /// Used to sign in. Provide [AuthDetails] with a valid email and password.
 Future<String> signIn(AuthDetails details, WidgetRef ref) async {
   // Define rest client
-  final client = ref.watch(restClientProvider); 
+  final client = ref.watch(restClientProvider);
 
   try {
     // Get a token if user credentials are valid and save it
@@ -25,10 +25,11 @@ Future<String> signIn(AuthDetails details, WidgetRef ref) async {
 
     // Check user type and save details appropriately
     if (userType == 'reviewee') {
-      final reviewee = await client.getRevieweeByUserId(token.accessToken, user[0].id);
-      ref.read(revieweeProvider.notifier).updateReviewee(reviewee[0]);
+      // await client.getRevieweeByUserId(token.accessToken, user[0].id);
+      ref.read(revieweeProvider.notifier).fetchReviewee(user[0].id);
     } else {
-      final reviewer = await client.getReviewerByUserId(token.accessToken, user[0].id);
+      final reviewer =
+          await client.getReviewerByUserId(token.accessToken, user[0].id);
       ref.read(reviewerProvider.notifier).updateReviewee(reviewer[0]);
     }
 

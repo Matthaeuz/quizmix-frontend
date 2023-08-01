@@ -33,11 +33,19 @@ class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
   }
 }
 
-
-final revieweeQuizzesProvider = StateNotifierProvider<RevieweeQuizzesNotifier, AsyncValue<List<Quiz>>>((ref) {
+final revieweeQuizzesProvider =
+    StateNotifierProvider<RevieweeQuizzesNotifier, AsyncValue<List<Quiz>>>(
+        (ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
-  final madeBy = ref.watch(revieweeProvider).belongsTo?.id ?? 0;
+  final madeBy = ref.watch(revieweeProvider).when(
+        data: (data) {
+          return data.belongsTo?.id;
+        },
+        error: (err, st) {},
+        loading: () {},
+      );
 
-  return RevieweeQuizzesNotifier(client: client, accessToken: token.accessToken, madeBy: madeBy);
+  return RevieweeQuizzesNotifier(
+      client: client, accessToken: token.accessToken, madeBy: madeBy ?? 0);
 });
