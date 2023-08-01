@@ -67,7 +67,7 @@ abstract class RestClient {
     @Path("belongsTo") int belongsTo,
   );
 
-  @GET("/reviewees/?belongs_to=")
+  @GET("/reviewees/?belongs_to_is_null=true")
   Future<List<Reviewee>> getUnassignedReviewees(
     @Header("Authorization") String token,
   );
