@@ -19,6 +19,7 @@ class AnswerQuizItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
+    final choiceLetters = ['A.', 'B.', 'C.', 'D.'];
 
     return allQuestionsAnswered == true
         ? Container(
@@ -88,7 +89,7 @@ class AnswerQuizItem extends ConsumerWidget {
                         itemCount: choices.length,
                         itemBuilder: (context, index) {
                           return Text(
-                            choices[index],
+                            '${choiceLetters[index]} ${choices[index]}',
                             style: const TextStyle(
                               fontSize: 16,
                             ),
