@@ -43,6 +43,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                 SolidButton(
                   text: 'OK',
                   onPressed: () {
+                    ref.read(currentTakenQuizProvider.notifier).updateScore(0);
                     Navigator.pop(context);
                   },
                 ),
