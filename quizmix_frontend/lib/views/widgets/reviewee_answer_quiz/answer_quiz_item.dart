@@ -33,7 +33,7 @@ class AnswerQuizItem extends ConsumerWidget {
             child: const Padding(
               padding: EdgeInsets.all(25),
               child: Text(
-                'All questions are answered, please press the submit button',
+                'You have completed this quiz.',
                 style: TextStyle(fontSize: 16),
               ),
             ),
