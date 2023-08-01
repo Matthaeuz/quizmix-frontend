@@ -109,10 +109,14 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnswerQuizItem(
-                            question: currentQuestion.question,
-                            image: currentQuestion.image!,
-                            choices: currentQuestion.choices,
-                            allQuestionsAnswered: allQuestionsAnswered),
+                          question: currentQuestion.question,
+                          image: currentQuestion.image!,
+                          choices: currentQuestion.choices,
+                          allQuestionsAnswered: allQuestionsAnswered,
+                        ),
+                        allQuestionsAnswered == true
+                            ? const Spacer()
+                            : const SizedBox(),
                         const SizedBox(height: 25),
                         Row(
                           children: [

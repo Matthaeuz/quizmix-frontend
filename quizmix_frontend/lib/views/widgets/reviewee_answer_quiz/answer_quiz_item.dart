@@ -20,86 +20,86 @@ class AnswerQuizItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.mainColor,
-          width: 1,
-        ),
-        color: Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            Visibility(
-              visible: !(allQuestionsAnswered == true),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      question,
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.1,
-                    ),
-                    child: SingleChildScrollView(
-                      child: Image.network(
-                        baseUrl + image,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Choices',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: choices.length,
-                    itemBuilder: (context, index) {
-                      return Text(
-                        choices[index],
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+    return allQuestionsAnswered == true
+        ? Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: AppColors.mainColor,
+                width: 1,
               ),
+              color: Colors.white,
             ),
-            Visibility(
-              visible: allQuestionsAnswered == true,
-              child: const Text(
+            child: const Padding(
+              padding: EdgeInsets.all(25),
+              child: Text(
                 'All questions are answered, please press the submit button',
                 style: TextStyle(fontSize: 16),
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          )
+        : Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.mainColor,
+                  width: 1,
+                ),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(25),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          question,
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Image.network(
+                        baseUrl + image,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      const Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Choices',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: choices.length,
+                        itemBuilder: (context, index) {
+                          return Text(
+                            choices[index],
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }
