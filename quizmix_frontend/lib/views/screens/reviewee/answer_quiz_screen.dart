@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
@@ -16,21 +17,51 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
   int currentQuestionIndex = 0;
   bool allQuestionsAnswered = false;
 
+  void itemAnalysisAndScoring(
+    WidgetRef ref,
+    int revieweeId,
+    bool isCurrentAnswerCorrect,
+  ) {
+    final Map<String, int> resp = {
+      "reviewee": revieweeId,
+      "question":
+          ref.read(currentTakenQuizProvider).questions[currentQuestionIndex].id,
+      "response": isCurrentAnswerCorrect ? 1 : 0,
+    };
+
+    // let our notifier know that a change in the api has occured
+    final notifier = ref.read(revieweeProvider.notifier);
+    notifier.updateReviewee(ref, resp);
+  }
+
   void handleChoicePressed(String choice) {
     setState(() {
       if (currentQuestionIndex >=
           ref.read(currentTakenQuizProvider).questions.length - 1) {
         allQuestionsAnswered = true;
+
         // Check if the last answer is correct
-        if (ref
+        bool isCurrentAnswerCorrect = ref
                 .read(currentTakenQuizProvider)
                 .questions[currentQuestionIndex]
                 .answer ==
-            choice) {
+            choice;
+        final revieweeId = ref.read(revieweeProvider).when(
+              data: (data) {
+                return data.id;
+              },
+              error: (err, st) {},
+              loading: () {},
+            );
+
+        if (isCurrentAnswerCorrect) {
           ref
               .read(currentTakenQuizProvider.notifier)
               .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
         }
+
+        itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
+
         // Display total score
         showDialog(
           context: context,
@@ -43,6 +74,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                 SolidButton(
                   text: 'OK',
                   onPressed: () {
+                    ref.read(currentTakenQuizProvider.notifier).updateScore(0);
                     Navigator.pop(context);
                   },
                 ),
@@ -53,15 +85,28 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
         return;
       } else {
         // Check if the current answer is correct
-        if (ref
+        bool isCurrentAnswerCorrect = ref
                 .read(currentTakenQuizProvider)
                 .questions[currentQuestionIndex]
                 .answer ==
-            choice) {
+            choice;
+        final revieweeId = ref.read(revieweeProvider).when(
+              data: (data) {
+                return data.id;
+              },
+              error: (err, st) {},
+              loading: () {},
+            );
+
+        if (isCurrentAnswerCorrect) {
           ref
               .read(currentTakenQuizProvider.notifier)
               .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
         }
+
+        itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
+
+        // proceed to next question
         currentQuestionIndex++;
       }
     });
@@ -109,10 +154,14 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnswerQuizItem(
-                            question: currentQuestion.question,
-                            image: currentQuestion.image!,
-                            choices: currentQuestion.choices,
-                            allQuestionsAnswered: allQuestionsAnswered),
+                          question: currentQuestion.question,
+                          image: currentQuestion.image!,
+                          choices: currentQuestion.choices,
+                          allQuestionsAnswered: allQuestionsAnswered,
+                        ),
+                        allQuestionsAnswered == true
+                            ? const Spacer()
+                            : const SizedBox(),
                         const SizedBox(height: 25),
                         Row(
                           children: [
