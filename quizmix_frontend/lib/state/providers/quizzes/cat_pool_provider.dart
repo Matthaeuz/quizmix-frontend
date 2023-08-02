@@ -19,6 +19,10 @@ class CATPoolNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
     getPool();
   }
 
+  void resetPool() {
+    hasDataLoaded = false;
+  }
+
   Future<void> getPool() async {
     if (!hasDataLoaded) {
       try {
