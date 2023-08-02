@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
@@ -34,7 +38,21 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     notifier.updateReviewee(ref, resp);
   }
 
-  void handleChoicePressed(String choice) {
+  void handleChoicePressed(String choice) async {
+    final questionDetails = QuestionDetails(
+        attempt: ref.read(currentQuizAttemptedProvider).id,
+        question: ref
+            .read(currentTakenQuizProvider)
+            .questions[currentQuestionIndex]
+            .id,
+        revieweeAnswer: choice,
+        difficultyScore: 0);
+
+    final client = ref.read(restClientProvider);
+    final token = ref.read(authTokenProvider).accessToken;
+
+    await client.createQuestionAttempt(token, questionDetails);
+
     setState(() {
       if (currentQuestionIndex >=
           ref.read(currentTakenQuizProvider).questions.length - 1) {
@@ -59,7 +77,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
               .read(currentTakenQuizProvider.notifier)
               .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
         }
-
+        
         itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
 
         // Display total score
