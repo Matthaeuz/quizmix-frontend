@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/views/screens/login_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

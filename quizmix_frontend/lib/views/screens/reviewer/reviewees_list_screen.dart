@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class RevieweesListScreen extends ConsumerWidget {
   const RevieweesListScreen({Key? key}) : super(key: key);
@@ -30,10 +32,28 @@ class RevieweesListScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SearchInput(
-                      onChanged: (value) {
-                        // Handle search input changes
-                      },
+                    Row(
+                      children: [
+                        // Search Input - On the very left
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: SearchInput(
+                              onChanged: (value) {
+                                // Handle search input changes
+                              },
+                            ),
+                          ),
+                        ),
+                        // Add Reviewee Button - On the very right
+                        SolidButton(
+                          text: 'Add Reviewee',
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const AddRevieweeScreen()));
+                          },
+                          icon: const Icon(Icons.person_add),
+                        ),
+                      ],
                     ),
                     // List
                     Flexible(
