@@ -1,6 +1,9 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
@@ -68,7 +71,7 @@ abstract class RestClient {
     @Path("belongsTo") int belongsTo,
   );
 
-  @GET("/reviewees/?belongs_to=")
+  @GET("/reviewees/?belongs_to_is_null=true")
   Future<List<Reviewee>> getUnassignedReviewees(
     @Header("Authorization") String token,
   );
@@ -146,4 +149,20 @@ abstract class RestClient {
     @Header("Authorization") String token,
     @Body() Map<String, int> quiz,
   );
+
+  /// QUIZ ATTEMPT API
+
+  @POST("/quiz_attempts/")
+  Future<QuizAttempt> createQuizAttempt(
+      @Header("Authorization") String token, @Body() Map<String, int> details);
+
+  @PATCH("/quiz_attempts/{id}/")
+  Future<QuizAttempt> updateQuizAttempt(@Header("Authorization") String token,
+      @Body() Map<String, dynamic> updatedDetails, @Path("id") int id);
+
+  /// QUESTION ATTEMPT API
+
+  @POST("/question_attempts/")
+  Future<QuestionAttempt> createQuestionAttempt(
+      @Header("Authorization") String token, @Body() QuestionDetails details);
 }

@@ -5,6 +5,11 @@ import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/cat_pool_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/adaptive_quiz_screen.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
@@ -16,6 +21,13 @@ class MyQuizItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final firstLetter = quiz.title[0];
+    final revieweeId = ref.read(revieweeProvider).when(
+          data: (data) => data.id,
+          error: (err, st) {},
+          loading: () {},
+        );
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -67,24 +79,23 @@ class MyQuizItem extends ConsumerWidget {
           const SizedBox(width: 12),
           SolidButton(
             onPressed: () {
-              ref
-                  .read(currentTakenQuizProvider.notifier)
-                  .updateCurrentQuiz(quiz);
+              Map<String, int> details = {
+                "attempted_by": revieweeId!,
+                "quiz": quiz.id,
+              };
 
-              // check if QuizAttempt exists for the reviewer
-              // ignore: dead_code
-              if (!true) {
+              client.createQuizAttempt(token, details).then((value) {
+                ref
+                    .read(currentTakenQuizProvider.notifier)
+                    .updateCurrentQuiz(quiz);
+                ref
+                    .read(currentQuizAttemptedProvider.notifier)
+                    .updateCurrentQuizAttempted(value);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => AnswerQuizScreen()));
-              } else {
-                ref.read(catPoolProvider.notifier).resetPool();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AdaptiveQuizScreen()));
-              }
+              });
             },
             text: 'Answer',
             width: 150,

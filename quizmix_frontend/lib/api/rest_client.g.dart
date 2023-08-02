@@ -338,7 +338,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              '/reviewees/?belongs_to=',
+              '/reviewees/?belongs_to_is_null=true',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -700,6 +700,103 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = _result.data!.cast<String, int>();
+    return value;
+  }
+
+  @override
+  Future<QuizAttempt> createQuizAttempt(
+    String token,
+    Map<String, int> details,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(details);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<QuizAttempt>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/quiz_attempts/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = QuizAttempt.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<QuizAttempt> updateQuizAttempt(
+    String token,
+    Map<String, dynamic> updatedDetails,
+    int id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(updatedDetails);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<QuizAttempt>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/quiz_attempts/${id}/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = QuizAttempt.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<QuestionAttempt> createQuestionAttempt(
+    String token,
+    QuestionDetails details,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(details.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<QuestionAttempt>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/question_attempts/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = QuestionAttempt.fromJson(_result.data!);
     return value;
   }
 
