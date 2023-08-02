@@ -106,6 +106,10 @@ abstract class RestClient {
     @Query("category") String category,
   );
 
+  @GET("/questions/{id}/")
+  Future<Question> getQuestionById(
+      @Header("Authorization") String token, @Path("id") int id);
+
   /// QUIZ API
 
   @POST("/quizzes/create_quiz/")
@@ -122,5 +126,17 @@ abstract class RestClient {
   Future<double> updateScoresAndParams(
     @Header("Authorization") String token,
     @Body() Map<String, int> resp,
+  );
+
+  @POST("/quizzes/select_item/")
+  Future<int> selectItem(
+    @Header("Authorization") String token,
+    @Body() Map<String, dynamic> pool,
+  );
+
+  @POST("/quizzes/get_specs/")
+  Future<Map<String, int>> getQuizSpecs(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> quiz,
   );
 }

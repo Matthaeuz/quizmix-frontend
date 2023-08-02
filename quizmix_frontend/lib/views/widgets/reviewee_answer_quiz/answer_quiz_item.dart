@@ -65,7 +65,7 @@ class AnswerQuizItem extends ConsumerWidget {
                         height: 25,
                       ),
                       Image.network(
-                        baseUrl + image,
+                        image.contains(baseUrl) ? image : baseUrl + image,
                       ),
                       const SizedBox(
                         height: 25,
