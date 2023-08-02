@@ -4,6 +4,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/reviewees/top_scores.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
@@ -70,6 +71,12 @@ abstract class RestClient {
   @GET("/reviewees/?belongs_to=")
   Future<List<Reviewee>> getUnassignedReviewees(
     @Header("Authorization") String token,
+  );
+
+  @POST("/reviewees/get_top_scores/")
+  Future<TopScores> getRevieweeTopScores(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> reviewee,
   );
 
   /// REVIEWER API
