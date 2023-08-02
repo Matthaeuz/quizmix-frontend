@@ -59,7 +59,13 @@ class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
                               },
                             );
                           },
-                          loading: () => const CircularProgressIndicator(),
+                          loading: () => const Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                           error: (err, stack) => Text('Error: $err'),
                         );
                       },
