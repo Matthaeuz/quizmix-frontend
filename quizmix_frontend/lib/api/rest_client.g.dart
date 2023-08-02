@@ -704,6 +704,40 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<List<QuizAttempt>> getRevieweeAttemptsByQuiz(
+    String token,
+    int revieweeId,
+    int quizId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<QuizAttempt>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/quiz_attempts/?attempted_by=${revieweeId}&quiz=${quizId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => QuizAttempt.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<QuizAttempt> createQuizAttempt(
     String token,
     Map<String, int> details,

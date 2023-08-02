@@ -8,7 +8,6 @@ import 'package:quizmix_frontend/views/screens/reviewee/adaptive_quiz_screen.dar
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -78,24 +77,35 @@ class MyQuizItem extends ConsumerWidget {
           ),
           const SizedBox(width: 12),
           SolidButton(
-            onPressed: () {
-              Map<String, int> details = {
-                "attempted_by": revieweeId!,
-                "quiz": quiz.id,
-              };
+            onPressed: () async {
+              final hasAttempts = await client.getRevieweeAttemptsByQuiz(token, revieweeId!, quiz.id);
 
-              client.createQuizAttempt(token, details).then((value) {
-                ref
-                    .read(currentTakenQuizProvider.notifier)
-                    .updateCurrentQuiz(quiz);
-                ref
-                    .read(currentQuizAttemptedProvider.notifier)
-                    .updateCurrentQuizAttempted(value);
-                Navigator.push(
+              if (hasAttempts.isEmpty) {
+                Map<String, int> details = {
+                  "attempted_by": revieweeId,
+                  "quiz": quiz.id,
+                };
+
+                client.createQuizAttempt(token, details).then((value) {
+                  ref
+                      .read(currentTakenQuizProvider.notifier)
+                      .updateCurrentQuiz(quiz);
+                  ref
+                      .read(currentQuizAttemptedProvider.notifier)
+                      .updateCurrentQuizAttempted(value);
+
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => AnswerQuizScreen()));
-              });
+                });
+              } else {
+                ref.read(catPoolProvider.notifier).resetPool();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AdaptiveQuizScreen()));
+              }
             },
             text: 'Answer',
             width: 150,
