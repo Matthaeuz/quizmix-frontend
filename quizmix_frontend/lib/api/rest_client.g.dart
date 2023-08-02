@@ -612,7 +612,7 @@ class _RestClient implements RestClient {
   @override
   Future<QuizAttempt> updateQuizAttempt(
     String token,
-    QuizAttempt newQuizAttempt,
+    Map<String, dynamic> updatedDetails,
     int id,
   ) async {
     const _extra = <String, dynamic>{};
@@ -620,7 +620,7 @@ class _RestClient implements RestClient {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(newQuizAttempt.toJson());
+    _data.addAll(updatedDetails);
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<QuizAttempt>(Options(
       method: 'PATCH',
@@ -629,7 +629,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              '/quiz_attempts/${id}',
+              '/quiz_attempts/${id}/',
               queryParameters: queryParameters,
               data: _data,
             )

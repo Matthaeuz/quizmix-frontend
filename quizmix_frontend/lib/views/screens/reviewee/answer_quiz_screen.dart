@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
+import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
@@ -36,6 +37,16 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     // let our notifier know that a change in the api has occured
     final notifier = ref.read(revieweeProvider.notifier);
     notifier.updateReviewee(ref, resp);
+  }
+
+  void endQuiz() async {
+    final client = ref.read(restClientProvider);
+    final token = ref.read(authTokenProvider).accessToken;
+
+    Map<String, dynamic> timeFinished = {
+      "time_finished": DateTime.now().toIso8601String()
+    };  
+    await client.updateQuizAttempt(token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
   }
 
   void handleChoicePressed(String choice) async {
@@ -100,6 +111,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             );
           },
         );
+        endQuiz();
         return;
       } else {
         // Check if the current answer is correct
@@ -145,6 +157,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             color: Colors.black,
           ),
           onPressed: () {
+            endQuiz();
             Navigator.pop(context);
           },
         ),

@@ -133,9 +133,9 @@ abstract class RestClient {
   Future<QuizAttempt> createQuizAttempt(
       @Header("Authorization") String token, @Body() Map<String, int> details);
 
-  @PATCH("/quiz_attempts/{id}")
+  @PATCH("/quiz_attempts/{id}/")
   Future<QuizAttempt> updateQuizAttempt(
-    @Header("Authorization") String token, @Body() QuizAttempt newQuizAttempt, @Path("id") int id
+    @Header("Authorization") String token, @Body() Map<String, dynamic> updatedDetails, @Path("id") int id
   );
 
   /// QUESTION ATTEMPT API

@@ -6,13 +6,13 @@ part 'quiz_attempt.g.dart';
 
 @JsonSerializable()
 class QuizAttempt {
-  const QuizAttempt({
+  QuizAttempt({
     required this.id,
     required this.attemptedBy,
     required this.quiz,
     required this.createdOn,
     required this.timeStarted,
-    required this.timeFinished,
+    this.timeFinished,
   });
 
   @JsonKey(name: 'id')
@@ -31,7 +31,7 @@ class QuizAttempt {
   final DateTime timeStarted;
 
   @JsonKey(name: 'time_finished')
-  final DateTime? timeFinished;
+  DateTime? timeFinished;
   
   /// Base quiz creation; call this if you need to reference an empty quiz.
   QuizAttempt.base()
