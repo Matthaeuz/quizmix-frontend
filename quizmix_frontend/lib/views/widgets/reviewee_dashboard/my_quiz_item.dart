@@ -94,9 +94,9 @@ class MyQuizItem extends ConsumerWidget {
                       .updateCurrentQuizAttempted(value);
 
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AnswerQuizScreen()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AnswerQuizScreen()));
                 });
               } else {
                 ref.read(catPoolProvider.notifier).resetPool();

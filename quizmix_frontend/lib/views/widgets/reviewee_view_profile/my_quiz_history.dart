@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
-
-//sample quizzes, delete on integration
-final quizzes = [
-  ["MyQuiz1", "80/80"],
-  ["MyQuiz2", "80/80"],
-  ["MyQuiz3", "80/80"],
-];
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_history_scores_provider.dart';
 
 class MyQuizHistory extends ConsumerWidget {
   const MyQuizHistory({
@@ -22,8 +15,7 @@ class MyQuizHistory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ignore: unused_local_variable
-    final revieweeDetails = ref.watch(revieweeProvider).when(
+    final attempts = ref.watch(revieweeHistoryScoresProvider).when(
           data: (data) {
             return data;
           },
@@ -53,57 +45,72 @@ class MyQuizHistory extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child:
-                            Text('Quiz Name', style: TextStyle(fontSize: 16)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Score', style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: quizzes.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                              child: Text(quizzes[index][0],
-                                  style: const TextStyle(fontSize: 14)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                  child: attempts != null && attempts.isNotEmpty
+                      ? const Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text('Quiz Name',
+                                  style: TextStyle(fontSize: 16)),
                             ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                              child: Text(quizzes[index][1],
-                                  style: const TextStyle(fontSize: 14)),
+                            Expanded(
+                              flex: 1,
+                              child:
+                                  Text('Score', style: TextStyle(fontSize: 16)),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        )
+                      : const Align(
+                          alignment: Alignment.topCenter,
+                          child: Text('You have no quiz attempts yet.',
+                              style: TextStyle(fontSize: 16)),
+                        ),
                 ),
+                attempts != null && attempts.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: attempts.length <= 6 ? attempts.length : 6,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                    child: Text(
+                                      attempts[index].quizName,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                                    child: Text(
+                                      '${attempts[index].score}/${attempts[index].numQuestions}',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : const SizedBox(),
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomRight,

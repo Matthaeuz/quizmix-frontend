@@ -1,27 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
-import 'package:quizmix_frontend/state/models/reviewees/top_scores.dart';
+import 'package:quizmix_frontend/state/models/reviewees/attempt_score.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 
-class RevieweeTopScoresNotifier extends StateNotifier<AsyncValue<TopScores>> {
+class RevieweeHistoryScoresNotifier
+    extends StateNotifier<AsyncValue<List<AttemptScore>>> {
   final RestClient client;
   final String accessToken;
   final int revieweeId;
 
-  RevieweeTopScoresNotifier({
+  RevieweeHistoryScoresNotifier({
     required this.client,
     required this.accessToken,
     required this.revieweeId,
   }) : super(const AsyncValue.loading()) {
-    fetchRevieweeTopScores();
+    fetchRevieweeHistoryScores();
   }
 
-  Future<void> fetchRevieweeTopScores() async {
+  Future<void> fetchRevieweeHistoryScores() async {
     try {
       var topScores = await client
-          .getRevieweeTopScores(accessToken, {"reviewee": revieweeId});
+          .getRevieweeHistoryScores(accessToken, {"reviewee": revieweeId});
       state = AsyncValue.data(topScores);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -29,9 +30,8 @@ class RevieweeTopScoresNotifier extends StateNotifier<AsyncValue<TopScores>> {
   }
 }
 
-final revieweeTopScoresProvider =
-    StateNotifierProvider<RevieweeTopScoresNotifier, AsyncValue<TopScores>>(
-        (ref) {
+final revieweeHistoryScoresProvider = StateNotifierProvider<
+    RevieweeHistoryScoresNotifier, AsyncValue<List<AttemptScore>>>((ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
   final revieweeId = ref.read(revieweeProvider).when(
@@ -42,7 +42,7 @@ final revieweeTopScoresProvider =
         loading: () {},
       );
 
-  return RevieweeTopScoresNotifier(
+  return RevieweeHistoryScoresNotifier(
     client: client,
     accessToken: token.accessToken,
     revieweeId: revieweeId!,
