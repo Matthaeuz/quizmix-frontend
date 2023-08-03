@@ -45,23 +45,30 @@ class MyQuizHistory extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child:
-                            Text('Quiz Name', style: TextStyle(fontSize: 16)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Score', style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                  child: attempts != null && attempts.isNotEmpty
+                      ? const Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text('Quiz Name',
+                                  style: TextStyle(fontSize: 16)),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child:
+                                  Text('Score', style: TextStyle(fontSize: 16)),
+                            ),
+                          ],
+                        )
+                      : const Align(
+                          alignment: Alignment.topCenter,
+                          child: Text('You have no quiz attempts yet.',
+                              style: TextStyle(fontSize: 16)),
+                        ),
                 ),
-                attempts != null
+                attempts != null && attempts.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
