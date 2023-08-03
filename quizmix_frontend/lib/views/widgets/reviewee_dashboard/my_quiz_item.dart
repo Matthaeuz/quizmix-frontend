@@ -79,7 +79,9 @@ class MyQuizItem extends ConsumerWidget {
           SolidButton(
             onPressed: () async {
               final hasAttempts = await client.getRevieweeAttemptsByQuiz(token, revieweeId!, quiz.id);
-
+              ref
+                      .read(currentTakenQuizProvider.notifier)
+                      .updateCurrentQuiz(quiz);
               if (hasAttempts.isEmpty) {
                 Map<String, int> details = {
                   "attempted_by": revieweeId,
@@ -87,9 +89,6 @@ class MyQuizItem extends ConsumerWidget {
                 };
 
                 client.createQuizAttempt(token, details).then((value) {
-                  ref
-                      .read(currentTakenQuizProvider.notifier)
-                      .updateCurrentQuiz(quiz);
                   ref
                       .read(currentQuizAttemptedProvider.notifier)
                       .updateCurrentQuizAttempted(value);
