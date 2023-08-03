@@ -33,30 +33,28 @@ class ViewQuizStatisticsContainer extends ConsumerWidget {
                                   style: TextStyle(fontSize: 32),
                                 ),
                                 const SizedBox(width: 15),
-                                Align(
-                                  // Wrap the Flexible with Align
-                                  alignment: Alignment.centerLeft,
-                                  child: Flexible(
-                                    child: Container(
+                                Expanded(
+                                  child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12,
                                         horizontal: 12,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: getCategoryColor(
-                                            'Algorithms and Programming'),
+                                        color:
+                                            getCategoryColor('Algorithms and Programming'),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: const Text(
-                                        'Algorithms and Programming',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
+                                      child: const Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Algorithms and Programming',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
+                                      )),
                                 ),
                               ],
                             ),

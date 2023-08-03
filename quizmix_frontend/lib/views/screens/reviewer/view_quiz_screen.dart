@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_statistics_screen.design.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/view_quiz_container.dart';
 import 'dart:async';
@@ -104,7 +105,13 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                               children: [
                                 SolidButton(
                                   text: 'View Statistics',
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ViewQuizStatisticsScreen()));
+                                  },
                                   icon: const Icon(Icons.bar_chart),
                                 ),
                                 const SizedBox(width: 25),
