@@ -41,18 +41,22 @@ class CATSpecsNotifier extends StateNotifier<AsyncValue<Map<String, int>>> {
   }
 
   Future<void> getSpecs() async {
-    if (!hasDataLoaded) {
-      try {
-        var specs = await client.getQuizSpecs(accessToken, {"quiz": quizId});
-        state = AsyncValue.data(specs);
-        print('firstspecs: $specs');
-        hasDataLoaded = true;
-        await updateSpecs();
-      } catch (e, st) {
-        state = AsyncValue.error(e, st);
-      }
+  if (!hasDataLoaded) {
+    try {
+      var specs = await client.getQuizSpecs(accessToken, {"quiz": quizId});
+      state = AsyncValue.data(specs);
+      print('firstspecs: $specs');
+      hasDataLoaded = true;
+
+      // get pool firsts before loading specs
+      await ref.read(catPoolProvider.notifier).getPool();
+
+      await updateSpecs(); // move this after the pool is populated
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
     }
   }
+}
 
   Future<void> updateSpecs() async {
     try {

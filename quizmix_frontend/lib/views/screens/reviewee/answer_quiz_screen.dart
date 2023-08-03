@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
-import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
+// import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
