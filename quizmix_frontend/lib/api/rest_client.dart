@@ -6,6 +6,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
+import 'package:quizmix_frontend/state/models/reviewees/attempt_score.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/state/models/reviewees/top_scores.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
@@ -78,6 +79,12 @@ abstract class RestClient {
 
   @POST("/reviewees/get_top_scores/")
   Future<TopScores> getRevieweeTopScores(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> reviewee,
+  );
+
+  @POST("/reviewees/get_quiz_history_scores/")
+  Future<List<AttemptScore>> getRevieweeHistoryScores(
     @Header("Authorization") String token,
     @Body() Map<String, int> reviewee,
   );

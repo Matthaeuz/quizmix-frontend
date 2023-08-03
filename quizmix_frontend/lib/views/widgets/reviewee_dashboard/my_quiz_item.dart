@@ -78,7 +78,8 @@ class MyQuizItem extends ConsumerWidget {
           const SizedBox(width: 12),
           SolidButton(
             onPressed: () async {
-              final hasAttempts = await client.getRevieweeAttemptsByQuiz(token, revieweeId!, quiz.id);
+              final hasAttempts = await client.getRevieweeAttemptsByQuiz(
+                  token, revieweeId!, quiz.id);
 
               if (hasAttempts.isEmpty) {
                 Map<String, int> details = {
@@ -95,9 +96,9 @@ class MyQuizItem extends ConsumerWidget {
                       .updateCurrentQuizAttempted(value);
 
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AnswerQuizScreen()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AnswerQuizScreen()));
                 });
               } else {
                 ref.read(catPoolProvider.notifier).resetPool();
