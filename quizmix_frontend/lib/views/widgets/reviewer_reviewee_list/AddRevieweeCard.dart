@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 
 class AddRevieweeCard extends StatelessWidget {

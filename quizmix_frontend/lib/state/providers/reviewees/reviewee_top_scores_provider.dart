@@ -15,10 +15,10 @@ class RevieweeTopScoresNotifier extends StateNotifier<AsyncValue<TopScores>> {
     required this.accessToken,
     required this.revieweeId,
   }) : super(const AsyncValue.loading()) {
-    fetchRevieweeTopScores(revieweeId);
+    fetchRevieweeTopScores();
   }
 
-  Future<void> fetchRevieweeTopScores(int revieweeId) async {
+  Future<void> fetchRevieweeTopScores() async {
     try {
       var topScores = await client
           .getRevieweeTopScores(accessToken, {"reviewee": revieweeId});

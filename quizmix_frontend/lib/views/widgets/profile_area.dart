@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_top_scores_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_reviewee_profile_screen.dart';
 
@@ -13,10 +14,12 @@ class ProfileArea extends ConsumerWidget {
     return InkWell(
       onTap: () {
         if (details.userType == "reviewee") {
+          final notifier = ref.read(revieweeTopScoresProvider.notifier);
+          notifier.fetchRevieweeTopScores();
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ViewRevieweeProfileScreen()));
+                  builder: (context) => const ViewRevieweeProfileScreen()));
         }
       },
       child: Container(
