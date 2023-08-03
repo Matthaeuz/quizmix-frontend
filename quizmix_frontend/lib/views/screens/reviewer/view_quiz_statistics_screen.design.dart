@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
-import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_statistics_screen.design.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-import 'package:quizmix_frontend/views/widgets/view_quiz_container.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_quiz_statistics/view_quiz_statistics_container.design.dart';
 import 'dart:async';
 
-class ViewQuizScreen extends ConsumerStatefulWidget {
-  const ViewQuizScreen({Key? key}) : super(key: key);
+class ViewQuizStatisticsScreen extends StatefulWidget {
+  const ViewQuizStatisticsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ViewQuizScreen> createState() => _ViewQuizScreenState();
+  State<ViewQuizStatisticsScreen> createState() => _ViewQuizScreenState();
 }
 
-class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
+class _ViewQuizScreenState extends State<ViewQuizStatisticsScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  Future<List<int>> getImageHeights(List<String> imagePaths) async {
+  Future<List<int>> getImageHeights() async {
+    List<String> imagePaths = [
+      'lib/assets/images/questions/q1.jpg',
+      'lib/assets/images/questions/q2.jpg',
+      'lib/assets/images/questions/q3.jpg',
+      'lib/assets/images/questions/q4.jpg',
+      'lib/assets/images/questions/q5.jpg',
+    ];
+
     List<int> imageHeights = [];
 
     // Use Future.wait to wait for all the image loading operations to complete
@@ -33,32 +34,22 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
             .resolve(const ImageConfiguration())
             .addListener(ImageStreamListener((info, call) {
           int height = info.image.height;
-          completer
-              .complete(height); // Complete the Future when the image is loaded
+          completer.complete(height);
         }));
 
-        return completer
-            .future; // Return the Future for this image loading operation
+        return completer.future;
       }),
     ).then((heights) {
-      imageHeights =
-          heights.cast<int>(); // Cast the list of dynamic to List<int>
+      imageHeights = heights.cast<int>();
     });
 
     return imageHeights;
   }
 
+  List<double> listViewItemHeights = List.filled(5, 0.0);
+
   @override
   Widget build(BuildContext context) {
-    final baseUrl = ref.watch(baseUrlProvider);
-    final currentQuiz = ref.watch(currentQuizViewedProvider);
-    final questions = currentQuiz.questions;
-    List<String> imageUrls = currentQuiz.questions
-        .map((question) => baseUrl + question.image!)
-        .toList();
-    List<double> listViewItemHeights = List.filled(questions.length, 0.0);
-    final firstLetter = currentQuiz.title[0];
-
     return Scaffold(
       body: Row(
         children: [
@@ -82,47 +73,20 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                               width: 150,
                               height: 150,
                               color: Colors.white,
-                              child: Center(
-                                child: currentQuiz.image != null
-                                    ? Image.network(currentQuiz.image!)
-                                    : Text(
-                                        firstLetter,
-                                        style: const TextStyle(
-                                          fontSize: 60,
-                                          color: AppColors.mainColor,
-                                        ),
-                                      ),
+                              child: const Center(
+                                child: Text(
+                                  'A',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    color: AppColors.mainColor,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),
-                            Text(
-                              currentQuiz.title,
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SolidButton(
-                                  text: 'View Statistics',
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ViewQuizStatisticsScreen()));
-                                  },
-                                  icon: const Icon(Icons.bar_chart),
-                                ),
-                                const SizedBox(width: 25),
-                                SolidButton(
-                                  text: 'Regenerate',
-                                  onPressed: () {
-                                    // Add your code for handling "Regenerate" press here
-                                  },
-                                  icon: const Icon(Icons.refresh),
-                                ),
-                              ],
+                            const Text(
+                              'Algorithms and Programming',
+                              style: TextStyle(fontSize: 24),
                             ),
                             const SizedBox(height: 16),
                             const Align(
@@ -142,12 +106,11 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                     child: SizedBox(
                                       child: ListView.builder(
                                         controller: _scrollController,
-                                        itemCount: questions.length,
+                                        itemCount: 5,
                                         itemBuilder: (context, index) {
-                                          final question = questions[index];
                                           final int questionNumber = index + 1;
-                                          final image =
-                                              baseUrl + question.image!;
+                                          final String imageFileName =
+                                              'q$questionNumber.jpg';
                                           return Column(
                                             children: [
                                               LayoutBuilder(
@@ -156,60 +119,47 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                   // Store the height of the current item
                                                   listViewItemHeights[index] =
                                                       constraints.maxHeight;
-                                                  return InkWell(
-                                                      onTap: () {
-                                                        ref
-                                                            .read(
-                                                                currentViewedQuizQuestionProvider
-                                                                    .notifier)
-                                                            .updateCurrentViewedQuestion(
-                                                                question);
-                                                      },
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .mainColor,
-                                                            width: 1.0,
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color:
+                                                            AppColors.mainColor,
+                                                        width: 1.0,
+                                                      ),
+                                                      color: Colors.white,
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Question $questionNumber',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 16),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 8.0),
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                              color: AppColors
+                                                                  .thirdColor,
+                                                              width: 1.0,
+                                                            ),
                                                           ),
-                                                          color: Colors.white,
+                                                          child: Image.asset(
+                                                            'lib/assets/images/questions/$imageFileName',
+                                                          ),
                                                         ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              'Question $questionNumber',
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          16),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 8.0),
-                                                            Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: AppColors
-                                                                      .thirdColor,
-                                                                  width: 1.0,
-                                                                ),
-                                                              ),
-                                                              child:
-                                                                  Image.network(
-                                                                image,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ));
+                                                      ],
+                                                    ),
+                                                  );
                                                 },
                                               ),
                                               const SizedBox(
@@ -227,7 +177,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                   // Right Area
                                   Expanded(
                                     child: FutureBuilder<List<int>>(
-                                      future: getImageHeights(imageUrls),
+                                      future: getImageHeights(),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
@@ -236,10 +186,9 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                   CircularProgressIndicator());
                                         } else if (snapshot.connectionState ==
                                             ConnectionState.done) {
-                                          final List<int> imageHeights =
+                                          List<int> imageHeights =
                                               snapshot.data ?? [];
-                                          final numberOfItems =
-                                              questions.length;
+                                          int numberOfItems = 5;
 
                                           const double defaultFontSize = 16.0;
                                           const double paddingSize = 12.0;
@@ -263,6 +212,8 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                               totalHeights[i] +=
                                                   imageHeights[i - 1]
                                                       .toDouble();
+                                              print('imageHeights[${i - 1}]');
+                                              print(imageHeights[i - 1]);
                                             }
                                           }
 
@@ -282,7 +233,6 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                               child: LayoutBuilder(
                                                 builder:
                                                     (context, constraints) {
-                                                  // Calculate the width and height based on percentage of the available space
                                                   double gridWidth =
                                                       constraints.maxWidth *
                                                           0.1;
@@ -291,14 +241,11 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                     gridDelegate:
                                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                                       maxCrossAxisExtent: 50,
-                                                      crossAxisSpacing:
-                                                          12.0, // The horizontal spacing between each child in pixel.
-                                                      mainAxisSpacing:
-                                                          12.0, // The vertical spacing between each child in pixel.
-                                                      childAspectRatio:
-                                                          1.0, // The ratio of the height to the main-axis extent of each child.
+                                                      crossAxisSpacing: 12.0,
+                                                      mainAxisSpacing: 12.0,
+                                                      childAspectRatio: 1.0,
                                                     ),
-                                                    itemCount: questions.length,
+                                                    itemCount: 5,
                                                     physics:
                                                         const NeverScrollableScrollPhysics(),
                                                     shrinkWrap: true,
@@ -312,7 +259,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                               width: gridWidth,
                                                               height: gridWidth,
                                                               color: AppColors
-                                                                  .fifthColor, // Set the desired color
+                                                                  .fifthColor,
                                                               child:
                                                                   ElevatedButton(
                                                                 onPressed: () {
@@ -329,9 +276,8 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                                 },
                                                                 style: ElevatedButton
                                                                     .styleFrom(
-                                                                  backgroundColor:
-                                                                      AppColors
-                                                                          .fifthColor,
+                                                                  backgroundColor:Colors.green,
+                                                                  // backgroundColor: Colors.red,
                                                                   padding:
                                                                       EdgeInsets
                                                                           .zero,
@@ -344,7 +290,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                                                             MediaQuery.of(context).size.width *
                                                                                 0.01,
                                                                         color: AppColors
-                                                                            .mainColor),
+                                                                            .white),
                                                                   ),
                                                                 ),
                                                               ),
@@ -359,7 +305,6 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                             ),
                                           );
                                         } else {
-                                          // Show a loading indicator while waiting for the future to complete
                                           return const Center(
                                               child:
                                                   CircularProgressIndicator());
@@ -382,10 +327,6 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            ref
-                                .read(
-                                    currentViewedQuizQuestionProvider.notifier)
-                                .updateCurrentViewedQuestion(Question.base());
                             Navigator.pop(context);
                           },
                         ),
@@ -402,7 +343,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
             flex: 1,
             child: Container(
               color: AppColors.fifthColor,
-              child: const ViewQuizContainer(index: 2),
+              child: const ViewQuizStatisticsContainer(),
             ),
           ),
         ],
