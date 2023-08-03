@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_reviewee_list/AddRevieweeCard.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
-import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
 
 class Reviewee {
   final String name;
