@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
-import 'package:quizmix_frontend/state/models/quizzes/tos_data.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:flutter/services.dart';
+
+final List<String> allCategories = [
+  'Basic Theories',
+  'Algorithms and Programming',
+  'Computer Components and Hardware',
+  'System Components',
+  'Software',
+  'Development Technology and Management',
+  'Database',
+  'Network',
+  'Security',
+  'System Audit, Strategy and Planning',
+  'Business, Corporate & Legal Affairs'
+];
+
+final List<String> allDiscrimination = [
+  'High Negative',
+  'Negative',
+  'Low',
+  'Positive',
+  'High Positive'
+];
+
+final List<String> allDifficulty = [
+  'Very Easy',
+  'Easy',
+  'Average',
+  'Hard',
+  'Very Hard'
+];
 
 class QuestionSearchModalScreen extends ConsumerStatefulWidget {
   const QuestionSearchModalScreen({
@@ -23,64 +49,25 @@ class QuestionSearchModalScreen extends ConsumerStatefulWidget {
 
 class _QuestionSearchModalScreenState
     extends ConsumerState<QuestionSearchModalScreen> {
-  List<String> categories = [];
-  String selectedCategory = "No Categories Added";
-  Map<String, CategoryData> categoryDataMap = {};
-  String quizName = '';
+  String searchTerm = '';
+  late List<bool> isCheckedCategories;
+  late List<bool> isCheckedDiscrimination;
+  late List<bool> isCheckedDifficulty;
 
-  List<String> allCategories = [
-    'Basic Theories',
-    'Algorithms and Programming',
-    'Computer Components and Hardware',
-    'System Components',
-    'Software',
-    'Development Technology and Management',
-    'Database',
-    'Network',
-    'Security',
-    'System Audit, Strategy and Planning',
-    'Business, Corporate & Legal Affairs'
-  ];
-
-  void _showCategoryDropdown(BuildContext context) {
-    if (allCategories.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No more available categories")),
-      );
-    } else {
-      RenderBox button = context.findRenderObject() as RenderBox;
-      Offset offset = button.localToGlobal(Offset.zero);
-
-      showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(
-          offset.dx,
-          offset.dy + button.size.height,
-          0,
-          0,
-        ),
-        items: allCategories.map((category) {
-          return PopupMenuItem<String>(
-            value: category,
-            child: Text(category),
-          );
-        }).toList(),
-      ).then((selectedValue) {
-        if (selectedValue != null) {
-          setState(() {
-            allCategories.remove(selectedValue);
-            categories.add(selectedValue);
-            selectedCategory = selectedValue;
-          });
-        }
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    // Initialize isCheckedList here, after the widget is fully constructed
+    isCheckedCategories = List.generate(allCategories.length, (index) => true);
+    isCheckedDiscrimination =
+        List.generate(allDiscrimination.length, (index) => true);
+    isCheckedDifficulty = List.generate(allDifficulty.length, (index) => true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(reviewerQuizzesProvider.notifier);
-    final reviewerId = ref.watch(reviewerProvider).id;
+    // final notifier = ref.read(reviewerQuizzesProvider.notifier);
+    // final reviewerId = ref.watch(reviewerProvider).id;
 
     return Scaffold(
       appBar: null,
@@ -91,17 +78,17 @@ class _QuestionSearchModalScreenState
           child: IntrinsicHeight(
             child: Container(
               width: 800,
+              padding: const EdgeInsets.all(25.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              child: Container(
-                padding: const EdgeInsets.all(25.0),
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Add Quiz",
+                      "Advanced Search",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -110,164 +97,160 @@ class _QuestionSearchModalScreenState
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: "Enter quiz name",
+                        labelText: "Write any question or choice text here",
                       ),
                       onChanged: (value) {
                         setState(() {
-                          quizName = value;
+                          searchTerm = value;
                         });
                       },
                     ),
-                    const SizedBox(height: 16),
-                    SolidButton(
-                      text: "Add Category",
-                      onPressed: () {
-                        _showCategoryDropdown(context);
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                    const SizedBox(height: 16),
-                    const Row(
+                    const SizedBox(height: 25),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 3,
-                          child: Text(
-                            "Category",
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: AppColors.mainColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(width: 25),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "No. of questions",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: AppColors.mainColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 25),
-                        Expanded(
-                            flex: 2,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Difficulty",
-                                style: TextStyle(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  "Category",
+                                  style: TextStyle(
                                     fontSize: 18,
                                     color: AppColors.mainColor,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            )),
-                        IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.white,
-                          ),
-                          onPressed: null,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        itemCount: categories.isEmpty ? 1 : categories.length,
-                        itemBuilder: (context, index) {
-                          if (categories.isEmpty) {
-                            return const Expanded(
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                              const SizedBox(height: 12),
+                              ...List.generate(allCategories.length, (index) {
+                                return Row(
                                   children: [
-                                    Icon(
-                                      Icons.category,
-                                      size: 64,
-                                      color: Colors.grey,
+                                    Checkbox(
+                                      value: isCheckedCategories[index],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isCheckedCategories[index] =
+                                              !isCheckedCategories[index];
+                                        });
+                                      },
+                                      activeColor: AppColors.mainColor,
                                     ),
-                                    SizedBox(height: 16),
-                                    Text(
-                                      "No Categories Added",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.grey,
+                                    Expanded(
+                                      child: Text(
+                                        allCategories[index],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.mainColor,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                     ),
                                   ],
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 25),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  "Discrimination Index",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: AppColors.mainColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            );
-                          } else {
-                            String category = categories[index];
-                            return Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    category,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors.mainColor,
-                                      overflow: TextOverflow.ellipsis,
+                              const SizedBox(height: 12),
+                              ...List.generate(allDiscrimination.length,
+                                  (index) {
+                                return Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isCheckedDiscrimination[index],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isCheckedDiscrimination[index] =
+                                              !isCheckedDiscrimination[index];
+                                        });
+                                      },
+                                      activeColor: AppColors.mainColor,
                                     ),
+                                    Expanded(
+                                      child: Text(
+                                        allDiscrimination[index],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.mainColor,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                              const SizedBox(height: 12),
+                              const Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  "Difficulty Index",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: AppColors.mainColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(width: 25),
-                                Expanded(
-                                  flex: 2,
-                                  child: buildCategoryFormField(
-                                    initialValue: categoryDataMap[category]
-                                        ?.numberOfQuestions
-                                        .toString(),
-                                    onChanged: (value) {
-                                      updateCategoryData(
-                                        category: category,
-                                        number: int.parse(value),
-                                        isDifficulty: false,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 25),
-                                Expanded(
-                                  flex: 2,
-                                  child: buildCategoryFormField(
-                                    initialValue: categoryDataMap[category]
-                                            ?.difficulty
-                                            .toString() ??
-                                        '0',
-                                    onChanged: (value) {
-                                      updateCategoryData(
-                                        category: category,
-                                        number: int.parse(value),
-                                        isDifficulty: true,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    setState(() {
-                                      categories.removeAt(index);
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
-                          }
-                        },
-                      ),
+                              ),
+                              const SizedBox(height: 12),
+                              ...List.generate(allDifficulty.length, (index) {
+                                return Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isCheckedDifficulty[index],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isCheckedDifficulty[index] =
+                                              !isCheckedDifficulty[index];
+                                        });
+                                      },
+                                      activeColor: AppColors.mainColor,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        allDifficulty[index],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.mainColor,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 25),
+                        // Expanded(
+                        //   flex: 2,
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [],
+                        //   ),
+                        // ),
+                      ],
                     ),
                     const SizedBox(height: 25),
                     Row(
@@ -286,27 +269,27 @@ class _QuestionSearchModalScreenState
                           child: SolidButton(
                             text: "Save",
                             onPressed: () {
-                              final TOS tos = TOS(
-                                madeBy: reviewerId,
-                                title: quizName,
-                                categories: categories,
-                                quantities: categories
-                                    .map((category) =>
-                                        categoryDataMap[category]
-                                            ?.numberOfQuestions ??
-                                        0)
-                                    .toList(),
-                                difficulties: categories
-                                    .map((category) =>
-                                        categoryDataMap[category]?.difficulty ??
-                                        0)
-                                    .toList(),
-                              );
+                              // final TOS tos = TOS(
+                              //   madeBy: reviewerId,
+                              //   title: searchTerm,
+                              //   categories: categories,
+                              //   quantities: categories
+                              //       .map((category) =>
+                              //           categoryDataMap[category]
+                              //               ?.numberOfQuestions ??
+                              //           0)
+                              //       .toList(),
+                              //   difficulties: categories
+                              //       .map((category) =>
+                              //           categoryDataMap[category]?.difficulty ??
+                              //           0)
+                              //       .toList(),
+                              // );
 
-                              // let our notifier know that a change in the api has occured
-                              notifier
-                                  .addQuiz(tos)
-                                  .then((value) => {Navigator.pop(context)});
+                              // // let our notifier know that a change in the api has occured
+                              // notifier
+                              //     .addQuiz(tos)
+                              //     .then((value) => {Navigator.pop(context)});
                             },
                           ),
                         ),
@@ -320,35 +303,5 @@ class _QuestionSearchModalScreenState
         ),
       ),
     );
-  }
-
-  TextFormField buildCategoryFormField(
-      {required String? initialValue, required Function(String) onChanged}) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: const InputDecoration(
-        hintText: "",
-      ),
-      textAlign: TextAlign.center,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
-      ],
-      onChanged: onChanged,
-    );
-  }
-
-  void updateCategoryData({
-    required String category,
-    required int number,
-    required bool isDifficulty,
-  }) {
-    categoryDataMap[category] ??= CategoryData();
-
-    if (isDifficulty) {
-      categoryDataMap[category]?.difficulty = number;
-    } else {
-      categoryDataMap[category]?.numberOfQuestions = number;
-    }
   }
 }
