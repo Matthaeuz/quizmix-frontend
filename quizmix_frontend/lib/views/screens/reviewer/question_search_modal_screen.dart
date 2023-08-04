@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-import 'package:flutter/services.dart';
 
 final List<String> allCategories = [
   'Basic Theories',
@@ -66,9 +65,6 @@ class _QuestionSearchModalScreenState
 
   @override
   Widget build(BuildContext context) {
-    // final notifier = ref.read(reviewerQuizzesProvider.notifier);
-    // final reviewerId = ref.watch(reviewerProvider).id;
-
     return Scaffold(
       appBar: null,
       backgroundColor: Colors.transparent,
@@ -243,13 +239,6 @@ class _QuestionSearchModalScreenState
                           ),
                         ),
                         const SizedBox(width: 25),
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [],
-                        //   ),
-                        // ),
                       ],
                     ),
                     const SizedBox(height: 25),
