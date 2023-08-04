@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class ViewQuizStatisticsContainer extends ConsumerWidget {
   const ViewQuizStatisticsContainer({super.key});
@@ -40,8 +39,8 @@ class ViewQuizStatisticsContainer extends ConsumerWidget {
                                         horizontal: 12,
                                       ),
                                       decoration: BoxDecoration(
-                                        color:
-                                            getCategoryColor('Algorithms and Programming'),
+                                        color: getCategoryColor(
+                                            'Algorithms and Programming'),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: const Align(
