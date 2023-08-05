@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/categories.constants.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/add_category_modal_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_details_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_question_screen.dart';
 
@@ -76,7 +77,11 @@ class UpdateQuizBankScreen extends ConsumerWidget {
                   icon: Icons.add,
                   buttonColor: AppColors.mainColor,
                   onPressed: () {
-                    // Handle Add Category press
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AddCategoryModalScreen()));
                   },
                 ),
               ],
@@ -108,14 +113,15 @@ class UpdateQuizBankScreen extends ConsumerWidget {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         UpdateQuizBankDetailsScreen(
-                                          categoryColor:
-                                              getCategoryColor(categories[index]),
+                                          categoryColor: getCategoryColor(
+                                              categories[index]),
                                           title: categories[index],
                                         )));
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: getCategoryColor(categories[index]),
+                            backgroundColor:
+                                getCategoryColor(categories[index]),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
