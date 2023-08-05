@@ -420,6 +420,39 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<Reviewee> updateReviewee(
+    String token,
+    int id,
+    Map<String, dynamic> newDetails,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(newDetails);
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Reviewee>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/reviewees/${id}/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Reviewee.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<List<Reviewer>> getReviewerByUserId(
     String token,
     int id,

@@ -89,6 +89,13 @@ abstract class RestClient {
     @Body() Map<String, int> reviewee,
   );
 
+  @PATCH("/reviewees/{id}/")
+  Future<Reviewee> updateReviewee(
+    @Header("Authorization") String token,
+    @Path("id") int id,
+    @Body() Map<String, dynamic> newDetails
+  );
+
   /// REVIEWER API
 
   @GET("/reviewers/?user={id}")
