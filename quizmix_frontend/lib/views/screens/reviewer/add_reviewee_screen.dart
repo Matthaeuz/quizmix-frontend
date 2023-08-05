@@ -1,61 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_reviewee_list/AddRevieweeCard.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart'; // Assuming the Reviewee model is defined in this import
+// import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+// import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart'; // Import the provider
 
-class Reviewee {
-  final String name;
-  final String image;
-  bool isChecked; // Add the isChecked property
-
-  Reviewee({
-    required this.name,
-    required this.image,
-    this.isChecked = false, // Set the default value to false
-  });
-}
-
-class AddRevieweeScreen extends StatefulWidget {
+class AddRevieweeScreen extends ConsumerStatefulWidget {
   const AddRevieweeScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddRevieweeScreen> createState() => _AddRevieweeScreenState();
+  _AddRevieweeScreenState createState() => _AddRevieweeScreenState();
 }
 
-class _AddRevieweeScreenState extends State<AddRevieweeScreen> {
+class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
+  List<bool> isCheckedList = [];
   List<Reviewee> selectedReviewees = [];
-
-  List<Reviewee> reviewees = [
-    Reviewee(name: 'Reviewee 1', image: 'path/to/image1.jpg'),
-    Reviewee(name: 'Reviewee 2', image: 'path/to/image2.jpg'),
-    Reviewee(name: 'Reviewee 3', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 4', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 5', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 6', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 7', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 8', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 9', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 10', image: 'path/to/image3.jpg'),
-    Reviewee(name: 'Reviewee 11', image: 'path/to/image3.jpg'),
-  ];
-
-  late List<bool> isCheckedList;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize isCheckedList here, after the widget is fully constructed
-    isCheckedList = List.generate(reviewees.length, (index) => false);
-  }
 
   void printSelectedReviewees() {
     for (var reviewee in selectedReviewees) {
-      print(reviewee.name);
+      debugPrint(reviewee.user.fullName);
     }
+  }
+
+  Future<void> addSelectedReviewees() async {
+    final reviewees = ref.read(unassignedRevieweesProvider);
+    final reviewerId = ref.read(reviewerProvider).id;
+    final client = ref.read(restClientProvider);
+    final token = ref.read(authTokenProvider).accessToken;
+
+    selectedReviewees.clear();
+    await reviewees.when(
+      data: (reviewees) async {
+        for (int i = 0; i < isCheckedList.length; i++) {
+          if (isCheckedList[i]) {
+            final reviewee = reviewees[i];
+            selectedReviewees.add(reviewee);
+
+            final newDetails = {
+              "belongs_to": reviewerId,
+            };
+            await client.updateReviewee(token, reviewee.id, newDetails);
+          }
+        }
+
+        // inform providers of change
+        ref.read(reviewerRevieweesProvider.notifier).fetchReviewerReviewees();
+        ref
+            .read(unassignedRevieweesProvider.notifier)
+            .fetchUnassignedReviewees();
+        Navigator.pop(context);
+        // printSelectedReviewees();
+      },
+      loading: () {},
+      error: (error, stackTrace) {},
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final revieweesFuture = ref.watch(unassignedRevieweesProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -96,14 +107,7 @@ class _AddRevieweeScreenState extends State<AddRevieweeScreen> {
                 SolidButton(
                   text: 'Add Selected',
                   onPressed: () {
-                    // Handle "Add Reviewee" button press
-                    selectedReviewees.clear();
-                    for (int i = 0; i < isCheckedList.length; i++) {
-                      if (isCheckedList[i]) {
-                        selectedReviewees.add(reviewees[i]);
-                      }
-                    }
-                    printSelectedReviewees();
+                    addSelectedReviewees();
                   },
                   icon: const Icon(Icons.add),
                 ),
@@ -111,20 +115,34 @@ class _AddRevieweeScreenState extends State<AddRevieweeScreen> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.separated(
-                itemCount: reviewees.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 25),
-                itemBuilder: (context, index) {
-                  return AddRevieweeCard(
-                    isSelected: isCheckedList[index],
-                    onCheckboxChanged: (value) {
-                      setState(() {
-                        isCheckedList[index] = value;
-                      });
+              child: revieweesFuture.when(
+                data: (reviewees) {
+                  if (isCheckedList.isEmpty) {
+                    // Initialize isCheckedList if it hasn't been initialized yet
+                    isCheckedList = List.filled(reviewees.length, false);
+                  }
+
+                  return ListView.separated(
+                    itemCount: reviewees.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 25),
+                    itemBuilder: (context, index) {
+                      final reviewee = reviewees[index];
+
+                      return AddRevieweeCard(
+                        reviewee: reviewee,
+                        isSelected: isCheckedList[index],
+                        onCheckboxChanged: (value) {
+                          setState(() {
+                            isCheckedList[index] = value;
+                          });
+                        },
+                      );
                     },
                   );
                 },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, stackTrace) => const Text('An error occurred'),
               ),
             ),
           ],

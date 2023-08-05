@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 
 class AddRevieweeCard extends StatelessWidget {
   final bool isSelected;
   final ValueChanged<bool> onCheckboxChanged;
+  final Reviewee reviewee;
 
   const AddRevieweeCard({
     Key? key,
+    required this.reviewee,
     required this.isSelected,
     required this.onCheckboxChanged,
   }) : super(key: key);
@@ -19,22 +22,22 @@ class AddRevieweeCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
             border: Border.all(color: AppColors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
         child: Row(
           children: [
             SizedBox(
               width: 75,
               height: 75,
               child: Image.network(
-                'lib/assets/images/profile_pictures/aaron.jpg',
+                'lib/assets/images/default_pic.png',
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Text(
-                "Aaron Benjmin R. Alcuitas",
-                style: TextStyle(
+                reviewee.user.fullName,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
