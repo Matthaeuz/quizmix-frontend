@@ -134,7 +134,7 @@ class _ViewQuestionBankScreenState
             ? Container(color: const Color(0x800077B6))
             : const SizedBox(),
         isOpenModal == true
-            ? QuestionSearchModalScreen(onCancel: () {
+            ? QuestionSearchModalScreen(onClick: () {
                 setState(() {
                   isOpenModal = false;
                 });
