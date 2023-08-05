@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
+import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 final List<String> allCategories = [
@@ -36,10 +38,10 @@ final List<String> allDifficulty = [
 class QuestionSearchModalScreen extends ConsumerStatefulWidget {
   const QuestionSearchModalScreen({
     Key? key,
-    required this.onCancel,
+    required this.onClick,
   }) : super(key: key);
 
-  final void Function() onCancel;
+  final void Function() onClick;
 
   @override
   ConsumerState<QuestionSearchModalScreen> createState() =>
@@ -48,7 +50,7 @@ class QuestionSearchModalScreen extends ConsumerStatefulWidget {
 
 class _QuestionSearchModalScreenState
     extends ConsumerState<QuestionSearchModalScreen> {
-  String searchTerm = '';
+  late String searchTerm;
   late List<bool> isCheckedCategories;
   late List<bool> isCheckedDiscrimination;
   late List<bool> isCheckedDifficulty;
@@ -57,10 +59,16 @@ class _QuestionSearchModalScreenState
   void initState() {
     super.initState();
     // Initialize isCheckedList here, after the widget is fully constructed
-    isCheckedCategories = List.generate(allCategories.length, (index) => true);
-    isCheckedDiscrimination =
-        List.generate(allDiscrimination.length, (index) => true);
-    isCheckedDifficulty = List.generate(allDifficulty.length, (index) => true);
+    // searchTerm = '';
+    // isCheckedCategories = List.generate(allCategories.length, (index) => true);
+    // isCheckedDiscrimination =
+    //     List.generate(allDiscrimination.length, (index) => true);
+    // isCheckedDifficulty = List.generate(allDifficulty.length, (index) => true);
+    final filters = ref.read(questionSearchFilterProvider);
+    searchTerm = filters["text"];
+    isCheckedCategories = List.from(filters["categories"]);
+    isCheckedDiscrimination = List.from(filters["discrimination"]);
+    isCheckedDifficulty = List.from(filters["difficulty"]);
   }
 
   @override
@@ -92,6 +100,7 @@ class _QuestionSearchModalScreenState
                       ),
                     ),
                     TextFormField(
+                      initialValue: searchTerm,
                       decoration: const InputDecoration(
                         labelText: "Write any question or choice text here",
                       ),
@@ -249,36 +258,28 @@ class _QuestionSearchModalScreenState
                           flex: 1,
                           child: SolidButton(
                             text: "Cancel",
-                            onPressed: widget.onCancel,
+                            onPressed: widget.onClick,
                           ),
                         ),
                         const SizedBox(width: 25),
                         Expanded(
                           flex: 1,
                           child: SolidButton(
-                            text: "Save",
+                            text: "Search",
                             onPressed: () {
-                              // final TOS tos = TOS(
-                              //   madeBy: reviewerId,
-                              //   title: searchTerm,
-                              //   categories: categories,
-                              //   quantities: categories
-                              //       .map((category) =>
-                              //           categoryDataMap[category]
-                              //               ?.numberOfQuestions ??
-                              //           0)
-                              //       .toList(),
-                              //   difficulties: categories
-                              //       .map((category) =>
-                              //           categoryDataMap[category]?.difficulty ??
-                              //           0)
-                              //       .toList(),
-                              // );
-
-                              // // let our notifier know that a change in the api has occured
-                              // notifier
-                              //     .addQuiz(tos)
-                              //     .then((value) => {Navigator.pop(context)});
+                              final filters = {
+                                "text": searchTerm,
+                                "categories": isCheckedCategories,
+                                "discrimination": isCheckedDiscrimination,
+                                "difficulty": isCheckedDifficulty
+                              };
+                              ref
+                                  .read(questionBankProvider.notifier)
+                                  .searchQuestions(filters);
+                              ref
+                                  .read(questionSearchFilterProvider.notifier)
+                                  .updateFilters(filters);
+                              widget.onClick();
                             },
                           ),
                         ),

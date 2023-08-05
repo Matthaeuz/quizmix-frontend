@@ -26,7 +26,17 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
     }
   }
 
-  Future<void> addQuestionsFromPdf(PlatformFile aFile, PlatformFile qFile, WidgetRef ref) async {
+  Future<void> searchQuestions(Map<String, dynamic> filters) async {
+    try {
+      var questions = await client.advancedSearch(accessToken, filters);
+      state = AsyncValue.data(questions);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  Future<void> addQuestionsFromPdf(
+      PlatformFile aFile, PlatformFile qFile, WidgetRef ref) async {
     try {
       await createQuestionsFromPdf(aFile, qFile, ref);
       await fetchQuestions();
@@ -36,9 +46,9 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   }
 }
 
-
-
-final questionBankProvider = StateNotifierProvider<QuestionBankNotifier, AsyncValue<List<Question>>>((ref) {
+final questionBankProvider =
+    StateNotifierProvider<QuestionBankNotifier, AsyncValue<List<Question>>>(
+        (ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
 

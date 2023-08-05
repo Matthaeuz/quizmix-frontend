@@ -127,6 +127,12 @@ abstract class RestClient {
   Future<Question> getQuestionById(
       @Header("Authorization") String token, @Path("id") int id);
 
+  @POST("/questions/advanced_search/")
+  Future<List<Question>> advancedSearch(
+    @Header("Authorization") String token,
+    @Body() Map<String, dynamic> filters,
+  );
+
   /// QUIZ API
 
   @POST("/quizzes/create_quiz/")
