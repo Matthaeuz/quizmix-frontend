@@ -62,27 +62,6 @@ class _ViewQuestionBankScreenState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              // const Flexible(
-                              //   flex: 1,
-                              //   child: FractionallySizedBox(
-                              //     widthFactor: 0.9, // Adjust this value as needed
-                              //     child: TextField(
-                              //       decoration: InputDecoration(
-                              //         prefixIcon: Icon(Icons.search),
-                              //         hintText: 'Search',
-                              //         filled: true,
-                              //         fillColor: Colors.white,
-                              //         border: OutlineInputBorder(
-                              //           borderRadius: BorderRadius.all(
-                              //             Radius.circular(10),
-                              //           ),
-                              //         ),
-                              //         contentPadding:
-                              //             EdgeInsets.symmetric(vertical: 10),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                               SolidButton(
                                 text: 'Search',
                                 onPressed: () {

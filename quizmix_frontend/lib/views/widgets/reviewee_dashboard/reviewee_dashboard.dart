@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/my_mixes_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/my_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
@@ -77,7 +78,12 @@ class RevieweeDashboardWidget extends StatelessWidget {
                     ),
                     onTap: () {
                       if (selectedOption != 'My Mixes') {
-                        // Add your logic for handling the onTap action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyMixesScreen(),
+                          ),
+                        );
                       }
                     },
                   ),
