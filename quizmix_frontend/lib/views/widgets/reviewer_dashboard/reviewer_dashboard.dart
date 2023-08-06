@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/view_question_bank_screen.dart';
+import 'package:quizmix_frontend/views/screens/view_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
@@ -92,9 +92,8 @@ class ReviewerDashboardWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  color: selectedOption == 'Quizzes'
-                      ? AppColors.mainColor
-                      : null,
+                  color:
+                      selectedOption == 'Quizzes' ? AppColors.mainColor : null,
                   child: ListTile(
                     leading: Icon(
                       Icons.quiz,
@@ -148,7 +147,9 @@ class ReviewerDashboardWidget extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ViewQuestionBankScreen(),
+                            builder: (context) => const ViewQuestionBankScreen(
+                              viewer: "reviewer",
+                            ),
                           ),
                         );
                       }
