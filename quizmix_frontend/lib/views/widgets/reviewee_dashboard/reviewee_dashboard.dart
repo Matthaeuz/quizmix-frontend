@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/my_mixes_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/my_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/question_bank_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 
 class RevieweeDashboardWidget extends StatelessWidget {
@@ -49,11 +48,9 @@ class RevieweeDashboardWidget extends StatelessWidget {
                     onTap: () {
                       if (selectedOption != 'My Quizzes') {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyQuizzesScreen(),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyQuizzesScreen()));
                       }
                     },
                   ),
@@ -78,12 +75,7 @@ class RevieweeDashboardWidget extends StatelessWidget {
                     ),
                     onTap: () {
                       if (selectedOption != 'My Mixes') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyMixesScreen(),
-                          ),
-                        );
+                        // Add your logic for handling the onTap action
                       }
                     },
                   ),
@@ -113,11 +105,10 @@ class RevieweeDashboardWidget extends StatelessWidget {
                     onTap: () {
                       if (selectedOption != 'Question Bank') {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyQuestionBankScreen(),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ViewQuestionBankScreen()));
                       }
                     },
                   ),
