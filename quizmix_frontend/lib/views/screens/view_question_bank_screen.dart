@@ -1,25 +1,32 @@
-/// The `MyQuestionBankScreen` class is a Flutter widget that displays a screen for viewing a question
-/// bank and allows users to search for questions and view individual questions.
+/// The `ViewQuestionBankScreen` class is a Flutter widget that displays a screen for viewing a question
+/// bank and allows users to search for questions, update the question bank, and view individual
+/// questions.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/question_search_modal_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/reviewee_dashboard.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_question_bank/question_bank_list.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_question_bank/question_bank_question_view.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-class MyQuestionBankScreen extends ConsumerStatefulWidget {
-  const MyQuestionBankScreen({
+class ViewQuestionBankScreen extends ConsumerStatefulWidget {
+  const ViewQuestionBankScreen({
     Key? key,
+    required this.viewer,
   }) : super(key: key);
 
+  final String viewer;
+
   @override
-  ConsumerState<MyQuestionBankScreen> createState() =>
-      _MyQuestionBankScreenState();
+  ConsumerState<ViewQuestionBankScreen> createState() =>
+      _ViewQuestionBankScreenState();
 }
 
-class _MyQuestionBankScreenState extends ConsumerState<MyQuestionBankScreen> {
+class _ViewQuestionBankScreenState
+    extends ConsumerState<ViewQuestionBankScreen> {
   bool isOpenModal = false;
 
   @override
@@ -34,12 +41,16 @@ class _MyQuestionBankScreenState extends ConsumerState<MyQuestionBankScreen> {
                 flex: 2,
                 child: Container(
                   color: Colors.white,
-                  child: const Column(
+                  child: Column(
                     children: [
                       // Left Side - Dashboard
-                      RevieweeDashboardWidget(
-                        selectedOption: 'Question Bank',
-                      ),
+                      widget.viewer == "reviewer"
+                          ? const ReviewerDashboardWidget(
+                              selectedOption: 'Question Bank',
+                            )
+                          : const RevieweeDashboardWidget(
+                              selectedOption: 'Question Bank',
+                            )
                     ],
                   ),
                 ),
@@ -68,6 +79,24 @@ class _MyQuestionBankScreenState extends ConsumerState<MyQuestionBankScreen> {
                                 },
                                 icon: const Icon(Icons.search),
                               ),
+                              widget.viewer == "reviewer"
+                                  ? const SizedBox(width: 12)
+                                  : const SizedBox(),
+                              widget.viewer == "reviewer"
+                                  ? SolidButton(
+                                      text: 'Update',
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UpdateQuizBankScreen(),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.edit),
+                                    )
+                                  : const SizedBox(),
                             ],
                           ),
                         ),
