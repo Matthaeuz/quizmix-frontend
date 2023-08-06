@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+// import 'package:quizmix_frontend/state/providers/questions/current_question_provider.dart';
+// import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
+// import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/view_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 
-class ReviewerDashboardWidget extends StatelessWidget {
+class ReviewerDashboardWidget extends ConsumerWidget {
   final String selectedOption;
 
   const ReviewerDashboardWidget({Key? key, required this.selectedOption})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       flex: 2,
       child: Container(
@@ -144,6 +148,16 @@ class ReviewerDashboardWidget extends StatelessWidget {
                     ),
                     onTap: () {
                       if (selectedOption != 'Question Bank') {
+                        // reset question bank screen
+                        // ref
+                        //     .read(questionBankProvider.notifier)
+                        //     .fetchQuestions();
+                        // ref
+                        //     .read(questionSearchFilterProvider.notifier)
+                        //     .initializeFilters();
+                        // ref
+                        //     .read(currentQuestionProvider.notifier)
+                        //     .updateCurrentQuestion(null);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
