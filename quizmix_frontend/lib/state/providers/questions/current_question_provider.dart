@@ -4,7 +4,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 class CurrentQuestionNotifier extends StateNotifier<Question?> {
   CurrentQuestionNotifier() : super(null);
 
-  void updateCurrentQuestion(Question newQuestion) {
+  void updateCurrentQuestion(Question? newQuestion) {
     state = newQuestion;
   }
 }

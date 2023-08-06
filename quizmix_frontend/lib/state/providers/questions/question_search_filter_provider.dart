@@ -22,6 +22,10 @@ final initialFilters = {
 class QuestionSearchFilterNotifier extends StateNotifier<Map<String, dynamic>> {
   QuestionSearchFilterNotifier() : super(initialFilters);
 
+  void initializeFilters() {
+    state = initialFilters;
+  }
+
   void updateFiltersText(String newText) {
     Map<String, dynamic> newFilters = Map.from(state);
     newFilters["text"] = newText;

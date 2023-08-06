@@ -20,7 +20,7 @@ class RevieweeMixView extends ConsumerWidget {
           return Container(
             color: AppColors.fourthColor,
             height: constraints.maxHeight,
-            padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
             child: Column(
               children: [
                 Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 
 class RevieweeMixAdd extends ConsumerWidget {
   const RevieweeMixAdd({Key? key}) : super(key: key);
@@ -8,7 +9,12 @@ class RevieweeMixAdd extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
-        // put add mix logic here
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateEditMixScreen(action: "create"),
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(12),
