@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/mix_question_search_filter_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 final List<String> allCategories = [
@@ -35,8 +35,8 @@ final List<String> allDifficulty = [
   'Very Hard'
 ];
 
-class QuestionSearchModalScreen extends ConsumerStatefulWidget {
-  const QuestionSearchModalScreen({
+class MixQuestionSearchModalScreen extends ConsumerStatefulWidget {
+  const MixQuestionSearchModalScreen({
     Key? key,
     required this.onClick,
   }) : super(key: key);
@@ -44,12 +44,12 @@ class QuestionSearchModalScreen extends ConsumerStatefulWidget {
   final void Function() onClick;
 
   @override
-  ConsumerState<QuestionSearchModalScreen> createState() =>
-      _QuestionSearchModalScreenState();
+  ConsumerState<MixQuestionSearchModalScreen> createState() =>
+      _MixQuestionSearchModalScreenState();
 }
 
-class _QuestionSearchModalScreenState
-    extends ConsumerState<QuestionSearchModalScreen> {
+class _MixQuestionSearchModalScreenState
+    extends ConsumerState<MixQuestionSearchModalScreen> {
   late String searchTerm;
   late List<bool> isCheckedCategories;
   late List<bool> isCheckedDiscrimination;
@@ -58,13 +58,7 @@ class _QuestionSearchModalScreenState
   @override
   void initState() {
     super.initState();
-    // Initialize isCheckedList here, after the widget is fully constructed
-    // searchTerm = '';
-    // isCheckedCategories = List.generate(allCategories.length, (index) => true);
-    // isCheckedDiscrimination =
-    //     List.generate(allDiscrimination.length, (index) => true);
-    // isCheckedDifficulty = List.generate(allDifficulty.length, (index) => true);
-    final filters = ref.read(questionSearchFilterProvider);
+    final filters = ref.read(mixQuestionSearchFilterProvider);
     searchTerm = filters["text"];
     isCheckedCategories = List.from(filters["categories"]);
     isCheckedDiscrimination = List.from(filters["discrimination"]);
@@ -271,14 +265,14 @@ class _QuestionSearchModalScreenState
                                 "text": searchTerm,
                                 "categories": isCheckedCategories,
                                 "discrimination": isCheckedDiscrimination,
-                                "difficulty": isCheckedDifficulty,
-                                "exclude": []
+                                "difficulty": isCheckedDifficulty
                               };
                               ref
-                                  .read(questionBankProvider.notifier)
+                                  .read(availableMixQuestionsProvider.notifier)
                                   .searchQuestions(filters);
                               ref
-                                  .read(questionSearchFilterProvider.notifier)
+                                  .read(
+                                      mixQuestionSearchFilterProvider.notifier)
                                   .updateFilters(filters);
                               widget.onClick();
                             },

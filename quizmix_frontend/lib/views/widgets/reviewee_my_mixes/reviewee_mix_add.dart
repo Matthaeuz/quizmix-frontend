@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/mix_question_search_filter_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 
 class RevieweeMixAdd extends ConsumerWidget {
@@ -9,6 +13,10 @@ class RevieweeMixAdd extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
+        ref.read(currentMixProvider.notifier).updateCurrentMix(null);
+        ref.read(availableMixQuestionsProvider.notifier).fetchQuestions();
+        ref.read(currentMixQuestionsProvider.notifier).fetchQuestions();
+        ref.read(mixQuestionSearchFilterProvider.notifier).initializeFilters();
         Navigator.push(
           context,
           MaterialPageRoute(

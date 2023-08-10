@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/mix_question_search_modal_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_create_edit_mix/create_edit_mix_question_card.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
@@ -23,35 +25,13 @@ class CreateEditMixScreen extends ConsumerStatefulWidget {
 
 class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
   bool isOpenModal = false;
-  AsyncValue<List<Question>> availableQuestions = const AsyncValue.loading();
-  AsyncValue<List<Question>> currentQuestions = const AsyncValue.loading();
-
-  @override
-  void initState() {
-    super.initState();
-    // temporary
-    final questionsNotInMix = widget.action == "create"
-        ? ref.read(questionBankProvider).when(
-            data: (data) {
-              return data;
-            },
-            error: (err, st) {},
-            loading: () {})
-        : ref.read(questionBankProvider).when(
-            data: (data) {
-              return data;
-            },
-            error: (err, st) {},
-            loading: () {});
-    // temporary
-    final questionsInMix =
-        widget.action == "create" ? <Question>[] : <Question>[];
-    availableQuestions = AsyncValue.data(questionsNotInMix!);
-    currentQuestions = AsyncValue.data(questionsInMix);
-  }
+  TextEditingController mixTitle = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final availableQuestions = ref.watch(availableMixQuestionsProvider);
+    final currentQuestions = ref.watch(currentMixQuestionsProvider);
+
     return Stack(
       children: [
         Scaffold(
@@ -119,32 +99,27 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                 return CreateEditMixQuestionCard(
                                   questionDetails: questions[index],
                                   action: "Add",
-                                  onClick: () {
-                                    final newAvailableQuestions =
-                                        List<Question>.from(questions);
-                                    List<Question> newCurrentQuestions = [];
-                                    currentQuestions.when(
-                                      data: (questions) {
-                                        newCurrentQuestions =
-                                            List<Question>.from(questions);
-                                      },
-                                      loading: () {},
-                                      error: (err, stack) {},
-                                    );
-                                    newCurrentQuestions.add(
-                                        newAvailableQuestions.removeAt(index));
-                                    setState(() {
-                                      availableQuestions = AsyncValue.data(
-                                          newAvailableQuestions);
-                                      currentQuestions =
-                                          AsyncValue.data(newCurrentQuestions);
-                                    });
+                                  onClick: () async {
+                                    Question? newQuestion = await ref
+                                        .read(availableMixQuestionsProvider
+                                            .notifier)
+                                        .removeQuestion(index);
+                                    ref
+                                        .read(currentMixQuestionsProvider
+                                            .notifier)
+                                        .addQuestion(newQuestion!);
                                   },
                                 );
                               },
                             );
                           },
-                          loading: () => const CircularProgressIndicator(),
+                          loading: () => const Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                           error: (err, stack) => Text('Error: $err'),
                         ),
                       ),
@@ -223,10 +198,17 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                 ),
                               ),
                             ),
-                            Column(
-                              children: [
-                                Container(),
-                              ],
+                            const SizedBox(width: 25),
+                            Expanded(
+                              child: TextField(
+                                controller: mixTitle,
+                                decoration: const InputDecoration(
+                                  labelText: "Mix Title",
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -242,26 +224,15 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                   return CreateEditMixQuestionCard(
                                     questionDetails: questions[index],
                                     action: "Remove",
-                                    onClick: () {
-                                      final newCurrentQuestions =
-                                          List<Question>.from(questions);
-                                      List<Question> newAvailableQuestions = [];
-                                      availableQuestions.when(
-                                        data: (questions) {
-                                          newAvailableQuestions =
-                                              List<Question>.from(questions);
-                                        },
-                                        loading: () {},
-                                        error: (err, stack) {},
-                                      );
-                                      newAvailableQuestions.add(
-                                          newCurrentQuestions.removeAt(index));
-                                      setState(() {
-                                        availableQuestions = AsyncValue.data(
-                                            newAvailableQuestions);
-                                        currentQuestions = AsyncValue.data(
-                                            newCurrentQuestions);
-                                      });
+                                    onClick: () async {
+                                      Question? newQuestion = await ref
+                                          .read(currentMixQuestionsProvider
+                                              .notifier)
+                                          .removeQuestion(index);
+                                      ref
+                                          .read(availableMixQuestionsProvider
+                                              .notifier)
+                                          .addQuestion(newQuestion!);
                                     },
                                   );
                                 },
@@ -280,7 +251,13 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                               ),
                             );
                           },
-                          loading: () => const CircularProgressIndicator(),
+                          loading: () => const Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                           error: (err, stack) => Text('Error: $err'),
                         ),
                       ),
@@ -291,6 +268,16 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
             ],
           ),
         ),
+        isOpenModal == true
+            ? Container(color: const Color(0x800077B6))
+            : const SizedBox(),
+        isOpenModal == true
+            ? MixQuestionSearchModalScreen(onClick: () {
+                setState(() {
+                  isOpenModal = false;
+                });
+              })
+            : const SizedBox(),
       ],
     );
   }
