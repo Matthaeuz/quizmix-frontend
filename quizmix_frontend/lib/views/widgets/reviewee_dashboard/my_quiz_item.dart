@@ -10,6 +10,7 @@ import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/review_attempts_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class MyQuizItem extends ConsumerWidget {
@@ -70,7 +71,7 @@ class MyQuizItem extends ConsumerWidget {
           ),
           SolidButton(
             onPressed: () {
-              // Handle Review Attempts button press
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ReviewAttemptsScreen()));
             },
             text: 'Review Attempts',
             width: 150,
