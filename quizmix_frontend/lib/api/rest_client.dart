@@ -1,5 +1,6 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
+import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
@@ -90,11 +91,8 @@ abstract class RestClient {
   );
 
   @PATCH("/reviewees/{id}/")
-  Future<Reviewee> updateReviewee(
-    @Header("Authorization") String token,
-    @Path("id") int id,
-    @Body() Map<String, dynamic> newDetails
-  );
+  Future<Reviewee> updateReviewee(@Header("Authorization") String token,
+      @Path("id") int id, @Body() Map<String, dynamic> newDetails);
 
   /// REVIEWER API
 
@@ -168,6 +166,14 @@ abstract class RestClient {
   Future<Map<String, int>> getQuizSpecs(
     @Header("Authorization") String token,
     @Body() Map<String, int> quiz,
+  );
+
+  /// MIX API
+
+  @GET("/mixes/?made_by={madeBy}")
+  Future<List<Mix>> getMadeByMixes(
+    @Header("Authorization") String token,
+    @Path("madeBy") int madeBy,
   );
 
   /// QUIZ ATTEMPT API
