@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_view_profile/reviewer_quizzes_list.dart';
 
 import '../../widgets/reviewee_review_attempts/review_attempts_container.dart';
 

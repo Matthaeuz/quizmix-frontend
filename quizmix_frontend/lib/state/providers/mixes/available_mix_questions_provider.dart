@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
+import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
@@ -12,7 +13,7 @@ class AvailableMixQuestionsNotifier
       AsyncValue<List<Question>>> ref;
   final RestClient client;
   final String accessToken;
-  final Question? mix;
+  final Mix? mix;
 
   AvailableMixQuestionsNotifier({
     required this.ref,
