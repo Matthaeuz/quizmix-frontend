@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/views/screens/forgot_password_verification_code_screen.dart';
 import 'package:quizmix_frontend/views/screens/login_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-
 
 class ForgotPasswordInputEmailScreen extends StatelessWidget {
   const ForgotPasswordInputEmailScreen({Key? key}) : super(key: key);
@@ -60,7 +60,11 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
                               text: 'Continue',
                               width: 200,
                               onPressed: () {
-                                // TODO: Implement continue functionality
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ForgotPasswordVerificationCodeScreen()));
                               },
                             ),
                           ],

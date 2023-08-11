@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/views/screens/forgot_password_verification_code_screen.dart';
 import 'package:quizmix_frontend/views/screens/login_screen.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const ForgotPasswordVerificationCodeScreen(),
     );
   }
 }
