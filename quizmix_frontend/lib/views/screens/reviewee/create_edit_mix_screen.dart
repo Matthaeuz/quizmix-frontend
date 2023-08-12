@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
 import 'package:quizmix_frontend/api/utils/multipart_form_handlers/create_mix.utils.dart';
+import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_mix.utils.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
@@ -41,6 +43,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
     if (result != null) {
       PlatformFile file = result.files.first;
       setState(() {
+        isFirstImageRemoved = false;
         selectedImageBytes = file.bytes; // Store the bytes for later use
       });
     }
@@ -201,17 +204,18 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                 onPressed: () {
                                   final questions = currentQuestions.when(
                                     data: (data) {
-                                      return data
-                                          .map((question) => question.id)
-                                          .toList();
+                                      return data;
                                     },
                                     error: (err, st) {
-                                      return <int>[];
+                                      return <Question>[];
                                     },
                                     loading: () {
-                                      return <int>[];
+                                      return <Question>[];
                                     },
                                   );
+                                  final questionsIdList = questions
+                                      .map((question) => question.id)
+                                      .toList();
                                   String? textFieldValue;
                                   if (_formKey.currentState != null) {
                                     textFieldValue =
@@ -222,9 +226,12 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       textFieldValue.isEmpty) {
                                     return;
                                   }
+                                  PlatformFile? imageFile;
+                                  if (selectedImageBytes != null) {
+                                    imageFile =
+                                        bytesToPlatform(selectedImageBytes!);
+                                  }
                                   if (mix == null) {
-                                    PlatformFile? imageFile;
-
                                     final reviewee =
                                         ref.read(revieweeProvider).when(
                                               data: (data) {
@@ -233,17 +240,25 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                               error: (err, st) {},
                                               loading: () {},
                                             );
-
                                     final newMix = {
                                       "title": textFieldValue,
                                       "made_by": reviewee!,
-                                      "questions": questions,
+                                      "questions": questionsIdList,
                                     };
-                                    if (selectedImageBytes != null) {
-                                      imageFile =
-                                          bytesToPlatform(selectedImageBytes!);
-                                    }
                                     createMix(newMix, imageFile, ref)
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                    });
+                                  } else {
+                                    final newMix = Mix(
+                                      id: mix.id,
+                                      title: textFieldValue,
+                                      image: mix.image,
+                                      madeBy: mix.madeBy,
+                                      createdOn: mix.createdOn,
+                                      questions: questions,
+                                    );
+                                    updateMix(newMix, imageFile, isFirstImageRemoved, ref)
                                         .then((value) {
                                       Navigator.pop(context);
                                     });
