@@ -63,8 +63,10 @@ class RevieweesListScreen extends ConsumerWidget {
                     // List
                     reviewees.when(
                       data: (reviewees) => reviewees.isEmpty
-                          ? const EmptyDataPlaceholder(
-                              message: "There are currently no unassigned reviewees.")
+                          ? const Expanded(
+                              child: EmptyDataPlaceholder(
+                                  message:
+                                      "There are currently no unassigned reviewees."))
                           : Flexible(
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 25),
