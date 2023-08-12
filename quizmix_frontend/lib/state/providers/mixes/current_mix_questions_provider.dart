@@ -24,6 +24,8 @@ class CurrentMixQuestionsNotifier
     try {
       if (mix == null) {
         state = const AsyncValue.data([]);
+      } else {
+        state = AsyncValue.data(List.from(mix!.questions));
       }
     } catch (e, st) {
       state = AsyncValue.error(e, st);

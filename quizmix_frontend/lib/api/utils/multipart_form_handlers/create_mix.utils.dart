@@ -26,6 +26,9 @@ Future<Mix> createMix(
       "image": image,
     });
     dataToSend = formData;
+  } else {
+    final formData = FormData.fromMap(mixData);
+    dataToSend = formData;
   }
 
   try {

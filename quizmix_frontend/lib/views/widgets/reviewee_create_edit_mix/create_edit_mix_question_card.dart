@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
 class CreateEditMixQuestionCard extends ConsumerWidget {
@@ -18,6 +19,7 @@ class CreateEditMixQuestionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.watch(baseUrlProvider);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(10),
@@ -86,7 +88,9 @@ class CreateEditMixQuestionCard extends ConsumerWidget {
               ),
             ),
             child: Image.network(
-              questionDetails.image!,
+              questionDetails.image!.contains(baseUrl)
+                  ? questionDetails.image!
+                  : baseUrl + questionDetails.image!,
               fit: BoxFit.cover,
             ),
           ),
