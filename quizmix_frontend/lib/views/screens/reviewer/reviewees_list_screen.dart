@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
@@ -49,39 +50,46 @@ class RevieweesListScreen extends ConsumerWidget {
                         SolidButton(
                           text: 'Add Reviewee',
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const AddRevieweeScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddRevieweeScreen()));
                           },
                           icon: const Icon(Icons.person_add),
                         ),
                       ],
                     ),
                     // List
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: reviewees.when(
-                          data: (reviewees) => GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 25,
-                              mainAxisSpacing: 25,
-                              mainAxisExtent: 125,
+                    reviewees.when(
+                      data: (reviewees) => reviewees.isEmpty
+                          ? const EmptyDataPlaceholder(
+                              message: "There are currently no unassigned reviewees.")
+                          : Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 25),
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 25,
+                                    mainAxisSpacing: 25,
+                                    mainAxisExtent: 125,
+                                  ),
+                                  itemCount: reviewees.length,
+                                  itemBuilder: (context, index) {
+                                    return RevieweeListCard(
+                                      revieweeDetails: reviewees[index],
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
-                            itemCount: reviewees.length,
-                            itemBuilder: (context, index) {
-                              return RevieweeListCard(
-                                revieweeDetails: reviewees[index],
-                              );
-                            },
-                          ),
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          error: (err, stack) => Text('Error Found: $err'),
-                        ),
-                      ),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Text('Error Found: $err'),
                     ),
-                    const SizedBox(height: 25)
+                    const SizedBox(height: 25),
                   ],
                 ),
               ),
