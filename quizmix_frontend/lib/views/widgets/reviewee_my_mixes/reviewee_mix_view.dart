@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/view_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_my_mixes/reviewee_mix_question_card.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
@@ -48,7 +49,11 @@ class RevieweeMixView extends ConsumerWidget {
                             icon: Icons.visibility_outlined,
                             buttonColor: AppColors.mainColor,
                             onPressed: () {
-                              // to View Mix
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ViewMixScreen()));
                             },
                           ),
                           const SizedBox(width: 10),
