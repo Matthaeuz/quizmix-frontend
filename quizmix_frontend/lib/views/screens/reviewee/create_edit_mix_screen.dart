@@ -8,6 +8,7 @@ import 'package:quizmix_frontend/api/utils/multipart_form_handlers/create_mix.ut
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/mix_question_search_modal_screen.dart';
@@ -16,12 +17,7 @@ import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:file_picker/file_picker.dart';
 
 class CreateEditMixScreen extends ConsumerStatefulWidget {
-  const CreateEditMixScreen({
-    Key? key,
-    required this.action,
-  }) : super(key: key);
-
-  final String action;
+  const CreateEditMixScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<CreateEditMixScreen> createState() =>
@@ -29,8 +25,11 @@ class CreateEditMixScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormFieldState<String>> _textFieldKey =
+      GlobalKey<FormFieldState<String>>();
   bool isOpenModal = false;
-  TextEditingController mixTitle = TextEditingController();
+  bool isFirstImageRemoved = false;
   Uint8List? selectedImageBytes;
 
   void _selectImage() async {
@@ -49,6 +48,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mix = ref.watch(currentMixProvider);
     final availableQuestions = ref.watch(availableMixQuestionsProvider);
     final currentQuestions = ref.watch(currentMixQuestionsProvider);
 
@@ -196,9 +196,8 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: SolidButton(
-                                text: widget.action == "create"
-                                    ? "Create Mix"
-                                    : "Apply Edits",
+                                text:
+                                    mix == null ? "Create Mix" : "Apply Edits",
                                 onPressed: () {
                                   final questions = currentQuestions.when(
                                     data: (data) {
@@ -213,11 +212,17 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       return <int>[];
                                     },
                                   );
+                                  String? textFieldValue;
+                                  if (_formKey.currentState != null) {
+                                    textFieldValue =
+                                        _textFieldKey.currentState!.value;
+                                  }
                                   if (questions.isEmpty ||
-                                      mixTitle.text.isEmpty) {
+                                      textFieldValue == null ||
+                                      textFieldValue.isEmpty) {
                                     return;
                                   }
-                                  if (widget.action == "create") {
+                                  if (mix == null) {
                                     PlatformFile? imageFile;
 
                                     final reviewee =
@@ -230,7 +235,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             );
 
                                     final newMix = {
-                                      "title": mixTitle.text,
+                                      "title": textFieldValue,
                                       "made_by": reviewee!,
                                       "questions": questions,
                                     };
@@ -254,64 +259,95 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
                         child: Row(
                           children: [
-                            InkWell(
-                              onTap: _selectImage,
-                              child: Container(
-                                width: 140,
-                                height: 140,
-                                decoration: BoxDecoration(
-                                  color: AppColors.fourthColor,
-                                  borderRadius: BorderRadius.circular(5),
+                            Stack(
+                              children: [
+                                InkWell(
+                                  onTap: _selectImage,
+                                  child: Container(
+                                    width: 140,
+                                    height: 140,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.fourthColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: selectedImageBytes != null
+                                        ? Image.memory(
+                                            selectedImageBytes!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : !isFirstImageRemoved &&
+                                                mix != null &&
+                                                mix.image != null
+                                            ? Image.network(
+                                                mix.image!,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                width: double.infinity,
+                                                height: 300,
+                                                color: Colors.grey[300],
+                                                child: const Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.image,
+                                                      size: 50,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Text(
+                                                      'No Image Selected',
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                  ),
                                 ),
-                                child: selectedImageBytes != null
-                                    ? Image.memory(selectedImageBytes!,
-                                        fit: BoxFit.cover)
-                                    : Container(
-                                        width: double.infinity,
-                                        height: 300,
-                                        color: Colors.grey[300],
-                                        // child: question.image == null
-                                        //     ? const Column(
-                                        //         mainAxisAlignment:
-                                        //             MainAxisAlignment.center,
-                                        //         children: [
-                                        //           Icon(Icons.image,
-                                        //               size: 50,
-                                        //               color: Colors
-                                        //                   .grey), // Placeholder icon
-                                        //           SizedBox(height: 10),
-                                        //           Text('No Image Selected',
-                                        //               style: TextStyle(
-                                        //                   color: Colors.grey)),
-                                        //         ],
-                                        //       )
-                                        //     : Image.network(question.image!),
-                                        child: const Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.image,
-                                                size: 50,
-                                                color: Colors
-                                                    .grey), // Placeholder icon
-                                            SizedBox(height: 10),
-                                            Text('No Image Selected',
-                                                style: TextStyle(
-                                                    color: Colors.grey)),
-                                          ],
-                                        ),
-                                      ),
-                              ),
+                                selectedImageBytes != null ||
+                                        (!isFirstImageRemoved &&
+                                            mix != null &&
+                                            mix.image != null)
+                                    ? Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: RawMaterialButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              isFirstImageRemoved = true;
+                                              selectedImageBytes = null;
+                                            });
+                                          },
+                                          fillColor: Colors.red,
+                                          shape: const CircleBorder(),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 36.0,
+                                            minHeight: 36.0,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                          ),
+                                        ))
+                                    : const SizedBox(),
+                              ],
                             ),
                             const SizedBox(width: 25),
                             Expanded(
-                              child: TextField(
-                                controller: mixTitle,
-                                decoration: const InputDecoration(
-                                  labelText: "Mix Title",
-                                ),
-                                style: const TextStyle(
-                                  fontSize: 40,
+                              child: Form(
+                                key: _formKey,
+                                child: TextFormField(
+                                  key: _textFieldKey,
+                                  initialValue: mix?.title,
+                                  decoration: const InputDecoration(
+                                    labelText: "Mix Title",
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                  ),
                                 ),
                               ),
                             ),

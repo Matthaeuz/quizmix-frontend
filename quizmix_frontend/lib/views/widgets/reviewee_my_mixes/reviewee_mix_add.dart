@@ -20,7 +20,7 @@ class RevieweeMixAdd extends ConsumerWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CreateEditMixScreen(action: "create"),
+            builder: (context) => const CreateEditMixScreen(),
           ),
         );
       },

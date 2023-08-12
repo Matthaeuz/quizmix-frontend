@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class ViewMixQuestionContainer extends ConsumerWidget {
   const ViewMixQuestionContainer({super.key});
@@ -33,48 +32,40 @@ class ViewMixQuestionContainer extends ConsumerWidget {
                             children: [
                               Container(
                                 padding: EdgeInsets.zero,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                child: Wrap(
+                                  runSpacing: 20,
                                   children: [
                                     Text(
                                       'Question $questionNum',
                                       style: const TextStyle(fontSize: 32),
                                     ),
                                     const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: getCategoryColor(
-                                              question.category),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            question.category,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
+                                    Flexible(
+                                      child: IntrinsicWidth(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: getCategoryColor(
+                                                question.category),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              question.category,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 25),
-                                    SolidButton(
-                                      text: 'Remove',
-                                      onPressed: () {
-                                        // Add your code for handling "Remove" press here
-                                      },
-                                      icon: const Icon(Icons.delete),
-                                      backgroundColor: Colors.red,
                                     ),
                                   ],
                                 ),

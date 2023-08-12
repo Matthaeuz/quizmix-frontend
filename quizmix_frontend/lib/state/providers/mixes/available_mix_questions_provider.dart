@@ -26,10 +26,14 @@ class AvailableMixQuestionsNotifier
 
   Future<void> fetchQuestions() async {
     try {
-      if (mix == null) {
-        var questions = await client.getQuestions(accessToken);
-        state = AsyncValue.data(questions);
+      var questions = await client.getQuestions(accessToken);
+      if (mix != null) {
+        final currentQuestionIds =
+            mix!.questions.map((question) => question.id).toList();
+        questions.removeWhere(
+            (question) => currentQuestionIds.contains(question.id));
       }
+      state = AsyncValue.data(questions);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }

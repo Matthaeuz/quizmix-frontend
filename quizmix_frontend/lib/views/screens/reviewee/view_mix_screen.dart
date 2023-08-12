@@ -4,7 +4,11 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/mix_question_search_filter_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_view_mix/view_mix_question_container.dart';
 import 'dart:async';
 
@@ -113,7 +117,31 @@ class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
                                       text: 'Edit',
                                       icon: Icons.edit,
                                       buttonColor: AppColors.mainColor,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ref
+                                            .read(currentMixProvider.notifier)
+                                            .updateCurrentMix(currentMix);
+                                        ref
+                                            .read(availableMixQuestionsProvider
+                                                .notifier)
+                                            .fetchQuestions();
+                                        ref
+                                            .read(currentMixQuestionsProvider
+                                                .notifier)
+                                            .fetchQuestions();
+                                        ref
+                                            .read(
+                                                mixQuestionSearchFilterProvider
+                                                    .notifier)
+                                            .initializeFilters();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CreateEditMixScreen(),
+                                          ),
+                                        );
+                                      },
                                     ),
                                     const SizedBox(width: 16.0),
                                     TinySolidButton(
