@@ -31,6 +31,8 @@ class TinySolidButton extends StatelessWidget {
         style: const TextStyle(
           fontFamily: 'Poppins',
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

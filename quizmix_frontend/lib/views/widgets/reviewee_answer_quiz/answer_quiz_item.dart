@@ -5,13 +5,13 @@ import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 
 class AnswerQuizItem extends ConsumerWidget {
   final String question;
-  final String image;
+  final String? image;
   final List<String> choices;
   final bool? allQuestionsAnswered;
 
   AnswerQuizItem({
     required this.question,
-    required this.image,
+    this.image,
     required this.choices,
     this.allQuestionsAnswered,
   });
@@ -64,12 +64,18 @@ class AnswerQuizItem extends ConsumerWidget {
                       const SizedBox(
                         height: 25,
                       ),
-                      Image.network(
-                        image.contains(baseUrl) ? image : baseUrl + image,
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
+                      image != null
+                          ? Image.network(
+                              image!.contains(baseUrl)
+                                  ? image!
+                                  : baseUrl + image!,
+                            )
+                          : const SizedBox(),
+                      image != null
+                          ? const SizedBox(
+                              height: 25,
+                            )
+                          : const SizedBox(),
                       const Align(
                         alignment: Alignment.topLeft,
                         child: Text(

@@ -138,7 +138,7 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                         currentQuestion != null
                             ? AnswerQuizItem(
                                 question: currentQuestion.question,
-                                image: currentQuestion.image!,
+                                image: currentQuestion.image,
                                 choices: currentQuestion.choices,
                                 allQuestionsAnswered: allQuestionsAnswered,
                               )

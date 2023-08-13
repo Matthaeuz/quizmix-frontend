@@ -186,7 +186,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                       children: [
                         AnswerQuizItem(
                           question: currentQuestion.question,
-                          image: currentQuestion.image!,
+                          image: currentQuestion.image,
                           choices: currentQuestion.choices,
                           allQuestionsAnswered: allQuestionsAnswered,
                         ),

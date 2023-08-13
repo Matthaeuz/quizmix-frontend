@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/mixes/answer_mix_responses_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/answer_mix_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_my_mixes/reviewee_mix_question_card.dart';
 import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
@@ -35,14 +37,6 @@ class RevieweeMixView extends ConsumerWidget {
                               style: const TextStyle(fontSize: 32),
                             ),
                           ),
-                          TinySolidButton(
-                            text: 'View Results',
-                            icon: Icons.list,
-                            buttonColor: AppColors.mainColor,
-                            onPressed: () {
-                              // to View Results
-                            },
-                          ),
                           const SizedBox(width: 10),
                           TinySolidButton(
                             text: 'View Mix',
@@ -50,10 +44,11 @@ class RevieweeMixView extends ConsumerWidget {
                             buttonColor: AppColors.mainColor,
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ViewMixScreen()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ViewMixScreen(),
+                                ),
+                              );
                             },
                           ),
                           const SizedBox(width: 10),
@@ -62,7 +57,15 @@ class RevieweeMixView extends ConsumerWidget {
                             icon: Icons.check_circle_outlined,
                             buttonColor: AppColors.mainColor,
                             onPressed: () {
-                              // to Answer Mix
+                              ref
+                                  .read(answerMixResponsesProvider.notifier)
+                                  .initialize();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AnswerMixScreen(),
+                                ),
+                              );
                             },
                           ),
                         ],
