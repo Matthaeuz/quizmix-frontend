@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_view_profile/my_categories.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_view_profile/my_quiz_history.dart';
@@ -9,6 +10,8 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.read(baseUrlProvider);
+
     double sectionWidth = MediaQuery.of(context).size.width * 0.8;
     double cardWidth = sectionWidth / 2 <= 200 ? double.infinity : 300;
     final revieweeDetails = ref.watch(revieweeProvider).when(
@@ -21,7 +24,7 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
     ImageProvider? imageProvider;
     if (revieweeDetails!.user.image != null &&
         revieweeDetails.user.image!.isNotEmpty) {
-      imageProvider = NetworkImage(revieweeDetails.user.image!);
+      imageProvider = NetworkImage(baseUrl + revieweeDetails.user.image!);
     } else {
       imageProvider = const AssetImage("lib/assets/images/default_pic.png");
     }

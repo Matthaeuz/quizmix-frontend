@@ -4,6 +4,7 @@ import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_reviewee_list/AddRevieweeCard.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -117,6 +118,12 @@ class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
             Expanded(
               child: revieweesFuture.when(
                 data: (reviewees) {
+                  if (reviewees.isEmpty) {
+                    return const EmptyDataPlaceholder(
+                      message: "No unassigned reviewees found.",
+                    );
+                  }
+                  
                   if (isCheckedList.isEmpty) {
                     // Initialize isCheckedList if it hasn't been initialized yet
                     isCheckedList = List.filled(reviewees.length, false);

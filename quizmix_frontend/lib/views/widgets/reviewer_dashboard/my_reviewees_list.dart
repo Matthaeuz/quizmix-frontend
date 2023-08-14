@@ -56,7 +56,7 @@ class MyRevieweesList extends ConsumerWidget {
                       const SizedBox(width: 25),
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      return const AddCard();
+                      return const AddCard(type: "reviewees");
                     } else {
                       final reviewee = revieweesData[index - 1];
                       final String name = reviewee.user.fullName;

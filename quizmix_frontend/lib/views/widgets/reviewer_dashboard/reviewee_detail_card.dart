@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 
-class RevieweeDetailCard extends StatelessWidget {
+class RevieweeDetailCard extends ConsumerWidget {
   final String title;
   final String? image;
 
@@ -8,7 +10,9 @@ class RevieweeDetailCard extends StatelessWidget {
       {super.key, required this.title, required this.image});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.read(baseUrlProvider);
+
     return GestureDetector(
       onTap: () {
         // Handle box onPress
@@ -34,7 +38,7 @@ class RevieweeDetailCard extends StatelessWidget {
                           fit: BoxFit.cover,
                         )
                       : Image.network(
-                          image!,
+                          baseUrl + image!,
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,

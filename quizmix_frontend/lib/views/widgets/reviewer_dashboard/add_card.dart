@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/tos_modal_screen.dart';
 
 class AddCard extends StatefulWidget {
-  const AddCard({super.key});
+  final String type;
+
+  const AddCard({super.key, this.type = "quizzes"});
 
   @override
   _AddCardState createState() => _AddCardState();
@@ -16,8 +19,13 @@ class _AddCardState extends State<AddCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
+        if (widget.type == "quizzes") {
+          Navigator.push(context,
             MaterialPageRoute(builder: (context) => const TosModalScreen()));
+        } else {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const AddRevieweeScreen()));
+        }      
       },
       onHover: (value) {
         setState(() {
