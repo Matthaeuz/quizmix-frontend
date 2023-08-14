@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class ViewQuizContainer extends ConsumerWidget {
@@ -109,6 +110,8 @@ class ViewQuizContainer extends ConsumerWidget {
                   );
                 },
               )
-            : const Placeholder());
+            : const EmptyDataPlaceholder(
+                message: "Please select a question to view details.",
+              ));
   }
 }
