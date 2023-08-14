@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/my_quiz_item.d
 import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/reviewee_dashboard.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart'; // Import the EmptyDataPlaceholder widget
 
 class MyQuizzesScreen extends ConsumerStatefulWidget {
   const MyQuizzesScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
   @override
   Widget build(BuildContext context) {
     final quizzes = ref.watch(revieweeQuizzesProvider);
-
+    
     return Scaffold(
       body: Row(
         children: [
@@ -46,6 +47,11 @@ class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
                       builder: (context, watch, child) {
                         return quizzes.when(
                           data: (data) {
+                            if (data.isEmpty) {
+                              return const EmptyDataPlaceholder(
+                                message: "You currently have no quizzes.",
+                              );
+                            }
                             return ListView.builder(
                               itemCount: data.length,
                               itemBuilder: (context, index) {

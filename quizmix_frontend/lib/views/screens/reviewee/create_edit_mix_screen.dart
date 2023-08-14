@@ -14,6 +14,7 @@ import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/mix_question_search_modal_screen.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_create_edit_mix/create_edit_mix_question_card.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:file_picker/file_picker.dart';
@@ -137,17 +138,9 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                 },
                               );
                             }
-                            return const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'There are no questions to show',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontFamily: 'Poppins',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
+                            return const Expanded(
+                              child: EmptyDataPlaceholder(
+                                  message: "There are no questions to show."),
                             );
                           },
                           loading: () => const Center(
@@ -258,7 +251,8 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       createdOn: mix.createdOn,
                                       questions: questions,
                                     );
-                                    updateMix(newMix, imageFile, isFirstImageRemoved, ref)
+                                    updateMix(newMix, imageFile,
+                                            isFirstImageRemoved, ref)
                                         .then((value) {
                                       Navigator.pop(context);
                                     });
