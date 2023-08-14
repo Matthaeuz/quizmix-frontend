@@ -262,7 +262,10 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
                                       icon: const Icon(Icons.clear),
                                       onPressed: () {
                                         setState(() {
-                                          categories.removeAt(index);
+                                          String removedCategory =
+                                              categories.removeAt(index);
+                                          allCategories.add(removedCategory);
+                                          allCategories.sort();
                                         });
                                       },
                                     ),
