@@ -36,10 +36,11 @@ class ProfileArea extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: details.image != ''
-                    ? NetworkImage(details.image!)
-                    : const AssetImage('lib/assets/images/default_pic.png')
-                        as ImageProvider<Object>,
+                backgroundImage:
+                    details.image != null && details.image!.isNotEmpty
+                        ? NetworkImage(details.image!)
+                        : const AssetImage('lib/assets/images/default_pic.png')
+                            as ImageProvider<Object>,
               ),
             ),
             const SizedBox(width: 16),

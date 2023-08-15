@@ -157,7 +157,7 @@ abstract class RestClient {
   );
 
   @POST("/quizzes/select_item/")
-  Future<int> selectItem(
+  Future<Question> selectItem(
     @Header("Authorization") String token,
     @Body() Map<String, dynamic> pool,
   );

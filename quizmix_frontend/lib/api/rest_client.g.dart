@@ -742,7 +742,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<int> selectItem(
+  Future<Question> selectItem(
     String token,
     Map<String, dynamic> pool,
   ) async {
@@ -752,23 +752,24 @@ class _RestClient implements RestClient {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(pool);
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Question>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
-        .compose(
-          _dio.options,
-          '/quizzes/select_item/',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data!;
+            .compose(
+              _dio.options,
+              '/quizzes/select_item/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Question.fromJson(_result.data!);
     return value;
   }
 
