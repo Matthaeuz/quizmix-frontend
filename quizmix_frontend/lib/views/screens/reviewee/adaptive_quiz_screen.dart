@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/cat_family_provider.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/cat_specs_provider.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
@@ -38,16 +41,34 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
     notifier.updateReviewee(ref, resp);
   }
 
-  void handleChoicePressed(String choice, Question currentQuestion) {
+  void endQuiz() async {
+    final client = ref.read(restClientProvider);
+    final token = ref.read(authTokenProvider).accessToken;
+
+    Map<String, dynamic> timeFinished = {
+      "time_finished": DateTime.now().toIso8601String()
+    };
+    await client.updateQuizAttempt(
+        token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
+  }
+
+  void handleChoicePressed(String choice, Question currentQuestion) async {
+    // create QuestionAttempt
+    final questionDetails = QuestionDetails(
+      attempt: ref.read(currentQuizAttemptedProvider).id,
+      question: currentQuestion.id,
+      revieweeAnswer: choice,
+      difficultyScore: 0,
+    );
+
+    final client = ref.read(restClientProvider);
+    final token = ref.read(authTokenProvider).accessToken;
+
+    await client.createQuestionAttempt(token, questionDetails);
+
     // Check if the current answer is correct
     bool isCurrentAnswerCorrect = currentQuestion.answer == choice;
-    final revieweeId = ref.read(revieweeProvider).when(
-          data: (data) {
-            return data.id;
-          },
-          error: (err, st) {},
-          loading: () {},
-        );
+    final revieweeId = ref.read(revieweeProvider).value!.id;
 
     if (isCurrentAnswerCorrect) {
       ref
@@ -56,7 +77,7 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
     }
 
     itemAnalysisAndScoring(
-        ref, revieweeId!, isCurrentAnswerCorrect, currentQuestion);
+        ref, revieweeId, isCurrentAnswerCorrect, currentQuestion);
 
     setState(() {
       if (currentQuestionIndex >=
@@ -83,10 +104,11 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
             );
           },
         );
+        endQuiz();
         return;
       } else {
         // decrement category from specs
-        ref.read(catSpecsProvider.notifier).updateSpecs();
+        ref.read(catProvider.notifier).getNextQuestion();
 
         // proceed to next question
         currentQuestionIndex++;
@@ -97,7 +119,13 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final currentQuiz = ref.watch(currentTakenQuizProvider);
-    final currentQuestion = ref.watch(catFamilyProvider(currentQuestionIndex));
+    final currentQuestion = ref.watch(catProvider).when(
+          data: (data) {
+            return data["question"];
+          },
+          error: (err, st) {},
+          loading: () {},
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -109,6 +137,7 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
             color: Colors.black,
           ),
           onPressed: () {
+            endQuiz();
             Navigator.pop(context);
           },
         ),
