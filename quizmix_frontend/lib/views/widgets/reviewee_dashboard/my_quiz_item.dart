@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/cat_pool_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/adaptive_quiz_screen.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
@@ -71,7 +71,10 @@ class MyQuizItem extends ConsumerWidget {
           ),
           SolidButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ReviewAttemptsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ReviewAttemptsScreen()));
             },
             text: 'Review Attempts',
             width: 150,
@@ -79,33 +82,35 @@ class MyQuizItem extends ConsumerWidget {
           const SizedBox(width: 12),
           SolidButton(
             onPressed: () async {
-              final hasAttempts = await client.getRevieweeAttemptsByQuiz(token, revieweeId!, quiz.id);
+              final hasAttempts = await client.getRevieweeAttemptsByQuiz(
+                  token, revieweeId!, quiz.id);
               ref
-                      .read(currentTakenQuizProvider.notifier)
-                      .updateCurrentQuiz(quiz);
-              if (hasAttempts.isEmpty) {
-                Map<String, int> details = {
-                  "attempted_by": revieweeId,
-                  "quiz": quiz.id,
-                };
+                  .read(currentTakenQuizProvider.notifier)
+                  .updateCurrentQuiz(quiz);
 
-                client.createQuizAttempt(token, details).then((value) {
-                  ref
-                      .read(currentQuizAttemptedProvider.notifier)
-                      .updateCurrentQuizAttempted(value);
+              // make QuizAttempt for either pretest & adaptive test
+              Map<String, int> details = {
+                "attempted_by": revieweeId,
+                "quiz": quiz.id,
+              };
 
+              client.createQuizAttempt(token, details).then((value) {
+                ref
+                    .read(currentQuizAttemptedProvider.notifier)
+                    .updateCurrentQuizAttempted(value);
+                if (hasAttempts.isEmpty) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AnswerQuizScreen()));
-                });
-              } else {
-                ref.read(catPoolProvider.notifier).resetPool();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AdaptiveQuizScreen()));
-              }
+                } else {
+                  ref.read(catProvider.notifier).initializeCAT();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AdaptiveQuizScreen()));
+                }
+              });
             },
             text: 'Answer',
             width: 150,
