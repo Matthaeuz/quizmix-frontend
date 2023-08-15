@@ -74,7 +74,8 @@ class MyQuizItem extends ConsumerWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ReviewAttemptsScreen()));
+                      builder: (context) =>
+                          ReviewAttemptsScreen(quizId: quiz.id)));
             },
             text: 'Review Attempts',
             width: 150,

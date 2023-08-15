@@ -6,6 +6,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
@@ -44,12 +45,21 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
   void endQuiz() async {
     final client = ref.read(restClientProvider);
     final token = ref.read(authTokenProvider).accessToken;
-
+    final time = DateTime.now().toUtc();
+    final quizId = ref.read(currentQuizAttemptedProvider).quiz.id;
+    final revieweeId = ref.read(revieweeProvider).when(
+          data: (data) => data.id,
+          error: (err, st) => 0,
+          loading: () => 0, 
+        );
+    
     Map<String, dynamic> timeFinished = {
-      "time_finished": DateTime.now().toIso8601String()
+      "time_finished": time.toIso8601String()
     };
     await client.updateQuizAttempt(
         token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
+        
+    ref.read(revieweeAttemptsProvider(quizId).notifier).fetchRevieweeAttempts(revieweeId, quizId);
   }
 
   void handleChoicePressed(String choice, Question currentQuestion) async {

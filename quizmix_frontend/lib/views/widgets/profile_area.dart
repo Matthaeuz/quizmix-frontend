@@ -36,7 +36,7 @@ class ProfileArea extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: details.image != ''
+                backgroundImage: details.image != null && details.image!.isNotEmpty
                     ? NetworkImage(details.image!)
                     : const AssetImage('lib/assets/images/default_pic.png')
                         as ImageProvider<Object>,

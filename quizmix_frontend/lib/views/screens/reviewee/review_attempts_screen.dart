@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
 import '../../widgets/reviewee_review_attempts/review_attempts_container.dart';
 
 class ReviewAttemptsScreen extends ConsumerWidget {
-  const ReviewAttemptsScreen({Key? key}) : super(key: key);
+  final int quizId;
+
+  const ReviewAttemptsScreen({Key? key, required this.quizId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final attempts = ref.watch(revieweeAttemptsProvider(quizId));
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -119,27 +126,44 @@ class ReviewAttemptsScreen extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 25),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: 20,
-                                      itemBuilder: (context, index) {
-                                        return const Padding(
-                                          padding:
-                                              EdgeInsets.only(bottom: 12.0),
-                                          child: ReviewAttemptsContainer(),
-                                        );
-                                      },
+                            attempts.when(
+                                data: (data) {
+                                  if (data.isEmpty) {
+                                    return const EmptyDataPlaceholder(
+                                        message:
+                                            "There are currently no attempts for this quiz.");
+                                  }
+                                  return Expanded(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: data.length,
+                                            itemBuilder: (context, index) {
+                                              final attempt = data[index];
+
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 12.0),
+                                                child: ReviewAttemptsContainer(
+                                                  attempt: attempt,
+                                                  index: index,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            )
+                                  );
+                                },
+                                error: (error, stack) =>
+                                    Center(child: Text('Error: $error')),
+                                loading: () =>
+                                    const CircularProgressIndicator())
                           ],
                         ),
                       ),

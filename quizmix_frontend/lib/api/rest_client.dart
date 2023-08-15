@@ -185,6 +185,12 @@ abstract class RestClient {
     @Path("quizId") int quizId,
   );
 
+  @GET("/quiz_attempts/?quiz={quizId}")
+  Future<List<QuizAttempt>> getQuizAttemptsByQuiz(
+    @Header("Authorization") String token,
+    @Path("quizId") int quizId,
+  );
+
   @POST("/quiz_attempts/")
   Future<QuizAttempt> createQuizAttempt(
       @Header("Authorization") String token, @Body() Map<String, int> details);
