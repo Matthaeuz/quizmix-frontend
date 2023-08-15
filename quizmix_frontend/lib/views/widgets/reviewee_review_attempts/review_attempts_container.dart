@@ -32,7 +32,7 @@ class ReviewAttemptsContainer extends StatelessWidget {
           ),
           Expanded(
             child: Center(
-              child: Text("something/$totalScore"),
+              child: Text("${attempt.attemptScore}/$totalScore"),
             ),
           ),
           Expanded(

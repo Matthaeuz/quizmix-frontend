@@ -13,6 +13,7 @@ class QuizAttempt {
     required this.createdOn,
     required this.timeStarted,
     this.timeFinished,
+    required this.attemptScore,
   });
 
   @JsonKey(name: 'id')
@@ -32,6 +33,9 @@ class QuizAttempt {
 
   @JsonKey(name: 'time_finished')
   DateTime? timeFinished;
+
+  @JsonKey(name: 'attempt_score')
+  final int attemptScore;
   
   /// Base quiz creation; call this if you need to reference an empty quiz.
   QuizAttempt.base()
@@ -40,7 +44,8 @@ class QuizAttempt {
         quiz = Quiz.base(),
         createdOn = DateTime.now(),
         timeStarted = DateTime.now(),
-        timeFinished = DateTime.now();
+        timeFinished = DateTime.now(),
+        attemptScore = 0;
 
   factory QuizAttempt.fromJson(Map<String, dynamic> json) => _$QuizAttemptFromJson(json);
   Map<String, dynamic> toJson() => _$QuizAttemptToJson(this);

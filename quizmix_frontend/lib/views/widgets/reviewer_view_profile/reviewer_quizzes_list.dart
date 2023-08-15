@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/reviewer_quiz_history_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart'; // Import the widget
 import 'package:quizmix_frontend/views/widgets/reviewer_quiz_item_container.dart';
@@ -43,7 +44,12 @@ class ReviewerQuizzesList extends ConsumerWidget {
                             MaterialPageRoute(
                                 builder: (context) => const ViewQuizScreen()));
                       },
-                      onViewHistoryPressed: () {},
+                      onViewHistoryPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ReviewerQuizHistoryScreen()));
+                      },
                     ),
                     const SizedBox(height: 16),
                   ]);
