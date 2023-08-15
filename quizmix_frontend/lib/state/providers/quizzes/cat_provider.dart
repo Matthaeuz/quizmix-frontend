@@ -55,17 +55,17 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       if (specs.containsKey(category)) {
         specs[category] = (specs[category] ?? 1) - 1;
       }
-      if (specs[category] == 0) {
-        specs.remove(category);
-      }
-      final questionId = await client.selectItem(accessToken, {
+      final question = await client.selectItem(accessToken, {
         "reviewee": revieweeId,
         "item_pool": pool[category],
       });
-      if (pool.containsKey(category)) {
-        pool[category].remove(questionId);
+      if (specs[category] == 0) {
+        specs.remove(category);
+        pool.remove(category);
       }
-      final question = await client.getQuestionById(accessToken, questionId);
+      if (pool.containsKey(category)) {
+        pool[category].remove(question.id);
+      }
 
       // compile state
       final initialState = {
@@ -89,22 +89,21 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       if (newState["specs"].containsKey(category)) {
         newState["specs"][category] = (newState["specs"][category] ?? 1) - 1;
       }
-      if (newState["specs"][category] == 0) {
-        newState["specs"].remove(category);
-      }
 
       // get new question
-      final questionId = await client.selectItem(accessToken, {
+      newState["question"] = await client.selectItem(accessToken, {
         "reviewee": revieweeId,
         "item_pool": newState["pool"][category],
       });
 
       // get new pool
-      if (newState["pool"].containsKey(category)) {
-        newState["pool"][category].remove(questionId);
+      if (newState["specs"][category] == 0) {
+        newState["specs"].remove(category);
+        newState["pool"].remove(category);
       }
-      newState["question"] =
-          await client.getQuestionById(accessToken, questionId);
+      if (newState["pool"].containsKey(category)) {
+        newState["pool"][category].remove(newState["question"].id);
+      }
 
       // compile new state
       print(newState);

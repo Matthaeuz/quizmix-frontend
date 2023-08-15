@@ -13,7 +13,7 @@ import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class AdaptiveQuizScreen extends ConsumerStatefulWidget {
-  AdaptiveQuizScreen({Key? key}) : super(key: key);
+  const AdaptiveQuizScreen({Key? key}) : super(key: key);
 
   @override
   _AdaptiveQuizScreenState createState() => _AdaptiveQuizScreenState();
