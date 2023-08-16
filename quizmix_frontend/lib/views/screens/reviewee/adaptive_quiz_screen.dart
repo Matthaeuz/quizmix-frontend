@@ -11,6 +11,7 @@ import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
+import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_number.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class AdaptiveQuizScreen extends ConsumerStatefulWidget {
@@ -50,19 +51,27 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
     final revieweeId = ref.read(revieweeProvider).when(
           data: (data) => data.id,
           error: (err, st) => 0,
-          loading: () => 0, 
+          loading: () => 0,
         );
-    
+
     Map<String, dynamic> timeFinished = {
       "time_finished": time.toIso8601String()
     };
     await client.updateQuizAttempt(
         token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
-        
-    ref.read(revieweeAttemptsProvider(quizId).notifier).fetchRevieweeAttempts(revieweeId, quizId);
+
+    ref
+        .read(revieweeAttemptsProvider(quizId).notifier)
+        .fetchRevieweeAttempts(revieweeId, quizId);
   }
 
   void handleChoicePressed(String choice, Question currentQuestion) async {
+    if (currentQuestionIndex <
+        ref.read(currentTakenQuizProvider).questions.length - 1) {
+      // temporarily set question to null if not last question
+      ref.read(catProvider.notifier).setLoading();
+    }
+
     // create QuestionAttempt
     final questionDetails = QuestionDetails(
       attempt: ref.read(currentQuizAttemptedProvider).id,
@@ -181,7 +190,20 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                                 choices: currentQuestion.choices,
                                 allQuestionsAnswered: allQuestionsAnswered,
                               )
-                            : const SizedBox(),
+                            : Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColors.mainColor,
+                                      width: 1,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
                         allQuestionsAnswered == true
                             ? const Spacer()
                             : const SizedBox(),
@@ -243,67 +265,30 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                         color: Colors.white,
                       ),
                       padding: const EdgeInsets.fromLTRB(12, 12, 12, 3),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double gridWidth = constraints.maxWidth * 0.1;
-                          return GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 70,
-                              crossAxisSpacing: 12.0,
-                              mainAxisSpacing: 12.0,
-                            ),
-                            itemCount: currentQuiz.questions.length,
-                            itemBuilder: (context, index) {
-                              return SizedBox(
-                                height: gridWidth,
-                                child: Column(
+                      child: Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Wrap(
                                   children: [
-                                    Material(
-                                      color: Colors.transparent,
-                                      child: GestureDetector(
-                                        onTap:
-                                            () {}, // No action on tap, making it non-pressable
-                                        child: Container(
-                                          width: gridWidth,
-                                          height: gridWidth,
-                                          color: allQuestionsAnswered
-                                              ? const Color.fromARGB(
-                                                  115, 158, 158, 158)
-                                              : currentQuestionIndex == index
-                                                  ? AppColors.mainColor
-                                                  : currentQuestionIndex > index
-                                                      ? const Color.fromARGB(
-                                                          115, 158, 158, 158)
-                                                      : AppColors.thirdColor,
-                                          child: Center(
-                                            child: Text(
-                                              '${index + 1}',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.01,
-                                                color: allQuestionsAnswered ||
-                                                        currentQuestionIndex ==
-                                                            index
-                                                    ? Colors.white
-                                                    : currentQuestionIndex >
-                                                            index
-                                                        ? Colors.white
-                                                        : AppColors.mainColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    for (int i = 0;
+                                        i < currentQuiz.questions.length;
+                                        i++) ...[
+                                      AnswerQuizNumber(
+                                        number: i + 1,
+                                        currentNumber: currentQuestionIndex + 1,
+                                        allQuestionsAnswered:
+                                            allQuestionsAnswered,
+                                      )
+                                    ]
                                   ],
                                 ),
-                              );
-                            },
-                          );
-                        },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )

@@ -112,6 +112,12 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       state = AsyncValue.error(e, st);
     }
   }
+
+  void setLoading() {
+    final newState = Map<String, dynamic>.from(state.value!);
+    newState["question"] = null;
+    state = AsyncValue.data(newState);
+  }
 }
 
 final catProvider =

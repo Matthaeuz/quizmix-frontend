@@ -48,9 +48,12 @@ class SolidButton extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: icon!,
             ),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 16.0),
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 16.0),
+            ),
           ),
         ],
       ),
