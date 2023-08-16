@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempts_list_provider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_histogram.dart';
 
 class ReviewerQuizHistoryScreen extends ConsumerWidget {
   final Quiz quiz;
@@ -12,7 +11,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final attempts = ref.read(quizAttemptsListProvider(quiz.id));
+    final attempts = ref.watch(quizAttemptsListProvider(quiz.id));
 
     return Scaffold(
         appBar: AppBar(
@@ -35,26 +34,6 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
             ),
           ),
         ),
-        body: Container(
-            child: attempts.when(
-                loading: () => const CircularProgressIndicator(),
-                error: (err, stack) => const Text('An error occurred'),
-                data: (quizAttempts) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SfCartesianChart(
-                      primaryXAxis: CategoryAxis(),
-                      series: <ChartSeries<QuizAttempt, String>>[
-                        ColumnSeries<QuizAttempt, String>(
-                          dataSource: quizAttempts,
-                          xValueMapper: (QuizAttempt attempt, _) =>
-                              'Attempt ${attempt.id}',
-                          yValueMapper: (QuizAttempt attempt, _) =>
-                              attempt.attemptScore,
-                        ),
-                      ],
-                    ),
-                  );
-                })));
+        body: Container(child: QuizHistogram(attempts: attempts)));
   }
 }
