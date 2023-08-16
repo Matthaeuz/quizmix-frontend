@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_profile/reviewer_quizzes_list.dart';
 
@@ -9,10 +10,11 @@ class ViewProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final baseUrl = ref.read(baseUrlProvider);
     final reviewerDetails = ref.watch(reviewerProvider);
     ImageProvider? imageProvider;
     if (reviewerDetails.user.image != null && reviewerDetails.user.image!.isNotEmpty) {
-        imageProvider = NetworkImage(reviewerDetails.user.image!);
+        imageProvider = NetworkImage(baseUrl + reviewerDetails.user.image!);
     } else {
         imageProvider = const AssetImage("lib/assets/images/default_pic.png");
     }
