@@ -7,11 +7,15 @@ import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 class QuizAttemptsListNotifier extends StateNotifier<AsyncValue<List<QuizAttempt>>> {
   final RestClient client;
   final String accessToken;
+  final int quizId;
 
   QuizAttemptsListNotifier({
     required this.client,
     required this.accessToken,
-  }) : super(const AsyncValue.loading());
+    required this.quizId,
+  }) : super(const AsyncValue.loading()) {
+    fetchQuizAttempts(quizId);
+  }
 
   Future<void> fetchQuizAttempts(int quizId) async {
     try {
@@ -23,9 +27,9 @@ class QuizAttemptsListNotifier extends StateNotifier<AsyncValue<List<QuizAttempt
   }
 }
 
-final quizAttemptsListProvider = StateNotifierProvider<QuizAttemptsListNotifier, AsyncValue<List<QuizAttempt>>>((ref) {
+final quizAttemptsListProvider = StateNotifierProvider.family<QuizAttemptsListNotifier, AsyncValue<List<QuizAttempt>>, int>((ref, quizId) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
 
-  return QuizAttemptsListNotifier(client: client, accessToken: token.accessToken);
+  return QuizAttemptsListNotifier(client: client, accessToken: token.accessToken, quizId: quizId);
 });

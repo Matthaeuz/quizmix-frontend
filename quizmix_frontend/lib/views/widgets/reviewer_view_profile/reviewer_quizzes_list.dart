@@ -48,7 +48,8 @@ class ReviewerQuizzesList extends ConsumerWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ReviewerQuizHistoryScreen()));
+                                builder: (context) =>
+                                    ReviewerQuizHistoryScreen(quiz: quiz)));
                       },
                     ),
                     const SizedBox(height: 16),
