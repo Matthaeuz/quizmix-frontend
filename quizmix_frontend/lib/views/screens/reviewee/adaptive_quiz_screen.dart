@@ -50,19 +50,27 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
     final revieweeId = ref.read(revieweeProvider).when(
           data: (data) => data.id,
           error: (err, st) => 0,
-          loading: () => 0, 
+          loading: () => 0,
         );
-    
+
     Map<String, dynamic> timeFinished = {
       "time_finished": time.toIso8601String()
     };
     await client.updateQuizAttempt(
         token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
-        
-    ref.read(revieweeAttemptsProvider(quizId).notifier).fetchRevieweeAttempts(revieweeId, quizId);
+
+    ref
+        .read(revieweeAttemptsProvider(quizId).notifier)
+        .fetchRevieweeAttempts(revieweeId, quizId);
   }
 
   void handleChoicePressed(String choice, Question currentQuestion) async {
+    if (currentQuestionIndex <
+        ref.read(currentTakenQuizProvider).questions.length - 1) {
+      // temporarily set question to null if not last question
+      ref.read(catProvider.notifier).setLoading();
+    }
+
     // create QuestionAttempt
     final questionDetails = QuestionDetails(
       attempt: ref.read(currentQuizAttemptedProvider).id,
@@ -181,7 +189,20 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                                 choices: currentQuestion.choices,
                                 allQuestionsAnswered: allQuestionsAnswered,
                               )
-                            : const SizedBox(),
+                            : Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColors.mainColor,
+                                      width: 1,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
                         allQuestionsAnswered == true
                             ? const Spacer()
                             : const SizedBox(),
