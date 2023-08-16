@@ -30,7 +30,9 @@ class AnswerQuizNumber extends StatelessWidget {
         child: Text(
           '$number',
           style: TextStyle(
-            color: number == currentNumber ? Colors.white : null,
+            color: number == currentNumber && !allQuestionsAnswered
+                ? Colors.white
+                : null,
           ),
         ),
       ),
