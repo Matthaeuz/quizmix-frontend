@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempts_list_provider.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_histogram.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_history_item.dart';
 
 class ReviewerQuizHistoryScreen extends ConsumerWidget {
   final Quiz quiz;
@@ -34,6 +37,114 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
             ),
           ),
         ),
-        body: Container(child: QuizHistogram(attempts: attempts)));
+        body: SingleChildScrollView(
+          child: Column(children: [
+            QuizHistogram(attempts: attempts),
+            const SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 25),
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  decoration: BoxDecoration(
+                      color: AppColors.fifthColor,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Student Name',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Total Score',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Date Taken',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Time Started',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Time Finished',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                          attempts.when(
+                              data: (data) {
+                                if (data.isEmpty) {
+                                  return const EmptyDataPlaceholder(
+                                      message:
+                                          "There are currently no attempts for this quiz.");
+                                }
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) {
+                                    final attempt = data[index];
+
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 12.0),
+                                      child: QuizHistoryItem(
+                                        attempt: attempt,
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              error: (error, stack) =>
+                                  Center(child: Text('Error: $error')),
+                              loading: () => const CircularProgressIndicator())
+                        ],
+                      ))),
+            )
+          ]),
+        ));
   }
 }
