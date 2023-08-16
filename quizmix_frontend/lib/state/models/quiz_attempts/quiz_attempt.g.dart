@@ -16,6 +16,7 @@ QuizAttempt _$QuizAttemptFromJson(Map<String, dynamic> json) => QuizAttempt(
       timeFinished: json['time_finished'] == null
           ? null
           : DateTime.parse(json['time_finished'] as String),
+      attemptScore: json['attempt_score'] as int,
     );
 
 Map<String, dynamic> _$QuizAttemptToJson(QuizAttempt instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$QuizAttemptToJson(QuizAttempt instance) =>
       'created_on': instance.createdOn.toIso8601String(),
       'time_started': instance.timeStarted.toIso8601String(),
       'time_finished': instance.timeFinished?.toIso8601String(),
+      'attempt_score': instance.attemptScore,
     };
