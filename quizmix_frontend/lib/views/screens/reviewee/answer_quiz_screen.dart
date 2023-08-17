@@ -8,6 +8,7 @@ import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_atte
 import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_number.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -111,13 +112,25 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             return AlertDialog(
               title: const Text('Quiz Completed!'),
               content: Text(
-                  'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}'),
+                  'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}/${ref.read(currentTakenQuizProvider).questions.length}'),
               actions: <Widget>[
                 SolidButton(
-                  text: 'OK',
+                  text: 'Review',
                   onPressed: () {
-                    ref.read(currentTakenQuizProvider.notifier).updateScore(0);
                     Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ViewQuizResultScreen(),
+                      ),
+                    );
+                  },
+                ),
+                SolidButton(
+                  text: 'Finish',
+                  onPressed: () {
+                    Navigator.pop(context);
+                    ref.read(currentTakenQuizProvider.notifier).updateScore(0);
                   },
                 ),
               ],
