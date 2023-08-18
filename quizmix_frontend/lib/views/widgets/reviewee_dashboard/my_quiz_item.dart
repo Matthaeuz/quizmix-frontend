@@ -87,6 +87,7 @@ class MyQuizItem extends ConsumerWidget {
               ref
                   .read(currentTakenQuizProvider.notifier)
                   .updateCurrentQuiz(quiz);
+              ref.read(currentTakenQuizProvider.notifier).updateScore(0);
 
               // make QuizAttempt for either pretest & adaptive test
               Map<String, int> details = {

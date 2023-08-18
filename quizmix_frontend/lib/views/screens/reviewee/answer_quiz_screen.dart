@@ -78,32 +78,33 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
 
     await client.createQuestionAttempt(token, questionDetails);
 
+    // Check if the current answer is correct
+    bool isCurrentAnswerCorrect = ref
+            .read(currentTakenQuizProvider)
+            .questions[currentQuestionIndex]
+            .answer ==
+        choice;
+
+    final revieweeId = ref.read(revieweeProvider).when(
+          data: (data) {
+            return data.id;
+          },
+          error: (err, st) {},
+          loading: () {},
+        );
+
+    if (isCurrentAnswerCorrect) {
+      ref
+          .read(currentTakenQuizProvider.notifier)
+          .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
+    }
+
+    itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
+
     setState(() {
       if (currentQuestionIndex >=
           ref.read(currentTakenQuizProvider).questions.length - 1) {
         allQuestionsAnswered = true;
-
-        // Check if the last answer is correct
-        bool isCurrentAnswerCorrect = ref
-                .read(currentTakenQuizProvider)
-                .questions[currentQuestionIndex]
-                .answer ==
-            choice;
-        final revieweeId = ref.read(revieweeProvider).when(
-              data: (data) {
-                return data.id;
-              },
-              error: (err, st) {},
-              loading: () {},
-            );
-
-        if (isCurrentAnswerCorrect) {
-          ref
-              .read(currentTakenQuizProvider.notifier)
-              .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
-        }
-
-        itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
 
         // Display total score
         showDialog(
@@ -130,7 +131,6 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                   text: 'Finish',
                   onPressed: () {
                     Navigator.pop(context);
-                    ref.read(currentTakenQuizProvider.notifier).updateScore(0);
                   },
                 ),
               ],
@@ -140,28 +140,6 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
         endQuiz();
         return;
       } else {
-        // Check if the current answer is correct
-        bool isCurrentAnswerCorrect = ref
-                .read(currentTakenQuizProvider)
-                .questions[currentQuestionIndex]
-                .answer ==
-            choice;
-        final revieweeId = ref.read(revieweeProvider).when(
-              data: (data) {
-                return data.id;
-              },
-              error: (err, st) {},
-              loading: () {},
-            );
-
-        if (isCurrentAnswerCorrect) {
-          ref
-              .read(currentTakenQuizProvider.notifier)
-              .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
-        }
-
-        itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
-
         // proceed to next question
         currentQuestionIndex++;
       }
