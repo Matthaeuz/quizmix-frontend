@@ -6,6 +6,7 @@ import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/question_attempts/currently_viewed_question_attempt_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempt_questions_responses_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/views/widgets/correctness_icon.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/view_quiz_result_number.dart';
 import 'dart:async';
 
@@ -92,19 +93,29 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                         const SizedBox(height: 16),
                         Text(
                           currentQuiz.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 24),
                         ),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Questions',
-                              style: TextStyle(fontSize: 24),
+                            const Flexible(
+                              child: Text(
+                                'Questions',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 24),
+                              ),
                             ),
-                            Text(
-                              'Your Score: ${ref.read(currentTakenQuizProvider.notifier).score}/${ref.read(currentTakenQuizProvider).questions.length}',
-                              style: const TextStyle(fontSize: 24),
+                            Flexible(
+                              child: Text(
+                                'Your Score: ${ref.read(currentTakenQuizProvider.notifier).score}/${ref.read(currentTakenQuizProvider).questions.length}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 24),
+                              ),
                             ),
                           ],
                         ),
@@ -132,7 +143,9 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                       itemCount: questions.length,
                                       itemBuilder: (context, index) {
                                         final question = questions[index];
-                                        final int questionNumber = index + 1;
+                                        final isCorrectItem =
+                                            responses[index] == question.answer;
+                                        final questionNumber = index + 1;
                                         final image =
                                             question.image!.contains(baseUrl)
                                                 ? question.image!
@@ -172,12 +185,46 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(
-                                                            'Question $questionNumber',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        16),
+                                                          Row(
+                                                            children: [
+                                                              isCorrectItem
+                                                                  ? const Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          right:
+                                                                              8.0),
+                                                                      child:
+                                                                          CorrectnessIcon(
+                                                                        isCorrect:
+                                                                            true,
+                                                                        iconSize:
+                                                                            16,
+                                                                      ),
+                                                                    )
+                                                                  : const Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          right:
+                                                                              8.0),
+                                                                      child:
+                                                                          CorrectnessIcon(
+                                                                        isCorrect:
+                                                                            false,
+                                                                        iconSize:
+                                                                            16,
+                                                                      ),
+                                                                    ),
+                                                              Flexible(
+                                                                child: Text(
+                                                                  'Question $questionNumber',
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          16),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
                                                           const SizedBox(
                                                               height: 8.0),

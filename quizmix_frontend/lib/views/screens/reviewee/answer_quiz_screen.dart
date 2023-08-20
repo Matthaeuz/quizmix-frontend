@@ -236,9 +236,7 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 25,
-                  ),
+                  const SizedBox(width: 25),
                   // Right Side
                   Expanded(
                     flex: 3,

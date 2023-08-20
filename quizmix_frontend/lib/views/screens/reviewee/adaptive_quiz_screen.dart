@@ -226,7 +226,8 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                               child: SolidButton(
                                 onPressed: () =>
                                     handleChoicePressed('a', currentQuestion!),
-                                isUnpressable: allQuestionsAnswered,
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice A',
                               ),
                             ),
@@ -235,7 +236,8 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                               child: SolidButton(
                                 onPressed: () =>
                                     handleChoicePressed('b', currentQuestion!),
-                                isUnpressable: allQuestionsAnswered,
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice B',
                               ),
                             ),
@@ -244,7 +246,8 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                               child: SolidButton(
                                 onPressed: () =>
                                     handleChoicePressed('c', currentQuestion!),
-                                isUnpressable: allQuestionsAnswered,
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice C',
                               ),
                             ),
@@ -253,7 +256,8 @@ class _AdaptiveQuizScreenState extends ConsumerState<AdaptiveQuizScreen> {
                               child: SolidButton(
                                 onPressed: () =>
                                     handleChoicePressed('d', currentQuestion!),
-                                isUnpressable: allQuestionsAnswered,
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice D',
                               ),
                             )
