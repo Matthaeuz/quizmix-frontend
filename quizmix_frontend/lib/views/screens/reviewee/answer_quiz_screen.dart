@@ -1,11 +1,15 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
@@ -14,13 +18,15 @@ import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class AnswerQuizScreen extends ConsumerStatefulWidget {
-  AnswerQuizScreen({Key? key}) : super(key: key);
+  AnswerQuizScreen({Key? key, required this.isPretest}) : super(key: key);
+
+  bool isPretest;
 
   @override
-  _AnswerQuizScreenState createState() => _AnswerQuizScreenState();
+  AnswerQuizScreenState createState() => AnswerQuizScreenState();
 }
 
-class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
+class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
   int currentQuestionIndex = 0;
   bool allQuestionsAnswered = false;
 
@@ -28,11 +34,16 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     WidgetRef ref,
     int revieweeId,
     bool isCurrentAnswerCorrect,
+    Question? currentQuestion,
   ) {
     final Map<String, int> resp = {
       "reviewee": revieweeId,
-      "question":
-          ref.read(currentTakenQuizProvider).questions[currentQuestionIndex].id,
+      "question": currentQuestion == null
+          ? ref
+              .read(currentTakenQuizProvider)
+              .questions[currentQuestionIndex]
+              .id
+          : currentQuestion.id,
       "response": isCurrentAnswerCorrect ? 1 : 0,
     };
 
@@ -63,13 +74,24 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
         .fetchRevieweeAttempts(revieweeId, quizId);
   }
 
-  void handleChoicePressed(String choice) async {
+  void handleChoicePressed(String choice, Question? currentQuestion) async {
+    Question question;
+    if (currentQuestion != null) {
+      question = currentQuestion;
+      if (currentQuestionIndex <
+          ref.read(currentTakenQuizProvider).questions.length - 1) {
+        // temporarily set question to null if CAT and not last question
+        ref.read(catProvider.notifier).setLoading();
+      }
+    } else {
+      question =
+          ref.read(currentTakenQuizProvider).questions[currentQuestionIndex];
+    }
+
+    // create QuestionAttempt
     final questionDetails = QuestionDetails(
         attempt: ref.read(currentQuizAttemptedProvider).id,
-        question: ref
-            .read(currentTakenQuizProvider)
-            .questions[currentQuestionIndex]
-            .id,
+        question: question.id,
         revieweeAnswer: choice,
         difficultyScore: 0);
 
@@ -79,19 +101,15 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     await client.createQuestionAttempt(token, questionDetails);
 
     // Check if the current answer is correct
-    bool isCurrentAnswerCorrect = ref
-            .read(currentTakenQuizProvider)
-            .questions[currentQuestionIndex]
-            .answer ==
-        choice;
+    bool isCurrentAnswerCorrect = currentQuestion == null
+        ? ref
+                .read(currentTakenQuizProvider)
+                .questions[currentQuestionIndex]
+                .answer ==
+            choice
+        : currentQuestion.answer == choice;
 
-    final revieweeId = ref.read(revieweeProvider).when(
-          data: (data) {
-            return data.id;
-          },
-          error: (err, st) {},
-          loading: () {},
-        );
+    final revieweeId = ref.read(revieweeProvider).value!.id;
 
     if (isCurrentAnswerCorrect) {
       ref
@@ -99,7 +117,8 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
           .updateScore(++ref.read(currentTakenQuizProvider.notifier).score);
     }
 
-    itemAnalysisAndScoring(ref, revieweeId!, isCurrentAnswerCorrect);
+    itemAnalysisAndScoring(
+        ref, revieweeId, isCurrentAnswerCorrect, currentQuestion);
 
     setState(() {
       if (currentQuestionIndex >=
@@ -140,6 +159,10 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
         endQuiz();
         return;
       } else {
+        if (currentQuestion != null) {
+          // decrement category from specs
+          ref.read(catProvider.notifier).getNextQuestion();
+        }
         // proceed to next question
         currentQuestionIndex++;
       }
@@ -149,7 +172,15 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final currentQuiz = ref.watch(currentTakenQuizProvider);
-    final currentQuestion = currentQuiz.questions[currentQuestionIndex];
+    final currentQuestion = widget.isPretest
+        ? currentQuiz.questions[currentQuestionIndex]
+        : ref.watch(catProvider).when(
+              data: (data) {
+                return data["question"];
+              },
+              error: (err, st) {},
+              loading: () {},
+            );
 
     return Scaffold(
       appBar: AppBar(
@@ -165,9 +196,9 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Answer Quiz',
-          style: TextStyle(
+        title: Text(
+          widget.isPretest ? 'Answer Quiz' : 'Answer Adaptive Quiz',
+          style: const TextStyle(
             color: Colors.black,
             fontFamily: 'Poppins',
           ),
@@ -188,12 +219,27 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AnswerQuizItem(
-                          question: currentQuestion.question,
-                          image: currentQuestion.image,
-                          choices: currentQuestion.choices,
-                          allQuestionsAnswered: allQuestionsAnswered,
-                        ),
+                        currentQuestion != null
+                            ? AnswerQuizItem(
+                                question: currentQuestion.question,
+                                image: currentQuestion.image,
+                                choices: currentQuestion.choices,
+                                allQuestionsAnswered: allQuestionsAnswered,
+                              )
+                            : Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColors.mainColor,
+                                      width: 1,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
                         allQuestionsAnswered == true
                             ? const Spacer()
                             : const SizedBox(),
@@ -202,32 +248,52 @@ class _AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                           children: [
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('a'),
-                                isUnpressable: allQuestionsAnswered,
+                                onPressed: () => handleChoicePressed(
+                                    'a',
+                                    !widget.isPretest
+                                        ? currentQuestion!
+                                        : null),
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice A',
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('b'),
-                                isUnpressable: allQuestionsAnswered,
+                                onPressed: () => handleChoicePressed(
+                                    'b',
+                                    !widget.isPretest
+                                        ? currentQuestion!
+                                        : null),
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice B',
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('c'),
-                                isUnpressable: allQuestionsAnswered,
+                                onPressed: () => handleChoicePressed(
+                                    'c',
+                                    !widget.isPretest
+                                        ? currentQuestion!
+                                        : null),
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice C',
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: SolidButton(
-                                onPressed: () => handleChoicePressed('d'),
-                                isUnpressable: allQuestionsAnswered,
+                                onPressed: () => handleChoicePressed(
+                                    'd',
+                                    !widget.isPretest
+                                        ? currentQuestion!
+                                        : null),
+                                isUnpressable: allQuestionsAnswered ||
+                                    currentQuestion == null,
                                 text: 'Choice D',
                               ),
                             )

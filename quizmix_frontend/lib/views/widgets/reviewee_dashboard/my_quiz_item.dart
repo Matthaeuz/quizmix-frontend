@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/adaptive_quiz_screen.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
@@ -103,12 +102,14 @@ class MyQuizItem extends ConsumerWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AnswerQuizScreen()));
+                          builder: (context) =>
+                              AnswerQuizScreen(isPretest: true)));
                 } else {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AdaptiveQuizScreen()));
+                          builder: (context) =>
+                              AnswerQuizScreen(isPretest: false)));
                 }
               });
             },
