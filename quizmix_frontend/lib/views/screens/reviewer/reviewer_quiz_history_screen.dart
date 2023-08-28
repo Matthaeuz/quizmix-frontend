@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempts_list_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_history_item.dart';
@@ -149,8 +152,28 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                   return Padding(
                                     padding:
                                         const EdgeInsets.only(bottom: 12.0),
-                                    child: QuizHistoryItem(
-                                      attempt: attempt,
+                                    child: InkWell(
+                                      onTap: () {
+                                        ref
+                                            .read(currentTakenQuizProvider
+                                                .notifier)
+                                            .updateScore(attempt.attemptScore);
+                                        ref
+                                            .read(currentQuizAttemptedProvider
+                                                .notifier)
+                                            .updateCurrentQuizAttempted(
+                                                attempt);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ViewQuizResultScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: QuizHistoryItem(
+                                        attempt: attempt,
+                                      ),
                                     ),
                                   );
                                 },

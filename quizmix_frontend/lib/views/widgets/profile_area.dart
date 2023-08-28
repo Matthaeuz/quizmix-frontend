@@ -4,6 +4,7 @@ import 'package:quizmix_frontend/state/providers/reviewees/reviewee_history_scor
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_top_scores_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_reviewee_profile_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_reviewer_profile_screen.dart';
 
 class ProfileArea extends ConsumerWidget {
   const ProfileArea({Key? key}) : super(key: key);
@@ -23,6 +24,13 @@ class ProfileArea extends ConsumerWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => const ViewRevieweeProfileScreen()));
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ViewReviewerProfileScreen(),
+            ),
+          );
         }
       },
       child: Container(

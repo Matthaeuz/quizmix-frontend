@@ -3,7 +3,6 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/screens/view_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/view_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 
 class DashboardWidget extends StatelessWidget {
@@ -109,14 +108,7 @@ class DashboardWidget extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      if (selectedOption != 'Quizzes') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ViewProfileScreen(),
-                          ),
-                        );
-                      }
+                      if (selectedOption != 'Quizzes') {}
                     },
                   ),
                 ),

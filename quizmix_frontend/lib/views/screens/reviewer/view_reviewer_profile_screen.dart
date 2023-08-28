@@ -5,18 +5,19 @@ import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_profile/reviewer_quizzes_list.dart';
 
-class ViewProfileScreen extends ConsumerWidget {
-  const ViewProfileScreen({Key? key}) : super(key: key);
+class ViewReviewerProfileScreen extends ConsumerWidget {
+  const ViewReviewerProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.read(baseUrlProvider);
     final reviewerDetails = ref.watch(reviewerProvider);
     ImageProvider? imageProvider;
-    if (reviewerDetails.user.image != null && reviewerDetails.user.image!.isNotEmpty) {
-        imageProvider = NetworkImage(baseUrl + reviewerDetails.user.image!);
+    if (reviewerDetails.user.image != null &&
+        reviewerDetails.user.image!.isNotEmpty) {
+      imageProvider = NetworkImage(baseUrl + reviewerDetails.user.image!);
     } else {
-        imageProvider = const AssetImage("lib/assets/images/default_pic.png");
+      imageProvider = const AssetImage("lib/assets/images/default_pic.png");
     }
 
     return Scaffold(
