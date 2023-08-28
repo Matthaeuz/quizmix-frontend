@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewer_quiz_history_screen.dart';
@@ -45,6 +46,12 @@ class ReviewerQuizzesList extends ConsumerWidget {
                                 builder: (context) => const ViewQuizScreen()));
                       },
                       onViewHistoryPressed: () {
+                        ref
+                            .read(currentTakenQuizProvider.notifier)
+                            .updateCurrentQuiz(quiz);
+                        ref
+                            .read(currentTakenQuizProvider.notifier)
+                            .updateScore(0);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
