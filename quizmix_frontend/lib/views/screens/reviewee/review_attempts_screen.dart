@@ -164,7 +164,7 @@ class ReviewAttemptsScreen extends ConsumerWidget {
                                                             currentQuizAttemptedProvider
                                                                 .notifier)
                                                         .updateCurrentQuizAttempted(
-                                                            attempt);
+                                                            attempt, index + 1);
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(

@@ -162,7 +162,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                             .read(currentQuizAttemptedProvider
                                                 .notifier)
                                             .updateCurrentQuizAttempted(
-                                                attempt);
+                                                attempt, 1);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
