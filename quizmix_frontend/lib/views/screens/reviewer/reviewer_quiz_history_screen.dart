@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempts_list_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
@@ -15,6 +16,23 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attempts = ref.watch(quizAttemptsListProvider(quiz.id));
+    final List<QuizAttempt> firstAttempts = [];
+
+    attempts.maybeWhen(
+      data: (data) {
+        final Set<String> uniqueNames = {};
+        for (final attempt in data) {
+          final studentName = attempt.attemptedBy.user.fullName;
+          if (!uniqueNames.contains(studentName)) {
+            uniqueNames.add(studentName);
+            firstAttempts.add(attempt);
+          }
+        }
+      },
+      orElse: () {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
 
     return Scaffold(
         appBar: AppBar(
@@ -39,7 +57,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            QuizHistogram(attempts: attempts),
+            QuizHistogram(attempts: AsyncValue.data(firstAttempts)),
             const SizedBox(height: 25),
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 0, 25, 25),
@@ -115,32 +133,33 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 25),
                           attempts.when(
-                              data: (data) {
-                                if (data.isEmpty) {
-                                  return const EmptyDataPlaceholder(
-                                      message:
-                                          "There are currently no attempts for this quiz.");
-                                }
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    final attempt = data[index];
+                            data: (data) {
+                              if (firstAttempts.isEmpty) {
+                                return const EmptyDataPlaceholder(
+                                    message:
+                                        "There are currently no attempts for this quiz.");
+                              }
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: firstAttempts.length,
+                                itemBuilder: (context, index) {
+                                  final attempt = firstAttempts[index];
 
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
-                                      child: QuizHistoryItem(
-                                        attempt: attempt,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              error: (error, stack) =>
-                                  Center(child: Text('Error: $error')),
-                              loading: () => const CircularProgressIndicator())
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 12.0),
+                                    child: QuizHistoryItem(
+                                      attempt: attempt,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            error: (error, stack) =>
+                                Center(child: Text('Error: $error')),
+                            loading: () => const CircularProgressIndicator(),
+                          )
                         ],
                       ))),
             )
