@@ -101,7 +101,8 @@ class MyQuizItem extends ConsumerWidget {
               client.createQuizAttempt(token, details).then((value) {
                 ref
                     .read(currentQuizAttemptedProvider.notifier)
-                    .updateCurrentQuizAttempted(value);
+                    .updateCurrentQuizAttempted(value,
+                        hasAttempts.isEmpty ? 1 : hasAttempts.length + 1);
                 if (hasAttempts.isEmpty) {
                   Navigator.push(
                       context,

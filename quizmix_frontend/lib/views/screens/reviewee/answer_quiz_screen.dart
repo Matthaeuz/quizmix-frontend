@@ -66,9 +66,12 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     Map<String, dynamic> timeFinished = {
       "time_finished": time.toIso8601String()
     };
-    await client.updateQuizAttempt(
+    final updatedAttempt = await client.updateQuizAttempt(
         token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
 
+    ref
+        .read(currentQuizAttemptedProvider.notifier)
+        .updateCurrentQuizAttempted(updatedAttempt, null);
     ref
         .read(revieweeAttemptsProvider(quizId).notifier)
         .fetchRevieweeAttempts(revieweeId, quizId);
@@ -137,6 +140,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                 SolidButton(
                   text: 'Review',
                   onPressed: () {
+                    endQuiz();
                     Navigator.pop(context);
                     Navigator.push(
                       context,
@@ -149,6 +153,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                 SolidButton(
                   text: 'Finish',
                   onPressed: () {
+                    endQuiz();
                     Navigator.pop(context);
                   },
                 ),
@@ -156,7 +161,6 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             );
           },
         );
-        endQuiz();
         return;
       } else {
         if (currentQuestion != null) {
