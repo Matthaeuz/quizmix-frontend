@@ -18,7 +18,7 @@ class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
   @override
   Widget build(BuildContext context) {
     final quizzes = ref.watch(revieweeQuizzesProvider);
-    
+
     return Scaffold(
       body: Row(
         children: [
@@ -56,11 +56,10 @@ class _MyQuizzesScreenState extends ConsumerState<MyQuizzesScreen> {
                               itemCount: data.length,
                               itemBuilder: (context, index) {
                                 final quiz = data[index];
-                                return Column(
-                                  children: [
-                                    MyQuizItem(quiz: quiz),
-                                    const SizedBox(height: 25),
-                                  ],
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 25),
+                                  child: MyQuizItem(quiz: quiz),
                                 );
                               },
                             );
