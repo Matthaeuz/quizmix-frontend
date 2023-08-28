@@ -20,12 +20,15 @@ class ViewQuestionAttemptContainer extends ConsumerWidget {
     final response = attemptDetails.when(
       data: (data) {
         final questionInd = questionNum > 0 ? questionNum - 1 : 0;
-        return data.responses[questionInd];
+        return data.responses.isNotEmpty && question != null
+            ? data.responses[questionInd]
+            : null;
       },
       error: (err, st) {},
       loading: () {},
     );
-    final isCorrectItem = response == question.answer;
+    final isCorrectItem =
+        response != null ? response == question.answer : false;
 
     return Expanded(
       flex: 5,
@@ -36,131 +39,138 @@ class ViewQuestionAttemptContainer extends ConsumerWidget {
             height: constraints.maxHeight,
             child: questionNum > 0
                 ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.zero,
-                                child: Wrap(
-                                  runSpacing: 20,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 32,
-                                      width: 32,
-                                      child: isCorrectItem
-                                          ? const CorrectnessIcon(
-                                              isCorrect: true,
-                                              padding: EdgeInsets.all(4),
-                                            )
-                                          : const CorrectnessIcon(
-                                              isCorrect: false,
-                                              padding: EdgeInsets.all(4),
+                    child: Padding(
+                      padding: const EdgeInsets.all(25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.zero,
+                            child: Wrap(
+                              runSpacing: 20,
+                              children: [
+                                SizedBox(
+                                  height: 32,
+                                  width: 32,
+                                  child: isCorrectItem
+                                      ? const CorrectnessIcon(
+                                          isCorrect: true,
+                                          padding: EdgeInsets.all(4),
+                                        )
+                                      : const CorrectnessIcon(
+                                          isCorrect: false,
+                                          padding: EdgeInsets.all(4),
+                                        ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Question $questionNum',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 32),
+                                ),
+                                if (question != null) ...[
+                                  const SizedBox(width: 12),
+                                  Flexible(
+                                    child: IntrinsicWidth(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 12,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: getCategoryColor(
+                                              question.category),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            question.category,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
                                             ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      'Question $questionNum',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 32),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Flexible(
-                                      child: IntrinsicWidth(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 12,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: getCategoryColor(
-                                                question.category),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              question.category,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                child: Text(
-                                  question.question,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              question.image != null
-                                  ? Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 20, 0, 20),
-                                      child: Image.network(
-                                        question.image!.contains(baseUrl)
-                                            ? question.image!
-                                            : baseUrl + question.image!,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : const SizedBox(height: 20),
-                              const Text(
-                                'Choices:',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: question.choices.length,
-                                itemBuilder: (context, index) {
-                                  return Text(
-                                    '${choiceLetters[index]} ${question.choices[index]}',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                'Correct Answer: ${question.answer.toString().toUpperCase()}',
+                                  )
+                                ]
+                              ],
+                            ),
+                          ),
+                          if (question != null) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Text(
+                                question.question,
                                 style: const TextStyle(fontSize: 20),
                               ),
-                              response != null
-                                  ? Text(
-                                      'Your Answer: ${response.toUpperCase()}',
-                                      style: const TextStyle(fontSize: 20),
-                                    )
-                                  : const SizedBox(),
-                              const SizedBox(height: 20),
-                              question.solution != null &&
-                                      question.solution.isNotEmpty
-                                  ? Text(
-                                      'Explanation: ${question.solution}',
-                                      style: const TextStyle(fontSize: 20),
-                                    )
-                                  : const SizedBox(),
-                              const SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ],
+                            ),
+                            question.image != null
+                                ? Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                    child: Image.network(
+                                      question.image!.contains(baseUrl)
+                                          ? question.image!
+                                          : baseUrl + question.image!,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : const SizedBox(height: 20),
+                            const Text(
+                              'Choices:',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: question.choices.length,
+                              itemBuilder: (context, index) {
+                                return Text(
+                                  '${choiceLetters[index]} ${question.choices[index]}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Correct Answer: ${question.answer.toString().toUpperCase()}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            response != null
+                                ? Text(
+                                    'Your Answer: ${response.toUpperCase()}',
+                                    style: const TextStyle(fontSize: 20),
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(height: 20),
+                            question.solution != null &&
+                                    question.solution.isNotEmpty
+                                ? Text(
+                                    'Explanation: ${question.solution}',
+                                    style: const TextStyle(fontSize: 20),
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(height: 10),
+                          ] else ...[
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              child: Text(
+                                'This question was not attempted',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ]
+                        ],
+                      ),
                     ),
                   )
                 : const SizedBox(),

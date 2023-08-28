@@ -69,6 +69,10 @@ class MyQuizItem extends ConsumerWidget {
           ),
           SolidButton(
             onPressed: () {
+              ref
+                  .read(currentTakenQuizProvider.notifier)
+                  .updateCurrentQuiz(quiz);
+              ref.read(currentTakenQuizProvider.notifier).updateScore(0);
               Navigator.push(
                   context,
                   MaterialPageRoute(

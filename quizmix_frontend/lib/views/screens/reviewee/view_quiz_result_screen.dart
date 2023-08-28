@@ -123,6 +123,7 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                         attemptDetails.when(data: (data) {
                           final questions = data.questions;
                           final responses = data.responses;
+                          final numberOfAttemptedItems = questions.length;
                           List<String> imageUrls = questions
                               .map((question) =>
                                   question.image!.contains(baseUrl)
@@ -130,7 +131,7 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                       : baseUrl + question.image!)
                               .toList();
                           List<double> listViewItemHeights =
-                              List.filled(questions.length, 0.0);
+                              List.filled(currentQuiz.questions.length, 0.0);
                           return Expanded(
                             child: Row(
                               children: [
@@ -140,14 +141,21 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                   child: SizedBox(
                                     child: ListView.builder(
                                       controller: _scrollController,
-                                      itemCount: questions.length,
+                                      itemCount: currentQuiz.questions.length,
                                       itemBuilder: (context, index) {
-                                        final question = questions[index];
-                                        final isCorrectItem =
-                                            responses[index] == question.answer;
+                                        final question =
+                                            index < numberOfAttemptedItems
+                                                ? questions[index]
+                                                : null;
+                                        final isCorrectItem = question != null
+                                            ? responses[index] ==
+                                                question.answer
+                                            : false;
                                         final questionNumber = index + 1;
-                                        final image =
-                                            question.image!.contains(baseUrl)
+                                        final image = question == null ||
+                                                question.image == null
+                                            ? null
+                                            : question.image!.contains(baseUrl)
                                                 ? question.image!
                                                 : baseUrl + question.image!;
                                         return Column(
@@ -238,9 +246,33 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                                                 width: 1.0,
                                                               ),
                                                             ),
-                                                            child:
-                                                                Image.network(
-                                                              image,
+                                                            child: Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: question ==
+                                                                          null
+                                                                      ? const Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(4),
+                                                                          child:
+                                                                              Text(
+                                                                            'This question was not attempted',
+                                                                            maxLines:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                        )
+                                                                      : image ==
+                                                                              null
+                                                                          ? Padding(
+                                                                              padding: const EdgeInsets.all(4),
+                                                                              child: Text(question.question))
+                                                                          : Image.network(
+                                                                              image,
+                                                                            ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ],
@@ -273,22 +305,21 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                           ConnectionState.done) {
                                         final List<int> imageHeights =
                                             snapshot.data ?? [];
-                                        final numberOfItems = questions.length;
 
                                         const double defaultFontSize = 16.0;
                                         const double paddingSize = 12.0;
                                         const double spacing = 25.0;
                                         const double verticalBorders = 4;
 
-                                        List<double> totalHeights =
-                                            List.filled(numberOfItems, 0.0);
+                                        List<double> totalHeights = List.filled(
+                                            numberOfAttemptedItems, 0.0);
                                         double itemHeight = defaultFontSize +
                                             paddingSize * 2 +
                                             spacing +
                                             verticalBorders;
 
                                         for (int i = 1;
-                                            i < numberOfItems;
+                                            i < numberOfAttemptedItems;
                                             i++) {
                                           totalHeights[i] =
                                               totalHeights[i - 1] + itemHeight;
@@ -319,8 +350,11 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                                     i++) ...[
                                                   ViewQuizResultNumber(
                                                     number: i + 1,
-                                                    isCorrect: responses[i] ==
-                                                        questions[i].answer,
+                                                    isCorrect: i <
+                                                            numberOfAttemptedItems
+                                                        ? responses[i] ==
+                                                            questions[i].answer
+                                                        : false,
                                                     onClick: () {
                                                       _scrollController
                                                           .animateTo(
