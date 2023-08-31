@@ -17,6 +17,16 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final attempts = ref.watch(quizAttemptsListProvider(quiz.id));
     final List<QuizAttempt> firstAttempts = [];
+    bool sortAscending = true;
+
+    void sortByTotalScore() {
+      firstAttempts.sort((a, b) {
+        return sortAscending
+            ? a.attemptScore.compareTo(b.attemptScore)
+            : b.attemptScore.compareTo(a.attemptScore);
+      });
+      sortAscending = !sortAscending;
+    }
 
     attempts.maybeWhen(
       data: (data) {
@@ -89,6 +99,21 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                    // TextButton.icon(
+                                    //   onPressed: () {
+                                    //     sortByTotalScore();
+                                    //     ref.refresh(); // Refresh the UI after sorting
+                                    //   },
+                                    //   icon: Icon(
+                                    //     sortAscending
+                                    //         ? Icons.sort
+                                    //         : Icons.sort_by_alpha,
+                                    //   ),
+                                    //   label: const Text(
+                                    //     'Total Score',
+                                    //     style: TextStyle(fontSize: 20),
+                                    //   ),
+                                    // ),
                                     Text(
                                       'Total Score',
                                       style: TextStyle(fontSize: 20),
