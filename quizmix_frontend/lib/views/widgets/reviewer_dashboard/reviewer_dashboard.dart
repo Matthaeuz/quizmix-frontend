@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 // import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
 // import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/quizzes_list_screen.dart';
 import 'package:quizmix_frontend/views/screens/view_question_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewees_list_screen.dart';
 import 'package:quizmix_frontend/views/widgets/profile_area.dart';
@@ -112,7 +113,14 @@ class ReviewerDashboardWidget extends ConsumerWidget {
                       ),
                     ),
                     onTap: () {
-                      if (selectedOption != 'Quizzes') {}
+                      if (selectedOption != 'Quizzes') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const QuizzesListScreen(),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
