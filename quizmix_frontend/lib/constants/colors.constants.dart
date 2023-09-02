@@ -35,11 +35,11 @@ Color getCategoryColor(String category) {
 }
 
 class AppColors {
-  static const Color mainColor = Color(0xFF03045E);
-  static const Color secondaryColor = Color(0xFF0077B6);
-  static const Color thirdColor = Color(0xFF00B4D8);
-  static const Color fourthColor = Color(0xFF90E0EF);
-  static const Color fifthColor = Color(0xFFCAF0F8);
+  static const Color mainColor = Color(0xFF673AB7);
+  static const Color secondaryColor = Color(0xFF6F61C0);
+  static const Color thirdColor = Color(0xFFA084E8);
+  static const Color fourthColor = Color(0xFF8BE8E5);
+  static const Color fifthColor = Color(0xFFD5FFE4);
   static const Color lightBackgroundColor = Color(0xFFF5F5F5);
   static const Color black = Color(0xFF333333);
   static const Color grey = Color(0xFF9E9E9E);

@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'QuizMix Code',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
       home: const LoginScreen(),
     );
