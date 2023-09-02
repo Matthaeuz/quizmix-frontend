@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/utils/sign_in.helper.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
+import 'package:quizmix_frontend/state/providers/ui/login_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
@@ -23,101 +24,135 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 100.0),
-        child: Align(
-          alignment: Alignment.center,
-          child: FractionallySizedBox(
-            widthFactor: 0.8,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 64.0),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(),
-                  child: const Text(
-                    'Let’s get started with your QuizMix Code journey!',
-                    style: TextStyle(fontSize: 24.0),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFieldWidget(
-                  labelText: 'Email',
-                  obscureText: false,
-                  controller: emailController,
-                ),
-                const SizedBox(height: 16.0),
-                TextFieldWidget(
-                  labelText: 'Password',
-                  obscureText: true,
-                  controller: passwordController,
-                ),
-                const SizedBox(height: 8.0),
-                Container(
-                  decoration: const BoxDecoration(),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const ForgotPasswordInputEmailScreen(),
-                        ),
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColors.mainColor,
-                      alignment: Alignment.centerRight,
-                    ),
-                    child: const Text('Forgot Password'),
-                  ),
-                ),
-                const SizedBox(height: 40.0),
-                SolidButton(
-                  text: 'Login',
-                  onPressed: () {
-                    AuthDetails details = AuthDetails(
-                      email: emailController.text.toLowerCase(),
-                      password: passwordController.text,
-                    );
+    final loginState = ref.watch(loginStateProvider);
 
-                    signIn(details, ref).then((value) => {
-                          if (value == 'reviewer')
-                            {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DashboardScreen()))
-                            }
-                          else
-                            {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MyQuizzesScreen()))
-                            }
-                        });
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                ButtonOutlined(
-                  text: 'Sign in with Google',
-                  onPressed: () {
-                    // TODO: Implement sign in with Google functionality
-                  },
-                ),
-              ],
+    if (loginState == LoginState.loggingIn) {
+      return const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 48.0,
+            width: 48.0,
+            child: CircularProgressIndicator(strokeWidth: 6.0),
+          ),
+          SizedBox(height: 16.0),
+          Text(
+            'Logging in...',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: AppColors.mainColor,
             ),
           ),
+        ],
+      );
+    }
+
+    return Align(
+      alignment: Alignment.center,
+      child: FractionallySizedBox(
+        widthFactor: 0.8,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Center(
+              child: Text(
+                'Login',
+                style: TextStyle(fontSize: 64.0),
+              ),
+            ),
+            const Center(
+              child: SizedBox(
+                width: 280.0,
+                child: Text(
+                  'Let’s get started with your QuizMix Code journey!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24.0),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            TextFieldWidget(
+              labelText: 'Email',
+              obscureText: false,
+              controller: emailController,
+            ),
+            const SizedBox(height: 16.0),
+            TextFieldWidget(
+              labelText: 'Password',
+              obscureText: true,
+              controller: passwordController,
+            ),
+            const SizedBox(height: 8.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const ForgotPasswordInputEmailScreen(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  alignment: Alignment.centerRight,
+                  foregroundColor: AppColors.mainColor,
+                ),
+                child: const Text('Forgot Password'),
+              ),
+            ),
+            const SizedBox(height: 40.0),
+            SolidButton(
+              text: 'Login',
+              onPressed: () async {
+                if (emailController.text.isNotEmpty &&
+                    passwordController.text.isNotEmpty) {
+                  ref
+                      .read(loginStateProvider.notifier)
+                      .updateLoginState(LoginState.loggingIn);
+
+                  AuthDetails details = AuthDetails(
+                    email: emailController.text.toLowerCase(),
+                    password: passwordController.text,
+                  );
+
+                  await signIn(details, ref).then((value) {
+                    if (value == 'reviewer') {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DashboardScreen()));
+                    } else {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyQuizzesScreen()));
+                    }
+                    ref
+                        .read(loginStateProvider.notifier)
+                        .updateLoginState(LoginState.loginScreen);
+                  }, onError: (error, stackTrace) {
+                    ref
+                        .read(loginStateProvider.notifier)
+                        .updateLoginState(LoginState.loginScreen);
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 16.0),
+            ButtonOutlined(
+              text: 'Sign Up',
+              onPressed: () {
+                ref
+                    .read(loginStateProvider.notifier)
+                    .updateLoginState(LoginState.signUpScreen);
+              },
+            ),
+          ],
         ),
       ),
     );
