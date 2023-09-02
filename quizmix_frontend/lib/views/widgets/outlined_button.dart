@@ -21,7 +21,7 @@ class ButtonOutlined extends StatelessWidget {
           color: Color(0xFF3A0CA3), // Border color
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0), // Border radius
+          borderRadius: BorderRadius.circular(12.0), // Border radius
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         minimumSize: const Size(50.0, 50.0),

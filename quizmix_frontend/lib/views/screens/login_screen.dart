@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/widgets/sign_up_login/auth_background.dart';
+import 'package:quizmix_frontend/state/providers/ui/login_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/sign_up_login/login_fields.dart';
+import 'package:quizmix_frontend/views/widgets/sign_up_login/signup_fields.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class LoginScreenState extends ConsumerState<LoginScreen> {
   static const BoxConstraints logoBoxConstraints = BoxConstraints(
     minWidth: 240.0,
     minHeight: 240.0,
@@ -30,55 +31,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     maxWidth: 600.0,
   );
 
+  Widget getWidgetFromLoginState(LoginState loginState) {
+    if (loginState == LoginState.loginScreen ||
+        loginState == LoginState.loggingIn) {
+      return const LoginFields();
+    } else if (loginState == LoginState.signUpScreen ||
+        loginState == LoginState.signingUp) {
+      return const SignUpFields();
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loginState = ref.watch(loginStateProvider);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double logoContainerWidth = screenWidth * 0.3;
 
-    // return Scaffold(
-    //   appBar: null,
-    //   body: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.stretch,
-    //     children: [
-    //       // Left Section
-    //       Expanded(
-    //         child: Padding(
-    //           padding: const EdgeInsets.all(25),
-    //           child: Container(
-    //             decoration: const BoxDecoration(),
-    //             child: const Column(
-    //               mainAxisAlignment: MainAxisAlignment.start,
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Row(
-    //                   children: [
-    //                     Padding(
-    //                       padding: EdgeInsets.only(right: 8.0),
-    //                       child: Image(
-    //                         image: AssetImage(
-    //                             'lib/assets/images/QuizMix_Logo.png'),
-    //                         height: 24.0,
-    //                         width: 24.0,
-    //                       ),
-    //                     ),
-    //                     Text(
-    //                       'QuizMix Code',
-    //                       style: TextStyle(fontSize: 18.0),
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 LoginFields()
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //       // Right Section
-    //       const AuthBackground(isLoginScreen: true)
-    //     ],
-    //   ),
-    // );
     return Scaffold(
       appBar: null,
       body: SingleChildScrollView(
@@ -97,12 +68,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: logoContainerWidth,
                 height: logoContainerWidth,
                 constraints: logoBoxConstraints,
-                // decoration: BoxDecoration(
-                //   border: Border.all(
-                //     color: Colors.black,
-                //     width: 1.0,
-                //   ),
-                // ),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     double parentWidth = constraints.maxWidth;
@@ -151,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               TextSpan(
                                 text: ' Code',
                                 style: TextStyle(
-                                  color: AppColors.fifthColor,
+                                  color: AppColors.iconColor,
                                   shadows: <Shadow>[
                                     Shadow(
                                       offset: Offset(2.0, 2.0),
@@ -172,11 +137,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Container(
                 width: screenWidth * 0.5,
                 height: screenHeight * 0.9,
-                color: Colors.yellow,
                 constraints: screenHeight >= loginBoxConstraintsA.minHeight
                     ? loginBoxConstraintsA
                     : loginBoxConstraintsB,
-              ),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: getWidgetFromLoginState(loginState),
+              )
             ],
           ),
         ),
