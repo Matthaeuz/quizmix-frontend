@@ -34,50 +34,55 @@ class ProfileArea extends ConsumerWidget {
         }
       },
       child: Container(
-        padding: const EdgeInsets.fromLTRB(15, 25, 15, 0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Circular Picture
-            Align(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage:
-                    details.image != null && details.image!.isNotEmpty
-                        ? NetworkImage(details.image!)
-                        : const AssetImage('lib/assets/images/default_pic.png')
-                            as ImageProvider<Object>,
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: LayoutBuilder(builder: (context, constraints) {
+          final parentWidth = constraints.maxWidth;
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Circular Picture
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: details.image != null &&
+                          details.image!.isNotEmpty
+                      ? NetworkImage(details.image!)
+                      : const AssetImage('lib/assets/images/default_pic.png')
+                          as ImageProvider<Object>,
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            // Text Information
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    details.fullName,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+              if (parentWidth > 92) ...[
+                const SizedBox(width: 16),
+                // Text Information
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        details.fullName,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        details.email,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    details.email,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                ),
+              ],
+            ],
+          );
+        }),
       ),
     );
   }
