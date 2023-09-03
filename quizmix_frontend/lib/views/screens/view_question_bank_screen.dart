@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/question_search_modal_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
-import 'package:quizmix_frontend/views/widgets/reviewee_dashboard/reviewee_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/reviewer_dashboard.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_question_bank/question_bank_list.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_question_bank/question_bank_question_view.dart';
@@ -41,16 +40,12 @@ class _ViewQuestionBankScreenState
                 flex: 2,
                 child: Container(
                   color: Colors.white,
-                  child: Column(
+                  child: const Column(
                     children: [
                       // Left Side - Dashboard
-                      widget.viewer == "reviewer"
-                          ? const ReviewerDashboardWidget(
-                              selectedOption: 'Question Bank',
-                            )
-                          : const RevieweeDashboardWidget(
-                              selectedOption: 'Question Bank',
-                            )
+                      ReviewerDashboardWidget(
+                        selectedOption: 'Question Bank',
+                      )
                     ],
                   ),
                 ),
