@@ -4,7 +4,7 @@ import 'package:quizmix_frontend/api/utils/sign_in.helper.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/ui/login_state_provider.dart';
-import 'package:quizmix_frontend/views/screens/forgot_password_input_email_screen.dart';
+import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/my_quizzes_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
@@ -89,13 +89,9 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const ForgotPasswordInputEmailScreen(),
-                    ),
-                  );
+                  ref
+                      .read(modalStateProvider.notifier)
+                      .updateModalState(ModalState.forgotPassword);
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
