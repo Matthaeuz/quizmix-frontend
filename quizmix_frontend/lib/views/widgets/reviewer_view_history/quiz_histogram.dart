@@ -19,22 +19,24 @@ class QuizHistogram extends ConsumerWidget {
               (scoreFrequencies[attempt.attemptScore] ?? 0) + 1;
         }
 
+        // Print the values received by the histogram
+        print("Score Frequencies: $scoreFrequencies");
+
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: SfCartesianChart(
-            primaryXAxis: NumericAxis(
-                title: AxisTitle(text: 'Attempt Score'),
-                numberFormat: NumberFormat('0'),
-                interval: 1),
+            primaryXAxis: CategoryAxis(
+                title: AxisTitle(text: 'Attempt Score'), interval: 1),
             primaryYAxis: NumericAxis(
                 title: AxisTitle(text: 'Frequency'),
                 numberFormat: NumberFormat('0'),
                 interval: 1),
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries>[
-              ColumnSeries<MapEntry<int, int>, int>(
+              ColumnSeries<MapEntry<int, int>, String>(
                 dataSource: scoreFrequencies.entries.toList(),
-                xValueMapper: (MapEntry<int, int> entry, _) => entry.key,
+                xValueMapper: (MapEntry<int, int> entry, _) =>
+                    entry.key.toString(),
                 yValueMapper: (MapEntry<int, int> entry, _) => entry.value,
                 name: 'Frequency of Attempt Scores',
               ),
