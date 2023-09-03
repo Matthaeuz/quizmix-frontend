@@ -112,14 +112,21 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                             .toggleSorting();
                                       },
                                       icon: Icon(
-                                        Icons.sort,
-                                        color: isAscending
-                                            ? Colors.black
-                                            : Colors.grey,
+                                        isAscending
+                                            ? Icons
+                                                .arrow_upward // Use arrow up icon if ascending
+                                            : Icons
+                                                .arrow_downward, // Use arrow down icon if descending
+                                        color: Colors
+                                            .black, // Set the color to black
                                       ),
                                       label: const Text(
                                         'Total Score',
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors
+                                              .black, // Set the text color to black
+                                        ),
                                       ),
                                     ),
                                   ],
