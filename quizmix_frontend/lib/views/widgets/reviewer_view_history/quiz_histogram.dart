@@ -12,37 +12,38 @@ class QuizHistogram extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return attempts.when(
-          data: (quizAttempts) {
-            final Map<int, int> scoreFrequencies = {};
-            for (var attempt in quizAttempts) {
-              scoreFrequencies[attempt.attemptScore] =
-                  (scoreFrequencies[attempt.attemptScore] ?? 0) + 1;
-            }
+      data: (quizAttempts) {
+        final Map<int, int> scoreFrequencies = {};
+        for (var attempt in quizAttempts) {
+          scoreFrequencies[attempt.attemptScore] =
+              (scoreFrequencies[attempt.attemptScore] ?? 0) + 1;
+        }
 
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SfCartesianChart(
-                primaryXAxis: NumericAxis(
-                    title: AxisTitle(text: 'Attempt Score'),
-                    numberFormat: NumberFormat('0'),
-                    interval: 1),
-                primaryYAxis: NumericAxis(
-                    title: AxisTitle(text: 'Frequency'),
-                    numberFormat: NumberFormat('0'),
-                    interval: 1),
-                series: <ChartSeries>[
-                  ColumnSeries<MapEntry<int, int>, int>(
-                    dataSource: scoreFrequencies.entries.toList(),
-                    xValueMapper: (MapEntry<int, int> entry, _) => entry.key,
-                    yValueMapper: (MapEntry<int, int> entry, _) => entry.value,
-                    name: 'Frequency of Attempt Scores',
-                  ),
-                ],
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SfCartesianChart(
+            primaryXAxis: NumericAxis(
+                title: AxisTitle(text: 'Attempt Score'),
+                numberFormat: NumberFormat('0'),
+                interval: 1),
+            primaryYAxis: NumericAxis(
+                title: AxisTitle(text: 'Frequency'),
+                numberFormat: NumberFormat('0'),
+                interval: 1),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <ChartSeries>[
+              ColumnSeries<MapEntry<int, int>, int>(
+                dataSource: scoreFrequencies.entries.toList(),
+                xValueMapper: (MapEntry<int, int> entry, _) => entry.key,
+                yValueMapper: (MapEntry<int, int> entry, _) => entry.value,
+                name: 'Frequency of Attempt Scores',
               ),
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          error: (err, stack) => const Text('An error occurred'),
+            ],
+          ),
         );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => const Text('An error occurred'),
+    );
   }
 }

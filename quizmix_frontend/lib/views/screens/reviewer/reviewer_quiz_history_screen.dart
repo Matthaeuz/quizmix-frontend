@@ -11,6 +11,19 @@ import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_history_item.dart';
 
+// Define a StateNotifier to manage the sorting state.
+class SortingNotifier extends StateNotifier<bool> {
+  SortingNotifier() : super(true);
+
+  void toggleSorting() {
+    state = !state;
+  }
+}
+
+final sortingProvider = StateNotifierProvider<SortingNotifier, bool>((ref) {
+  return SortingNotifier();
+});
+
 class ReviewerQuizHistoryScreen extends ConsumerWidget {
   final Quiz quiz;
 
@@ -20,6 +33,9 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final attempts = ref.watch(quizAttemptsListProvider(quiz.id));
     final List<QuizAttempt> firstAttempts = [];
+
+    // Use the Riverpod sorting state
+    final isAscending = ref.watch(sortingProvider);
 
     attempts.maybeWhen(
       data: (data) {
@@ -74,10 +90,10 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -92,14 +108,27 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'Total Score',
-                                      style: TextStyle(fontSize: 20),
+                                    TextButton.icon(
+                                      onPressed: () {
+                                        ref
+                                            .read(sortingProvider.notifier)
+                                            .toggleSorting();
+                                      },
+                                      icon: Icon(
+                                        Icons.sort,
+                                        color: isAscending
+                                            ? Colors.black
+                                            : Colors.grey,
+                                      ),
+                                      label: const Text(
+                                        'Total Score',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -110,7 +139,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -121,7 +150,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -142,12 +171,18 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
                                     message:
                                         "There are currently no attempts for this quiz.");
                               }
+
                               return ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: firstAttempts.length,
                                 itemBuilder: (context, index) {
-                                  final attempt = firstAttempts[index];
+                                  // Sort your data based on the current sorting order
+                                  final sortedAttempts = isAscending
+                                      ? firstAttempts
+                                      : List.from(firstAttempts.reversed);
+
+                                  final attempt = sortedAttempts[index];
 
                                   return Padding(
                                     padding:
