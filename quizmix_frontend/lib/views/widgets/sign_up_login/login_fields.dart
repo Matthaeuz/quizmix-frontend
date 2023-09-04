@@ -117,6 +117,7 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                   );
 
                   await signIn(details, ref).then((value) {
+                    debugPrint("hey");
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

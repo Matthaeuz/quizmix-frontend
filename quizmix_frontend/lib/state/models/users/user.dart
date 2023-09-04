@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quizmix_frontend/state/models/roles/role.dart';
 
 part 'user.g.dart';
 
@@ -42,7 +41,7 @@ class User {
   final DateTime createdOn;
 
   @JsonKey(name: 'role')
-  final Role role;
+  final String role;
 
   /// Base user creation; call this if you need to reference an empty user.
   User.base()
@@ -54,13 +53,12 @@ class User {
         image = null,
         isActive = false,
         createdOn = DateTime.now(),
-        role = Role.base();
+        role = "";
 
   String get fullName => (middleName == null || middleName!.isEmpty)
       ? '$firstName $lastName'
       : '$firstName $middleName $lastName';
 
-  String get roleName => role.name;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
@@ -11,13 +12,16 @@ Future<String> signIn(AuthDetails details, WidgetRef ref) async {
   final client = ref.watch(restClientProvider);
 
   try {
+    debugPrint('Entered try catch');
     // Get a token if user credentials are valid and save it
     final token = await client.signIn(details);
     ref.read(authTokenProvider.notifier).updateToken(token);
-
+    debugPrint('$token');
     // Get user details and save to provider
     final user = await client.getUserByEmail(token.accessToken, details.email);
-    final userType = user[0].roleName;
+    debugPrint("$user");
+    final userType = user[0].role;
+    debugPrint("$userType");
 
     ref.read(userProvider.notifier).updateUser(user[0]);
 
