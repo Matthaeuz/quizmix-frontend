@@ -13,7 +13,7 @@ class User {
     this.image,
     required this.isActive,
     required this.createdOn,
-    required this.userType,
+    required this.role,
   });
 
   @JsonKey(name: 'id')
@@ -40,8 +40,8 @@ class User {
   @JsonKey(name: 'created_on')
   final DateTime createdOn;
 
-  @JsonKey(name: 'user_type')
-  final String userType;
+  @JsonKey(name: 'role')
+  final String role;
 
   /// Base user creation; call this if you need to reference an empty user.
   User.base()
@@ -53,10 +53,12 @@ class User {
         image = null,
         isActive = false,
         createdOn = DateTime.now(),
-        userType = '';
+        role = "";
 
-String get fullName => 
-  (middleName == null || middleName!.isEmpty) ? '$firstName $lastName' : '$firstName $middleName $lastName';
+  String get fullName => (middleName == null || middleName!.isEmpty)
+      ? '$firstName $lastName'
+      : '$firstName $middleName $lastName';
+
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

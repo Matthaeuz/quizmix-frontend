@@ -7,13 +7,7 @@ Future<void> signUp(SignUpDetails details, WidgetRef ref) async {
   final client = ref.watch(restClientProvider);
 
   try {
-    final user = await client.createUser(details);
-
-    Map<String,dynamic> userId = {
-      'user': user.id
-    };
-
-    await client.createReviewee(userId);
+    await client.signUp(details);
   } on DioException catch (_) {
     rethrow;
   }

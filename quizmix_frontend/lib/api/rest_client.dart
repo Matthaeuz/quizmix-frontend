@@ -39,6 +39,9 @@ abstract class RestClient {
   @POST("/users/")
   Future<User> createUser(@Body() SignUpDetails details);
 
+  @POST("/users/sign_up/")
+  Future<void> signUp(@Body() SignUpDetails details);
+
   // @GET("users")
   // Future<List<User>> getUsers(@Header("Authorization") String token);
 

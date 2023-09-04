@@ -15,7 +15,7 @@ class ProfileArea extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
-        if (details.userType == "reviewee") {
+        if (details.role == "reviewee") {
           ref.read(revieweeTopScoresProvider.notifier).fetchRevieweeTopScores();
           ref
               .read(revieweeHistoryScoresProvider.notifier)
