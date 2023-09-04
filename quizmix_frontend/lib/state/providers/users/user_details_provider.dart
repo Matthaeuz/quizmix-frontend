@@ -5,17 +5,7 @@ class UserDetailsNotifier extends StateNotifier<User> {
   UserDetailsNotifier(User user) : super(user);
 
   void updateUser(User newUser) {
-    state = User(
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      middleName: newUser.middleName,
-      lastName: newUser.lastName,
-      image: newUser.image,
-      isActive: newUser.isActive,
-      createdOn: newUser.createdOn,
-      userType: newUser.userType,
-    );
+    state = newUser;
   }
 }
 

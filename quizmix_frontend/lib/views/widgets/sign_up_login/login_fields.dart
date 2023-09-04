@@ -117,6 +117,10 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                   );
 
                   await signIn(details, ref).then((value) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DashboardScreen()));
                     if (value == 'reviewer') {
                       Navigator.pushReplacement(
                           context,
