@@ -13,7 +13,7 @@ Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
       answer: json['answer'] as String,
       choices:
           (json['choices'] as List<dynamic>).map((e) => e as String).toList(),
-      category: json['category'] as String,
+      category: Category.fromJson(json['category'] as Map<String, dynamic>),
       solution: json['solution'] as String?,
       parameters: (json['parameters'] as List<dynamic>)
           .map((e) => (e as num).toDouble())

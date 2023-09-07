@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:quizmix_frontend/state/models/categories/category.dart';
 
 part 'question.g.dart';
 
@@ -33,7 +34,7 @@ class Question {
   final List<String> choices;
 
   @JsonKey(name: 'category')
-  final String category;
+  final Category category;
 
   @JsonKey(name: 'solution')
   final String? solution;
@@ -54,7 +55,7 @@ class Question {
         image = '',
         answer = '',
         choices = [],
-        category = '',
+        category = Category.base(),
         solution = '',
         parameters = [],
         responses = [],

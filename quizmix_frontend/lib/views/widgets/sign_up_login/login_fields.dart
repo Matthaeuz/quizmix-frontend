@@ -116,13 +116,13 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                     password: passwordController.text,
                   );
 
-                  await signIn(details, ref).then((value) {
+                  await signIn(details, ref).then((role) {
                     debugPrint("hey");
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const DashboardScreen()));
-                    if (value == 'reviewer') {
+                    if (role == 'reviewer') {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

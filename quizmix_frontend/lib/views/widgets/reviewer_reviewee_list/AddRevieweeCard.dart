@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 
 class AddRevieweeCard extends StatelessWidget {
   final bool isSelected;
   final ValueChanged<bool> onCheckboxChanged;
-  final Reviewee reviewee;
+  final User reviewee;
 
   const AddRevieweeCard({
     Key? key,
@@ -36,7 +36,7 @@ class AddRevieweeCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                reviewee.user.fullName,
+                reviewee.fullName,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

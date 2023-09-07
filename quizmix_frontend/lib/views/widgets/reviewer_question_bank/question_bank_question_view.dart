@@ -42,11 +42,11 @@ class QuestionBankQuestion extends ConsumerWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: getCategoryColor(
-                                            currentQuestion.category),
+                                            currentQuestion.category.name),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
-                                        currentQuestion.category,
+                                        currentQuestion.category.name,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,

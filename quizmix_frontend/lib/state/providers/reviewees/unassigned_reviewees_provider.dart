@@ -1,10 +1,11 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 
-class UnassignedRevieweesNotifier extends StateNotifier<AsyncValue<List<Reviewee>>> {
+class UnassignedRevieweesNotifier
+    extends StateNotifier<AsyncValue<List<User>>> {
   final RestClient client;
   final String accessToken;
 
@@ -17,7 +18,7 @@ class UnassignedRevieweesNotifier extends StateNotifier<AsyncValue<List<Reviewee
 
   Future<void> fetchUnassignedReviewees() async {
     try {
-      var reviewees = await client.getUnassignedReviewees(accessToken);
+      var reviewees = await client.getUnassignedReviewees(accessToken, {});
       state = AsyncValue.data(reviewees);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -26,10 +27,11 @@ class UnassignedRevieweesNotifier extends StateNotifier<AsyncValue<List<Reviewee
 }
 
 final unassignedRevieweesProvider =
-    StateNotifierProvider<UnassignedRevieweesNotifier, AsyncValue<List<Reviewee>>>(
+    StateNotifierProvider<UnassignedRevieweesNotifier, AsyncValue<List<User>>>(
         (ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
 
-  return UnassignedRevieweesNotifier(client: client, accessToken: token.accessToken);
+  return UnassignedRevieweesNotifier(
+      client: client, accessToken: token.accessToken);
 });

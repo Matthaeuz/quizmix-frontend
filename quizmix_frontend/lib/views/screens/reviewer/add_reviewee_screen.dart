@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_reviewee_list/AddRevieweeCard.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart'; // Assuming the Reviewee model is defined in this import
 // import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 // import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart'; // Import the provider
@@ -22,17 +22,17 @@ class AddRevieweeScreen extends ConsumerStatefulWidget {
 
 class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
   List<bool> isCheckedList = [];
-  List<Reviewee> selectedReviewees = [];
+  List<User> selectedReviewees = [];
 
   void printSelectedReviewees() {
     for (var reviewee in selectedReviewees) {
-      debugPrint(reviewee.user.fullName);
+      debugPrint(reviewee.fullName);
     }
   }
 
   Future<void> addSelectedReviewees() async {
     final reviewees = ref.read(unassignedRevieweesProvider);
-    final reviewerId = ref.read(reviewerProvider).id;
+    final reviewer = ref.read(userProvider);
     final client = ref.read(restClientProvider);
     final token = ref.read(authTokenProvider).accessToken;
 
@@ -44,10 +44,11 @@ class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
             final reviewee = reviewees[i];
             selectedReviewees.add(reviewee);
 
-            final newDetails = {
-              "belongs_to": reviewerId,
+            final request = {
+              "reviewee_id": reviewee.id,
+              "reviewer_id": reviewer.id,
             };
-            await client.updateReviewee(token, reviewee.id, newDetails);
+            await client.assignReviewee(token, request);
           }
         }
 
@@ -123,7 +124,7 @@ class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
                       message: "No unassigned reviewees found.",
                     );
                   }
-                  
+
                   if (isCheckedList.isEmpty) {
                     // Initialize isCheckedList if it hasn't been initialized yet
                     isCheckedList = List.filled(reviewees.length, false);

@@ -47,7 +47,7 @@ Future<Question> updateQuestion(
           .updateCurrentEditedQuestion(updatedQuestion);
       ref.read(questionBankProvider.notifier).fetchQuestions();
       ref
-          .read(categoryQuestionsProvider(question.category).notifier)
+          .read(categoryQuestionsProvider(question.category.name).notifier)
           .fetchQuestionsByCategory();
 
       return updatedQuestion;

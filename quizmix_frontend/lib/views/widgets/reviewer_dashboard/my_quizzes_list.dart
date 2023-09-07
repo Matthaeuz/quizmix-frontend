@@ -68,7 +68,15 @@ class MyQuizzesList extends ConsumerWidget {
             ),
           ),
           loading: () => const CircularProgressIndicator(),
-          error: (error, stack) => Text('Error: $error'),
+          error: (error, stack) => SizedBox(
+            height: 200,
+            child: Row(
+              children: [
+                const AddCard(),
+                Text('Error: $error'),
+              ],
+            ),
+          ),
         ),
       ],
     );
