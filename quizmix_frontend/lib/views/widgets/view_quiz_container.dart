@@ -52,14 +52,14 @@ class ViewQuizContainer extends ConsumerWidget {
                                               ),
                                               decoration: BoxDecoration(
                                                 color: getCategoryColor(
-                                                    question.category),
+                                                    question.category.name),
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  question.category,
+                                                  question.category.name,
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 16,

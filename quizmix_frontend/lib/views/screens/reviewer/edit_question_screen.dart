@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
 import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_question.utils.dart';
 import 'package:quizmix_frontend/constants/categories.constants.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/categories/category.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/questions/current_edited_question_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -45,13 +46,18 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
   void initState() {
     super.initState();
     questionController.text = ref.read(currentEditedQuestionProvider)!.question;
-    explanationController.text = ref.read(currentEditedQuestionProvider)!.solution ?? '';
-    choiceAController.text = ref.read(currentEditedQuestionProvider)!.choices[0];
-    choiceBController.text = ref.read(currentEditedQuestionProvider)!.choices[1];
-    choiceCController.text = ref.read(currentEditedQuestionProvider)!.choices[2];
-    choiceDController.text = ref.read(currentEditedQuestionProvider)!.choices[3];
+    explanationController.text =
+        ref.read(currentEditedQuestionProvider)!.solution ?? '';
+    choiceAController.text =
+        ref.read(currentEditedQuestionProvider)!.choices[0];
+    choiceBController.text =
+        ref.read(currentEditedQuestionProvider)!.choices[1];
+    choiceCController.text =
+        ref.read(currentEditedQuestionProvider)!.choices[2];
+    choiceDController.text =
+        ref.read(currentEditedQuestionProvider)!.choices[3];
     _selectedAnswer = ref.read(currentEditedQuestionProvider)!.answer;
-    dropdownValue = ref.read(currentEditedQuestionProvider)!.category;
+    dropdownValue = ref.read(currentEditedQuestionProvider)!.category.name;
   }
 
   void _selectImage() async {
@@ -303,7 +309,9 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
                             image: question.image,
                             answer: _selectedAnswer,
                             choices: newChoices,
-                            category: dropdownValue,
+                            // TODO: update to category
+                            // category: dropdownValue,
+                            category: Category.base(),
                             solution: explanationController.text,
                             // Add reset funcationality later!
                             parameters: question.parameters,

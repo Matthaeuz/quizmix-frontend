@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 
 class RevieweeListCard extends StatelessWidget {
-  final Reviewee revieweeDetails;
+  final User revieweeDetails;
 
   const RevieweeListCard({
     Key? key,
@@ -26,9 +26,9 @@ class RevieweeListCard extends StatelessWidget {
               SizedBox(
                   width: 75,
                   height: 75,
-                  child: revieweeDetails.user.image != null
+                  child: revieweeDetails.image != null
                       ? Image.network(
-                          revieweeDetails.user.image!,
+                          revieweeDetails.image!,
                           fit: BoxFit.cover,
                         )
                       : Image.asset(
@@ -39,7 +39,7 @@ class RevieweeListCard extends StatelessWidget {
               // 2nd column - Text
               Expanded(
                 child: Text(
-                  revieweeDetails.user.fullName,
+                  revieweeDetails.fullName,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

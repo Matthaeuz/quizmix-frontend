@@ -16,7 +16,9 @@ class QuestionBankCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
-        ref.read(currentQuestionProvider.notifier).updateCurrentQuestion(questionDetails);
+        ref
+            .read(currentQuestionProvider.notifier)
+            .updateCurrentQuestion(questionDetails);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -44,11 +46,11 @@ class QuestionBankCard extends ConsumerWidget {
                       horizontal: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: getCategoryColor(questionDetails.category),
+                      color: getCategoryColor(questionDetails.category.name),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      questionDetails.category,
+                      questionDetails.category.name,
                       style: const TextStyle(
                         color: Colors.white,
                       ),

@@ -54,11 +54,11 @@ class CreateEditMixQuestionCard extends ConsumerWidget {
                         horizontal: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: getCategoryColor(questionDetails.category),
+                        color: getCategoryColor(questionDetails.category.name),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        questionDetails.category,
+                        questionDetails.category.name,
                         style: const TextStyle(
                           color: Colors.white,
                         ),

@@ -3,8 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos_data.dart';
+import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewers/reviewer_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:flutter/services.dart';
@@ -22,19 +23,33 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
   Map<String, CategoryData> categoryDataMap = {};
   String quizName = '';
 
-  List<String> allCategories = [
-    'Basic Theories',
-    'Algorithms and Programming',
-    'Computer Components and Hardware',
-    'System Components',
-    'Software',
-    'Development Technology and Management',
-    'Database',
-    'Network',
-    'Security',
-    'System Audit, Strategy and Planning',
-    'Business, Corporate & Legal Affairs'
-  ];
+  // List<String> allCategories = [
+  //   'Basic Theories',
+  //   'Algorithms and Programming',
+  //   'Computer Components and Hardware',
+  //   'System Components',
+  //   'Software',
+  //   'Development Technology and Management',
+  //   'Database',
+  //   'Network',
+  //   'Security',
+  //   'System Audit, Strategy and Planning',
+  //   'Business, Corporate & Legal Affairs'
+  // ];
+
+  late List<String> allCategories;
+
+  @override
+  void initState() {
+    super.initState();
+    allCategories = ref.read(categoryProvider).when(data: (data) {
+      return data.map((category) => category.name).toList();
+    }, error: (err, st) {
+      return [];
+    }, loading: () {
+      return [];
+    });
+  }
 
   void _showCategoryDropdown(BuildContext context) {
     if (allCategories.isEmpty) {
@@ -74,7 +89,7 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
   @override
   Widget build(BuildContext context) {
     final notifier = ref.read(reviewerQuizzesProvider.notifier);
-    final reviewerId = ref.watch(reviewerProvider).id;
+    final reviewerId = ref.watch(userProvider).id;
 
     return Stack(
       children: [

@@ -46,12 +46,12 @@ class UpdateQuizBankItemContainer extends ConsumerWidget {
               if (showCategory)
                 Container(
                   decoration: BoxDecoration(
-                    color: getCategoryColor(questionDetails.category),
+                    color: getCategoryColor(questionDetails.category.name),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    questionDetails.category,
+                    questionDetails.category.name,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),

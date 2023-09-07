@@ -1,5 +1,6 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
+import 'package:quizmix_frontend/state/models/categories/category.dart';
 import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
@@ -55,6 +56,23 @@ abstract class RestClient {
     @Path("email") String email,
   );
 
+  @POST("/users/get_unassigned_reviewees/")
+  Future<List<User>> getUnassignedReviewees(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> request,
+  );
+
+  @POST("/users/assign_reviewee/")
+  Future<void> assignReviewee(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> request,
+  );
+
+  /// CATEGORY API
+
+  @GET("/categories/")
+  Future<List<Category>> getCategories(@Header("Authorization") String token);
+
   /// REVIEWEE API
 
   @POST("/reviewees/")
@@ -77,12 +95,7 @@ abstract class RestClient {
     @Path("belongsTo") int belongsTo,
   );
 
-  @GET("/reviewees/?belongs_to_is_null=true")
-  Future<List<Reviewee>> getUnassignedReviewees(
-    @Header("Authorization") String token,
-  );
-
-  @POST("/reviewees/get_top_scores/")
+  @POST("/users/get_top_scores/")
   Future<TopScores> getRevieweeTopScores(
     @Header("Authorization") String token,
     @Body() Map<String, int> reviewee,
@@ -93,10 +106,6 @@ abstract class RestClient {
     @Header("Authorization") String token,
     @Body() Map<String, int> reviewee,
   );
-
-  @PATCH("/reviewees/{id}/")
-  Future<Reviewee> updateReviewee(@Header("Authorization") String token,
-      @Path("id") int id, @Body() Map<String, dynamic> newDetails);
 
   /// REVIEWER API
 
@@ -146,7 +155,9 @@ abstract class RestClient {
 
   @POST("/quizzes/create_quiz/")
   Future<Quiz> createQuizFromTOS(
-      @Header("Authorization") String token, @Body() TOS tos);
+    @Header("Authorization") String token,
+    @Body() TOS tos,
+  );
 
   @GET("/quizzes/?made_by={madeBy}")
   Future<List<Quiz>> getMadeByQuizzes(

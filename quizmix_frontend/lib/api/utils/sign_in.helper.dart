@@ -21,7 +21,7 @@ Future<String> signIn(AuthDetails details, WidgetRef ref) async {
     final user = await client.getUserByEmail(token.accessToken, details.email);
     debugPrint("$user");
     final userType = user[0].role;
-    debugPrint("$userType");
+    debugPrint(userType);
 
     ref.read(userProvider.notifier).updateUser(user[0]);
 

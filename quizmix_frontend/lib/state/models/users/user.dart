@@ -53,12 +53,11 @@ class User {
         image = null,
         isActive = false,
         createdOn = DateTime.now(),
-        role = "";
+        role = '';
 
   String get fullName => (middleName == null || middleName!.isEmpty)
       ? '$firstName $lastName'
       : '$firstName $middleName $lastName';
-
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
