@@ -20,7 +20,7 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
 
     return Container(
       color: AppColors.mainColor,
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: quizzes.when(
         data: (data) {
           if (data.isEmpty) {
@@ -32,31 +32,38 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
               ),
             );
           }
-          return SingleChildScrollView(
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Search Input
-                  SearchInput(
-                    onChanged: (value) {
-                      // Handle search input changes
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  Wrap(
-                    spacing: 24.0,
-                    runSpacing: 24.0,
-                    children: [
-                      for (var index = 0; index < data.length; index++) ...[
-                        RevieweeQuizItem(quiz: data[index]),
-                      ]
-                    ],
-                  ),
-                ],
+          //this widget
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
+                    // Search Input
+                    SearchInput(
+                      onChanged: (value) {
+                        // Handle search input changes
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Wrap(
+                      spacing: 24.0,
+                      runSpacing: 24.0,
+                      children: [
+                        for (var index = 0; index < data.length; index++) ...[
+                          RevieweeQuizItem(quiz: data[index]),
+                        ]
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: SizedBox(),
+              ),
+            ],
           );
         },
         loading: () => const Center(
@@ -66,7 +73,13 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
             child: CircularProgressIndicator(color: AppColors.white),
           ),
         ),
-        error: (err, stack) => Text('Error: $err'),
+        error: (err, stack) => Center(
+          child: SingleChildScrollView(
+            child: EmptyDataPlaceholder(
+              message: "Error: $err",
+            ),
+          ),
+        ),
       ),
     );
   }

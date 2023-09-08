@@ -18,7 +18,7 @@ class UnassignedRevieweesNotifier
 
   Future<void> fetchUnassignedReviewees() async {
     try {
-      var reviewees = await client.getUnassignedReviewees(accessToken, {});
+      var reviewees = await client.getUnassignedReviewees(accessToken);
       state = AsyncValue.data(reviewees);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

@@ -194,16 +194,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<User>> getUnassignedReviewees(
-    String token,
-    Map<String, int> request,
-  ) async {
+  Future<List<User>> getUnassignedReviewees(String token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(request);
+    final Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
       method: 'POST',
@@ -230,14 +226,14 @@ class _RestClient implements RestClient {
   @override
   Future<void> assignReviewee(
     String token,
-    Map<String, int> request,
+    AssignRevieweeDetails details,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(request);
+    _data.addAll(details.toJson());
     await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'POST',
       headers: _headers,
@@ -729,6 +725,40 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = Quiz.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<Quiz>> getRevieweeQuizzes(
+    String token,
+    RevieweeQuizzesDetails details,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(details.toJson());
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Quiz>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/quizzes/get_reviewee_quizzes/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Quiz.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

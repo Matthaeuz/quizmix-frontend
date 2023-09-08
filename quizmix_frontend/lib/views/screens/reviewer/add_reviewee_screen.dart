@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/state/models/users/assign_reviewee_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
@@ -44,11 +45,11 @@ class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
             final reviewee = reviewees[i];
             selectedReviewees.add(reviewee);
 
-            final request = {
-              "reviewee_id": reviewee.id,
-              "reviewer_id": reviewer.id,
-            };
-            await client.assignReviewee(token, request);
+            final details = AssignRevieweeDetails(
+              revieweeId: reviewee.id,
+              reviewerId: reviewer.id,
+            );
+            await client.assignReviewee(token, details);
           }
         }
 
@@ -56,8 +57,11 @@ class _AddRevieweeScreenState extends ConsumerState<AddRevieweeScreen> {
         ref.read(reviewerRevieweesProvider.notifier).fetchReviewerReviewees();
         ref
             .read(unassignedRevieweesProvider.notifier)
-            .fetchUnassignedReviewees();
-        Navigator.pop(context);
+            .fetchUnassignedReviewees()
+            .then((value) {
+          Navigator.pop(context);
+        });
+
         // printSelectedReviewees();
       },
       loading: () {},

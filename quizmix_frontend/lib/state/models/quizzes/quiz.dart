@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 
 part 'quiz.g.dart';
 
@@ -19,7 +19,7 @@ class Quiz {
   final int id;
 
   @JsonKey(name: 'made_by')
-  final Reviewer madeBy;
+  final User madeBy;
 
   @JsonKey(name: 'title')
   final String title;
@@ -32,11 +32,11 @@ class Quiz {
 
   @JsonKey(name: 'questions')
   final List<Question> questions;
-  
+
   /// Base quiz creation; call this if you need to reference an empty quiz.
   Quiz.base()
       : id = 0,
-        madeBy = Reviewer.base(),
+        madeBy = User.base(),
         title = '',
         image = '',
         createdOn = DateTime.now(),
