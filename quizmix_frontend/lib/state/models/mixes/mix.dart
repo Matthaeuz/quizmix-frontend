@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 
 part 'mix.g.dart';
 
@@ -25,7 +25,7 @@ class Mix {
   final String? image;
 
   @JsonKey(name: 'made_by')
-  final Reviewee madeBy;
+  final User madeBy;
 
   @JsonKey(name: 'created_on')
   final DateTime createdOn;
@@ -38,7 +38,7 @@ class Mix {
       : id = 0,
         title = '',
         image = '',
-        madeBy = Reviewee.base(),
+        madeBy = User.base(),
         createdOn = DateTime.now(),
         questions = [];
 
