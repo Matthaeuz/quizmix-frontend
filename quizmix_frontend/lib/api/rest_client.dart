@@ -8,11 +8,13 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt_questions_responses.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/reviewees/attempt_score.dart';
 import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
 import 'package:quizmix_frontend/state/models/reviewees/top_scores.dart';
 import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
+import 'package:quizmix_frontend/state/models/users/assign_reviewee_details.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:retrofit/retrofit.dart';
@@ -59,13 +61,12 @@ abstract class RestClient {
   @POST("/users/get_unassigned_reviewees/")
   Future<List<User>> getUnassignedReviewees(
     @Header("Authorization") String token,
-    @Body() Map<String, int> request,
   );
 
   @POST("/users/assign_reviewee/")
   Future<void> assignReviewee(
     @Header("Authorization") String token,
-    @Body() Map<String, int> request,
+    @Body() AssignRevieweeDetails details,
   );
 
   /// CATEGORY API
@@ -157,6 +158,12 @@ abstract class RestClient {
   Future<Quiz> createQuizFromTOS(
     @Header("Authorization") String token,
     @Body() TOS tos,
+  );
+
+  @POST("/quizzes/get_reviewee_quizzes/")
+  Future<List<Quiz>> getRevieweeQuizzes(
+    @Header("Authorization") String token,
+    @Body() RevieweeQuizzesDetails details,
   );
 
   @GET("/quizzes/?made_by={madeBy}")

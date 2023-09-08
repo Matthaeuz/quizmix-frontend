@@ -2,26 +2,28 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
   final RestClient client;
   final String accessToken;
-  final int madeBy;
+  final int revieweeId;
 
   RevieweeQuizzesNotifier({
     required this.client,
     required this.accessToken,
-    required this.madeBy,
+    required this.revieweeId,
   }) : super(const AsyncValue.loading()) {
     fetchQuizzes();
   }
 
   Future<void> fetchQuizzes() async {
     try {
-      var quizzes = await client.getMadeByQuizzes(accessToken, madeBy);
+      final details = RevieweeQuizzesDetails(revieweeId: revieweeId);
+      final quizzes = await client.getRevieweeQuizzes(accessToken, details);
       state = AsyncValue.data(quizzes);
     } catch (e, st) {
       if (e is DioException && e.response?.statusCode == 400) {
@@ -38,14 +40,8 @@ final revieweeQuizzesProvider =
         (ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
-  final madeBy = ref.watch(revieweeProvider).when(
-        data: (data) {
-          return data.belongsTo?.id;
-        },
-        error: (err, st) {},
-        loading: () {},
-      );
+  final revieweeId = ref.watch(userProvider).id;
 
   return RevieweeQuizzesNotifier(
-      client: client, accessToken: token.accessToken, madeBy: madeBy ?? 0);
+      client: client, accessToken: token.accessToken, revieweeId: revieweeId);
 });

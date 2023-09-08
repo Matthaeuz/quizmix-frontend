@@ -8,7 +8,7 @@ part of 'quiz.dart';
 
 Quiz _$QuizFromJson(Map<String, dynamic> json) => Quiz(
       id: json['id'] as int,
-      madeBy: Reviewer.fromJson(json['made_by'] as Map<String, dynamic>),
+      madeBy: User.fromJson(json['made_by'] as Map<String, dynamic>),
       title: json['title'] as String,
       image: json['image'] as String?,
       createdOn: DateTime.parse(json['created_on'] as String),
