@@ -3,7 +3,7 @@ import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 class RevieweeMixesNotifier extends StateNotifier<AsyncValue<List<Mix>>> {
   final RestClient client;
@@ -32,17 +32,11 @@ final revieweeMixesProvider =
     StateNotifierProvider<RevieweeMixesNotifier, AsyncValue<List<Mix>>>((ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
-  final madeBy = ref.read(revieweeProvider).when(
-        data: (data) {
-          return data.id;
-        },
-        error: (err, st) {},
-        loading: () {},
-      );
+  final madeBy = ref.read(userProvider).id;
 
   return RevieweeMixesNotifier(
     client: client,
     accessToken: token.accessToken,
-    madeBy: madeBy!,
+    madeBy: madeBy,
   );
 });

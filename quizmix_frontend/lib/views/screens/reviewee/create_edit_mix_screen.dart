@@ -12,7 +12,7 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/mix_question_search_modal_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_create_edit_mix/create_edit_mix_question_card.dart';
@@ -225,17 +225,11 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                         bytesToPlatform(selectedImageBytes!);
                                   }
                                   if (mix == null) {
-                                    final reviewee =
-                                        ref.read(revieweeProvider).when(
-                                              data: (data) {
-                                                return data.id;
-                                              },
-                                              error: (err, st) {},
-                                              loading: () {},
-                                            );
+                                    final revieweeId =
+                                        ref.read(userProvider).id;
                                     final newMix = {
                                       "title": textFieldValue,
-                                      "made_by": reviewee!,
+                                      "made_by": revieweeId,
                                       "questions": questionsIdList,
                                     };
                                     createMix(newMix, imageFile, ref)
