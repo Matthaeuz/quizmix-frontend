@@ -42,6 +42,10 @@ class Quiz {
         createdOn = DateTime.now(),
         questions = [];
 
+  int get numQuestions => questions.length;
+  int get numCategories =>
+      questions.map((quiz) => quiz.category.name).toSet().length;
+
   factory Quiz.fromJson(Map<String, dynamic> json) => _$QuizFromJson(json);
   Map<String, dynamic> toJson() => _$QuizToJson(this);
 }

@@ -4,7 +4,6 @@ import 'package:quizmix_frontend/state/providers/quizzes/reviewee_quizzes_provid
 import 'package:quizmix_frontend/views/widgets/reviewee_quizzes_tab/reviewee_quiz_item.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
-import 'package:quizmix_frontend/views/widgets/search_input.dart';
 
 class RevieweeQuizzesTab extends ConsumerStatefulWidget {
   const RevieweeQuizzesTab({Key? key}) : super(key: key);
@@ -17,13 +16,15 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
   @override
   Widget build(BuildContext context) {
     final quizzes = ref.watch(revieweeQuizzesProvider);
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
       color: AppColors.mainColor,
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: quizzes.when(
         data: (data) {
-          if (data.isEmpty) {
+          final allQuizzesLen =
+              ref.read(revieweeQuizzesProvider.notifier).allQuizzes.length;
+          if (data.isEmpty && allQuizzesLen == 0) {
             return const Center(
               child: SingleChildScrollView(
                 child: EmptyDataPlaceholder(
@@ -32,37 +33,81 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
               ),
             );
           }
-          //this widget
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    // Search Input
-                    SearchInput(
-                      onChanged: (value) {
-                        // Handle search input changes
-                      },
+
+          return Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            0, screenHeight > 160 ? 100 : 0, 0, 0),
+                        child: Wrap(
+                          spacing: 24.0,
+                          runSpacing: 24.0,
+                          children: [
+                            for (var index = 0;
+                                index < data.length;
+                                index++) ...[
+                              RevieweeQuizItem(quiz: data[index]),
+                            ]
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 24),
-                    Wrap(
-                      spacing: 24.0,
-                      runSpacing: 24.0,
-                      children: [
-                        for (var index = 0; index < data.length; index++) ...[
-                          RevieweeQuizItem(quiz: data[index]),
-                        ]
-                      ],
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: SizedBox(),
                     ),
                   ],
                 ),
               ),
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: SizedBox(),
-              ),
+              // Search Input
+              screenHeight > 160
+                  ? Container(
+                      padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
+                      color: AppColors.mainColor.withOpacity(0.5),
+                      child: LayoutBuilder(
+                        builder: ((context, constraints) {
+                          final spaceWidth = constraints.maxWidth > 352
+                              ? (constraints.maxWidth - 352) * 0.8
+                              : 0.0;
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: AppColors.white,
+                                    hintText: 'Search Quizzes',
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(12),
+                                      ),
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 8),
+                                  ),
+                                  onChanged: (value) {
+                                    ref
+                                        .read(revieweeQuizzesProvider.notifier)
+                                        .searchQuizzes(value);
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: spaceWidth),
+                            ],
+                          );
+                        }),
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           );
         },
