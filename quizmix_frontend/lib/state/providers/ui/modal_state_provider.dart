@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum ModalState { none, forgotPassword }
+enum ModalState { none, forgotPassword, advancedSearch, viewQuestion }
 
 class ModalStateNotifier extends StateNotifier<ModalState> {
   ModalStateNotifier(ModalState initModalState) : super(initModalState);

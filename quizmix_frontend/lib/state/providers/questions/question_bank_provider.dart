@@ -9,6 +9,7 @@ import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   final RestClient client;
   final String accessToken;
+  late List<Question> allQuestions;
 
   QuestionBankNotifier({
     required this.client,
@@ -20,9 +21,22 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   Future<void> fetchQuestions() async {
     try {
       var questions = await client.getQuestions(accessToken);
+      allQuestions = questions;
       state = AsyncValue.data(questions);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    }
+  }
+
+  void textSearchQuestions(String value) {
+    if (value.isEmpty) {
+      state = AsyncValue.data(allQuestions);
+    } else {
+      final searchResult = allQuestions
+          .where((question) =>
+              question.question.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      state = AsyncValue.data(searchResult);
     }
   }
 
