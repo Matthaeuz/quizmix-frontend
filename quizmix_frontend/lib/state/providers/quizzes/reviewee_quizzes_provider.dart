@@ -11,6 +11,7 @@ class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
   final RestClient client;
   final String accessToken;
   final int revieweeId;
+  late List<Quiz> allQuizzes;
 
   RevieweeQuizzesNotifier({
     required this.client,
@@ -24,13 +25,26 @@ class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
     try {
       final details = RevieweeQuizzesDetails(revieweeId: revieweeId);
       final quizzes = await client.getRevieweeQuizzes(accessToken, details);
-      state = AsyncValue.data(quizzes);
+      allQuizzes = quizzes.reversed.toList();
+      state = AsyncValue.data(allQuizzes);
     } catch (e, st) {
       if (e is DioException && e.response?.statusCode == 400) {
         state = const AsyncValue.data([]);
       } else {
         state = AsyncValue.error(e, st);
       }
+    }
+  }
+
+  void searchQuizzes(String value) {
+    if (value.isEmpty) {
+      state = AsyncValue.data(allQuizzes);
+    } else {
+      final searchResult = allQuizzes
+          .where(
+              (quiz) => quiz.title.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      state = AsyncValue.data(searchResult);
     }
   }
 }

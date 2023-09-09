@@ -11,3 +11,9 @@ String dateTimeToTime(DateTime dt) {
 
   return DateFormat('h:mm a').format(localDt);
 }
+
+String dateTimeToWordDate(DateTime dt) {
+  final localDt = dt.toLocal();
+
+  return DateFormat.yMMMMd().format(localDt);
+}
