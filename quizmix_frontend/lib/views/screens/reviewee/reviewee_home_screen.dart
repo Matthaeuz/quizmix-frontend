@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
+import 'package:quizmix_frontend/views/modals/advanced_search_modal.dart';
+import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_mixes_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_question_bank_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_quizzes_tab.dart';
@@ -29,20 +33,36 @@ class _RevieweeHomeScreenState extends ConsumerState<RevieweeHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final tabState = ref.watch(tabStateProvider);
+    final modalState = ref.watch(modalStateProvider);
 
-    return Scaffold(
-      body: Row(
-        children: [
-          const Expanded(
-            flex: 2,
-            child: TabsWidget(),
+    return Stack(
+      children: [
+        Scaffold(
+          body: Row(
+            children: [
+              const Expanded(
+                flex: 2,
+                child: TabsWidget(),
+              ),
+              Expanded(
+                flex: 8,
+                child: getWidgetFromTabState(tabState),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 8,
-            child: getWidgetFromTabState(tabState),
+        ),
+        if (modalState == ModalState.advancedSearch) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const AdvancedSearhModal(),
           ),
-        ],
-      ),
+        ] else if (modalState == ModalState.viewQuestion) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const ViewQuestionModal(),
+          ),
+        ]
+      ],
     );
   }
 }
