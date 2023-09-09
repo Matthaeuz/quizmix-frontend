@@ -19,7 +19,6 @@ class RevieweeQuizItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final firstLetter = quiz.title[0];
     final revieweeId = ref.read(revieweeProvider).when(
           data: (data) => data.id,
           error: (err, st) {},
@@ -55,18 +54,25 @@ class RevieweeQuizItem extends ConsumerWidget {
                   height: 70,
                   decoration: BoxDecoration(
                     color: AppColors.fourthColor,
-                    borderRadius:
-                        BorderRadius.circular(5), // Add border radius of 5
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(
-                    child: Text(
-                      firstLetter,
-                      style: const TextStyle(
-                        color: AppColors.black,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: quiz.image != null
+                        ? Image(
+                            image: NetworkImage(quiz.image!),
+                            fit: BoxFit.cover,
+                          )
+                        : Center(
+                            child: Text(
+                              quiz.title[0],
+                              style: const TextStyle(
+                                color: AppColors.black,
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
