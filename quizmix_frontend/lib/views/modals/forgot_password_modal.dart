@@ -22,52 +22,54 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: IntrinsicHeight(
-            child: Container(
-              width: 600,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
+          child: SingleChildScrollView(
+            child: IntrinsicHeight(
               child: Container(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Forgot Password',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    const SizedBox(height: 16),
-                    TextFieldWidget(
-                      labelText: 'Email',
-                      obscureText: false,
-                      controller: emailController,
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SolidButton(
-                          text: 'Cancel',
-                          width: 160,
-                          onPressed: () {
-                            ref
-                                .read(modalStateProvider.notifier)
-                                .updateModalState(ModalState.none);
-                          },
-                        ),
-                        const SizedBox(width: 16),
-                        SolidButton(
-                          text: 'Continue',
-                          width: 160,
-                          onPressed: () {
-                            // TODO: Implement continue functionality
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                width: 600,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Forgot Password',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFieldWidget(
+                        labelText: 'Email',
+                        obscureText: false,
+                        controller: emailController,
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SolidButton(
+                            text: 'Cancel',
+                            width: 160,
+                            onPressed: () {
+                              ref
+                                  .read(modalStateProvider.notifier)
+                                  .updateModalState(ModalState.none);
+                            },
+                          ),
+                          const SizedBox(width: 16),
+                          SolidButton(
+                            text: 'Continue',
+                            width: 160,
+                            onPressed: () {
+                              // TODO: Implement continue functionality
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

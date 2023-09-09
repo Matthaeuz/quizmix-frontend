@@ -42,6 +42,10 @@ class Mix {
         createdOn = DateTime.now(),
         questions = [];
 
+  int get numQuestions => questions.length;
+  int get numCategories =>
+      questions.map((mix) => mix.category.name).toSet().length;
+
   factory Mix.fromJson(Map<String, dynamic> json) => _$MixFromJson(json);
   Map<String, dynamic> toJson() => _$MixToJson(this);
 }

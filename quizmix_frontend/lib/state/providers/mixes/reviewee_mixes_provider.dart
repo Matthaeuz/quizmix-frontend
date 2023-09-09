@@ -9,6 +9,7 @@ class RevieweeMixesNotifier extends StateNotifier<AsyncValue<List<Mix>>> {
   final RestClient client;
   final String accessToken;
   final int madeBy;
+  late List<Mix> allMixes;
 
   RevieweeMixesNotifier({
     required this.client,
@@ -21,9 +22,21 @@ class RevieweeMixesNotifier extends StateNotifier<AsyncValue<List<Mix>>> {
   Future<void> fetchMixes() async {
     try {
       var mixes = await client.getMadeByMixes(accessToken, madeBy);
-      state = AsyncValue.data(mixes);
+      allMixes = mixes.reversed.toList();
+      state = AsyncValue.data(allMixes);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    }
+  }
+
+  void searchMixes(String value) {
+    if (value.isEmpty) {
+      state = AsyncValue.data(allMixes);
+    } else {
+      final searchResult = allMixes
+          .where((mix) => mix.title.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      state = AsyncValue.data(searchResult);
     }
   }
 }
