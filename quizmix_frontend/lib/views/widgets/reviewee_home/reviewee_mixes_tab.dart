@@ -9,6 +9,7 @@ import 'package:quizmix_frontend/state/providers/mixes/reviewee_mixes_provider.d
 import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_mixes_tab/reviewee_mix_item.dart';
+import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class RevieweeMixesTab extends ConsumerStatefulWidget {
   const RevieweeMixesTab({
@@ -109,7 +110,10 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
                               SizedBox(width: spaceWidth),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                                child: ElevatedButton(
+                                child: SolidButton(
+                                  text: "Add Mix",
+                                  icon: const Icon(Icons.add),
+                                  elevation: 8.0,
                                   onPressed: () {
                                     ref
                                         .read(currentMixProvider.notifier)
@@ -134,33 +138,6 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
                                       ),
                                     );
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 8,
-                                    foregroundColor: AppColors.white,
-                                    backgroundColor: AppColors.iconColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 8.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    minimumSize: const Size(48.0, 48.0),
-                                  ),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 8.0),
-                                        child: Icon(Icons.add),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          "Add Mix",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 16.0),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
                               ),
                             ],
