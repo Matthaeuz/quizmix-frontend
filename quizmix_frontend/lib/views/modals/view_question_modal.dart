@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/questions/current_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
 class ViewQuestionModal extends ConsumerStatefulWidget {
   const ViewQuestionModal({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _ViewQuestionModalState extends ConsumerState<ViewQuestionModal> {
   @override
   Widget build(BuildContext context) {
     final currentQuestion = ref.watch(currentQuestionProvider);
+    final choiceLetters = ['A', 'B', 'C', 'D'];
 
     return Scaffold(
       appBar: null,
@@ -34,80 +36,92 @@ class _ViewQuestionModalState extends ConsumerState<ViewQuestionModal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: currentQuestion != null
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Question ${currentQuestion.id}',
-                                      style: const TextStyle(fontSize: 32),
-                                    ),
-                                    const SizedBox(width: 15),
-                                    Flexible(
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 12,
-                                        ),
-                                        child: Text(
-                                          currentQuestion.category.name,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                    TextButton(
+                      onPressed: () {
+                        ref
+                            .read(modalStateProvider.notifier)
+                            .updateModalState(ModalState.none);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        foregroundColor: AppColors.mainColor,
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_back,
+                            size: 16.0,
+                            color: AppColors.mainColor,
+                          ),
+                          Text('Back to Question Bank'),
+                        ],
+                      ),
+                    ),
+                    currentQuestion != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                'Question ${currentQuestion.id}',
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Category: ${currentQuestion.category.name}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                currentQuestion.question,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(height: 16),
+                              currentQuestion.image != null
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16),
+                                      child: Image.network(
+                                        currentQuestion.image!,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Image.network(
-                                  currentQuestion.image!,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(height: 20),
+                                    )
+                                  : const SizedBox(),
+                              for (var i = 0;
+                                  i < currentQuestion.choices.length;
+                                  i++) ...[
                                 Text(
-                                  'The correct answer is "${currentQuestion.answer}"',
-                                  style: const TextStyle(fontSize: 28),
-                                ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  'Explanation:',
-                                  style: TextStyle(fontSize: 28),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  currentQuestion.solution == ''
-                                      ? 'No explanation available'
-                                      : currentQuestion.solution!,
-                                  style: const TextStyle(fontSize: 20),
+                                  '${choiceLetters[i]}. ${currentQuestion.choices[i]}',
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
-                            )
-                          : Container(),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: SolidButton(
-                            text: "Back",
-                            onPressed: () {
-                              ref
-                                  .read(modalStateProvider.notifier)
-                                  .updateModalState(ModalState.none);
-                            },
+                              const SizedBox(height: 16),
+                              Text(
+                                'Answer: ${currentQuestion.answer.toUpperCase()}. ${currentQuestion.choices[choiceLetters.indexOf(currentQuestion.answer.toUpperCase())]}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              currentQuestion.solution != null &&
+                                      currentQuestion.solution!.isNotEmpty
+                                  ? Text(
+                                      'Reviewer\'s Explanation: ${currentQuestion.solution}',
+                                      style: const TextStyle(fontSize: 16),
+                                    )
+                                  : const SizedBox(),
+                              const SizedBox(height: 16),
+                            ],
+                          )
+                        : const Expanded(
+                            child: Center(
+                              child: EmptyDataPlaceholder(
+                                message: "Please try again later",
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
