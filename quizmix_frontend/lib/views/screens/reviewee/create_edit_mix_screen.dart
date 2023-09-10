@@ -91,51 +91,81 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                 ],
                               ),
                             ),
-                            InkWell(
-                              onTap: _selectImage,
-                              child: Container(
-                                width: 140,
-                                height: 140,
-                                decoration: BoxDecoration(
-                                  color: AppColors.fourthColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: selectedImageBytes != null
-                                    ? Image.memory(
-                                        selectedImageBytes!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : !isFirstImageRemoved &&
-                                            mix != null &&
-                                            mix.image != null
-                                        ? Image.network(
-                                            mix.image!,
+                            Stack(
+                              children: [
+                                InkWell(
+                                  onTap: _selectImage,
+                                  child: Container(
+                                    width: 140,
+                                    height: 140,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.fourthColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: selectedImageBytes != null
+                                        ? Image.memory(
+                                            selectedImageBytes!,
                                             fit: BoxFit.cover,
                                           )
-                                        : Container(
-                                            width: double.infinity,
-                                            height: 300,
-                                            color: Colors.grey[300],
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.image,
-                                                  size: 48,
-                                                  color: Colors.grey,
+                                        : !isFirstImageRemoved &&
+                                                mix != null &&
+                                                mix.image != null
+                                            ? Image.network(
+                                                mix.image!,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                width: double.infinity,
+                                                height: 300,
+                                                color: Colors.grey[300],
+                                                child: const Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.image,
+                                                      size: 50,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Text(
+                                                      'No Image Selected',
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                SizedBox(height: 12),
-                                                Text(
-                                                  'No Image Selected',
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                  ),
+                                ),
+                                selectedImageBytes != null ||
+                                        (!isFirstImageRemoved &&
+                                            mix != null &&
+                                            mix.image != null)
+                                    ? Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: RawMaterialButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              isFirstImageRemoved = true;
+                                              selectedImageBytes = null;
+                                            });
+                                          },
+                                          fillColor: Colors.red,
+                                          shape: const CircleBorder(),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 36.0,
+                                            minHeight: 36.0,
                                           ),
-                              ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                          ),
+                                        ))
+                                    : const SizedBox(),
+                              ],
                             ),
                           ],
                         ),
