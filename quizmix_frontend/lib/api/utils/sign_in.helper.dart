@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 /// Used to sign in. Provide [AuthDetails] with a valid email and password.
@@ -24,16 +25,7 @@ Future<String> signIn(AuthDetails details, WidgetRef ref) async {
     debugPrint(userType);
 
     ref.read(userProvider.notifier).updateUser(user[0]);
-
-    // Check user type and save details appropriately
-    // if (userType == 'reviewee') {
-    //   // await client.getRevieweeByUserId(token.accessToken, user[0].id);
-    //   ref.read(revieweeProvider.notifier).fetchReviewee(user[0].id);
-    // } else {
-    //   final reviewer =
-    //       await client.getReviewerByUserId(token.accessToken, user[0].id);
-    //   ref.read(reviewerProvider.notifier).updateReviewee(reviewer[0]);
-    // }
+    ref.read(categoryProvider.notifier).fetchCategories();
 
     return userType;
   } on DioException catch (_) {

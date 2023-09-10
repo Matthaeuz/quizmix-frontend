@@ -6,19 +6,19 @@ import 'package:quizmix_frontend/state/providers/questions/question_search_filte
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-final List<String> allCategories = [
-  'Basic Theories',
-  'Algorithms and Programming',
-  'Computer Components and Hardware',
-  'System Components',
-  'Software',
-  'Development Technology and Management',
-  'Database',
-  'Network',
-  'Security',
-  'System Audit, Strategy and Planning',
-  'Business, Corporate & Legal Affairs'
-];
+// final List<String> allCategories = [
+//   'Basic Theories',
+//   'Algorithms and Programming',
+//   'Computer Components and Hardware',
+//   'System Components',
+//   'Software',
+//   'Development Technology and Management',
+//   'Database',
+//   'Network',
+//   'Security',
+//   'System Audit, Strategy and Planning',
+//   'Business, Corporate & Legal Affairs'
+// ];
 
 final List<String> allDiscrimination = [
   'High Negative',
@@ -48,21 +48,18 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
   late List<bool> isCheckedCategories;
   late List<bool> isCheckedDiscrimination;
   late List<bool> isCheckedDifficulty;
+  late List<String> categoryNames;
 
   @override
   void initState() {
     super.initState();
-    // Initialize isCheckedList here, after the widget is fully constructed
-    // searchTerm = '';
-    // isCheckedCategories = List.generate(allCategories.length, (index) => true);
-    // isCheckedDiscrimination =
-    //     List.generate(allDiscrimination.length, (index) => true);
-    // isCheckedDifficulty = List.generate(allDifficulty.length, (index) => true);
     final filters = ref.read(questionSearchFilterProvider);
     searchTerm = filters["text"];
     isCheckedCategories = List.from(filters["categories"]);
     isCheckedDiscrimination = List.from(filters["discrimination"]);
     isCheckedDifficulty = List.from(filters["difficulty"]);
+    categoryNames =
+        ref.read(questionSearchFilterProvider.notifier).categoryNames;
   }
 
   @override
@@ -125,7 +122,7 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              ...List.generate(allCategories.length, (index) {
+                              ...List.generate(categoryNames.length, (index) {
                                 return Row(
                                   children: [
                                     Checkbox(
@@ -140,7 +137,7 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
                                     ),
                                     Expanded(
                                       child: Text(
-                                        allCategories[index],
+                                        categoryNames[index],
                                         style: const TextStyle(
                                           fontSize: 16,
                                           color: AppColors.mainColor,

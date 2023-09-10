@@ -43,6 +43,7 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   Future<void> searchQuestions(Map<String, dynamic> filters) async {
     try {
       var questions = await client.advancedSearch(accessToken, filters);
+      allQuestions = questions;
       state = AsyncValue.data(questions);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

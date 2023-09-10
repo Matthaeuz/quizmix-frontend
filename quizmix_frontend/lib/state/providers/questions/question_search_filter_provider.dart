@@ -1,26 +1,15 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-final initialFilters = {
-  "text": "",
-  "categories": [
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true
-  ],
-  "discrimination": [true, true, true, true, true],
-  "difficulty": [true, true, true, true, true]
-};
+import 'package:quizmix_frontend/state/models/categories/category.dart';
+import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 
 class QuestionSearchFilterNotifier extends StateNotifier<Map<String, dynamic>> {
-  QuestionSearchFilterNotifier() : super(initialFilters);
+  Map<String, dynamic> initialFilters;
+  List<String> categoryNames;
+
+  QuestionSearchFilterNotifier({
+    required this.initialFilters,
+    required this.categoryNames,
+  }) : super(initialFilters);
 
   void initializeFilters() {
     state = initialFilters;
@@ -46,5 +35,29 @@ class QuestionSearchFilterNotifier extends StateNotifier<Map<String, dynamic>> {
 final questionSearchFilterProvider =
     StateNotifierProvider<QuestionSearchFilterNotifier, Map<String, dynamic>>(
         (ref) {
-  return QuestionSearchFilterNotifier();
+  final categories = ref.watch(categoryProvider).when(
+    data: (data) {
+      return data;
+    },
+    error: (err, st) {
+      return <Category>[];
+    },
+    loading: () {
+      return <Category>[];
+    },
+  );
+  final initialFilters = {
+    "text": "",
+    "categories": List.generate(categories.length, (index) => true),
+    "discrimination": [true, true, true, true, true],
+    "difficulty": [true, true, true, true, true]
+  };
+  final categoryNames = List.generate(
+    categories.length,
+    (index) => categories[index].name,
+  );
+  return QuestionSearchFilterNotifier(
+    initialFilters: initialFilters,
+    categoryNames: categoryNames,
+  );
 });

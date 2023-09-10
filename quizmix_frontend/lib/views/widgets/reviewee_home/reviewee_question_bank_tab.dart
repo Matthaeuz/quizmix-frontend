@@ -157,6 +157,9 @@ class _RevieweeQuestionBankTabState
                                     ref
                                         .read(questionBankProvider.notifier)
                                         .textSearchQuestions(value);
+                                    setState(() {
+                                      shouldApplyPadding = true;
+                                    });
                                   },
                                 ),
                               ),
