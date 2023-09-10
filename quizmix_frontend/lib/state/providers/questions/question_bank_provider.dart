@@ -10,6 +10,7 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   final RestClient client;
   final String accessToken;
   late List<Question> allQuestions;
+  late bool hasQuestions;
 
   QuestionBankNotifier({
     required this.client,
@@ -21,6 +22,11 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   Future<void> fetchQuestions() async {
     try {
       var questions = await client.getQuestions(accessToken);
+      if (questions.isNotEmpty) {
+        hasQuestions = true;
+      } else {
+        hasQuestions = false;
+      }
       allQuestions = questions;
       state = AsyncValue.data(questions);
     } catch (e, st) {

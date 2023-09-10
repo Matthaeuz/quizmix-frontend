@@ -75,9 +75,9 @@ class _RevieweeQuestionBankTabState
       color: AppColors.mainColor,
       child: questions.when(
         data: (data) {
-          final allQuestionsLen =
-              ref.read(questionBankProvider.notifier).allQuestions.length;
-          if (data.isEmpty && allQuestionsLen == 0) {
+          final hasQuestions =
+              ref.read(questionBankProvider.notifier).hasQuestions;
+          if (data.isEmpty && !hasQuestions) {
             return const Center(
               child: SingleChildScrollView(
                 child: EmptyDataPlaceholder(
