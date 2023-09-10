@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/state/providers/questions/question_bank_provide
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/question_bank/question_bank_item.dart';
+import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
 
 class RevieweeQuestionBankTab extends ConsumerStatefulWidget {
   const RevieweeQuestionBankTab({
@@ -166,46 +167,17 @@ class _RevieweeQuestionBankTabState
                               SizedBox(width: spaceWidth),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                                child: ElevatedButton(
+                                child: ResponsiveSolidButton(
+                                  text: "Advanced Search",
+                                  condition: constraints.maxWidth > 744,
+                                  icon: const Icon(Icons.search),
+                                  elevation: 8.0,
                                   onPressed: () {
                                     ref
                                         .read(modalStateProvider.notifier)
                                         .updateModalState(
                                             ModalState.advancedSearch);
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 8,
-                                    foregroundColor: AppColors.white,
-                                    backgroundColor: AppColors.iconColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 8.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    minimumSize: const Size(48.0, 48.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            right: constraints.maxWidth > 744
-                                                ? 8.0
-                                                : 0),
-                                        child: const Icon(Icons.search),
-                                      ),
-                                      constraints.maxWidth > 744
-                                          ? const Flexible(
-                                              child: Text(
-                                                "Advanced Search",
-                                                overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    TextStyle(fontSize: 16.0),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                    ],
-                                  ),
                                 ),
                               ),
                             ],
