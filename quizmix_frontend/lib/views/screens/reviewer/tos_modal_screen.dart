@@ -42,13 +42,8 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
   @override
   void initState() {
     super.initState();
-    allCategories = ref.read(categoryProvider).when(data: (data) {
-      return data.map((category) => category.name).toList();
-    }, error: (err, st) {
-      return [];
-    }, loading: () {
-      return [];
-    });
+    final categoryObjs = ref.read(categoryProvider);
+    allCategories = categoryObjs.map((category) => category.name).toList();
   }
 
   void _showCategoryDropdown(BuildContext context) {

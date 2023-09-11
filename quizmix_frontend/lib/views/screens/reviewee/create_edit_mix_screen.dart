@@ -198,18 +198,8 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       backgroundColor: AppColors.mainColor,
                                       elevation: 8.0,
                                       onPressed: () {
-                                        final questions = currentQuestions.when(
-                                          data: (data) {
-                                            return data;
-                                          },
-                                          error: (err, st) {
-                                            return <Question>[];
-                                          },
-                                          loading: () {
-                                            return <Question>[];
-                                          },
-                                        );
-                                        final questionsIdList = questions
+                                        final questions = currentQuestions;
+                                        final questionsIdList = currentQuestions
                                             .map((question) => question.id)
                                             .toList();
                                         String? textFieldValue;
@@ -298,26 +288,43 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                               return ListView.builder(
                                 itemCount: questions.length,
                                 itemBuilder: (context, index) {
-                                  return CreateEditMixQuestionCard(
-                                    questionDetails: questions[index],
-                                    action: "Add",
-                                    onClick: () async {
-                                      Question? newQuestion = await ref
-                                          .read(availableMixQuestionsProvider
-                                              .notifier)
-                                          .removeQuestion(index);
-                                      ref
-                                          .read(currentMixQuestionsProvider
-                                              .notifier)
-                                          .addQuestion(newQuestion!);
-                                    },
+                                  return Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: index == 0 ? 12 : 0,
+                                        bottom: index == questions.length - 1
+                                            ? 12
+                                            : 0,
+                                      ),
+                                      child: CreateEditMixQuestionCard(
+                                        questionDetails: questions[index],
+                                        action: "Add",
+                                        onClick: () async {
+                                          Question? newQuestion = await ref
+                                              .read(
+                                                  availableMixQuestionsProvider
+                                                      .notifier)
+                                              .removeQuestion(index);
+                                          ref
+                                              .read(currentMixQuestionsProvider
+                                                  .notifier)
+                                              .addQuestion(newQuestion!);
+                                        },
+                                      ),
+                                    ),
                                   );
                                 },
                               );
                             }
-                            return const Expanded(
-                              child: EmptyDataPlaceholder(
-                                  message: "There are no questions to show."),
+                            return const Center(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: EmptyDataPlaceholder(
+                                      message:
+                                          "There are no available questions"),
+                                ),
+                              ),
                             );
                           },
                           loading: () => const Center(
@@ -334,51 +341,50 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                     Expanded(
                       child: Container(
                         color: AppColors.mainColor,
-                        child: currentQuestions.when(
-                          data: (questions) {
-                            if (questions.isNotEmpty) {
-                              return ListView.builder(
-                                itemCount: questions.length,
+                        child: currentQuestions.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: currentQuestions.length,
                                 itemBuilder: (context, index) {
-                                  return CreateEditMixQuestionCard(
-                                    questionDetails: questions[index],
-                                    action: "Remove",
-                                    onClick: () async {
-                                      Question? newQuestion = await ref
-                                          .read(currentMixQuestionsProvider
-                                              .notifier)
-                                          .removeQuestion(index);
-                                      ref
-                                          .read(availableMixQuestionsProvider
-                                              .notifier)
-                                          .addQuestion(newQuestion!);
-                                    },
+                                  return Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: index == 0 ? 12 : 0,
+                                        bottom:
+                                            index == currentQuestions.length - 1
+                                                ? 12
+                                                : 0,
+                                      ),
+                                      child: CreateEditMixQuestionCard(
+                                        questionDetails:
+                                            currentQuestions[index],
+                                        action: "Remove",
+                                        onClick: () {
+                                          Question? newQuestion = ref
+                                              .read(currentMixQuestionsProvider
+                                                  .notifier)
+                                              .removeQuestion(index);
+                                          ref
+                                              .read(
+                                                  availableMixQuestionsProvider
+                                                      .notifier)
+                                              .addQuestion(newQuestion);
+                                        },
+                                      ),
+                                    ),
                                   );
                                 },
-                              );
-                            }
-                            return const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Questions you add will appear here',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontFamily: 'Poppins',
-                                  overflow: TextOverflow.ellipsis,
+                              )
+                            : const Center(
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(12),
+                                    child: EmptyDataPlaceholder(
+                                      message:
+                                          "There are no questions in your Mix",
+                                    ),
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                          loading: () => const Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          error: (err, stack) => Text('Error: $err'),
-                        ),
                       ),
                     ),
                   ],

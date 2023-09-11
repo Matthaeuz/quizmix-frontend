@@ -74,7 +74,8 @@ class AvailableMixQuestionsNotifier
           return [];
         },
       );
-      newQuestions.insert(0, question);
+      int insertIndex = newQuestions.indexWhere((q) => q.id > question.id);
+      newQuestions.insert(insertIndex, question);
       state = AsyncValue.data(newQuestions);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -83,18 +84,11 @@ class AvailableMixQuestionsNotifier
 
   Future<void> searchQuestions(Map<String, dynamic> filters) async {
     try {
-      List<int> currentQuestions = ref.read(currentMixQuestionsProvider).when(
-        data: (data) {
-          return data.map((question) => question.id).toList();
-        },
-        error: (err, st) {
-          return [];
-        },
-        loading: () {
-          return [];
-        },
-      );
-      filters["exclude"] = currentQuestions;
+      final currentQuestions = ref.read(currentMixQuestionsProvider);
+      final currentQuestionsIds =
+          currentQuestions.map((question) => question.id).toList();
+
+      filters["exclude"] = currentQuestionsIds;
       var questions = await client.advancedSearch(accessToken, filters);
       state = AsyncValue.data(questions);
     } catch (e, st) {
