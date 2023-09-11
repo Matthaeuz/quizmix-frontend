@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/tos_modal_screen.dart';
 
@@ -11,30 +10,30 @@ class AddCard extends ConsumerStatefulWidget {
   const AddCard({super.key, this.type = "quizzes"});
 
   @override
-  _AddCardState createState() => _AddCardState();
+  AddCardState createState() => AddCardState();
 }
 
-class _AddCardState extends ConsumerState<AddCard> {
+class AddCardState extends ConsumerState<AddCard> {
   bool isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
+      onTap: () {
         if (widget.type == "quizzes") {
-          await ref.read(categoryProvider.notifier).fetchCategories().then(
-            (value) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TosModalScreen()));
-            },
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TosModalScreen(),
+            ),
           );
         } else {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddRevieweeScreen()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddRevieweeScreen(),
+            ),
+          );
         }
       },
       onHover: (value) {

@@ -20,81 +20,92 @@ class CreateEditMixQuestionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: AppColors.mainColor,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        constraints: const BoxConstraints(maxWidth: 400),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 0),
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Flexible(
-                    child: Text(
-                      'Category:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: getCategoryColor(questionDetails.category.name),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Flexible(
                       child: Text(
-                        questionDetails.category.name,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        'Category:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              getCategoryColor(questionDetails.category.name),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          questionDetails.category.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TinySolidButton(
+                    text: action,
+                    icon: action == "Add" ? Icons.add : Icons.remove,
+                    buttonColor:
+                        action == "Add" ? AppColors.mainColor : Colors.red,
+                    onPressed: onClick,
                   ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TinySolidButton(
-                  text: action,
-                  icon: action == "Add" ? Icons.add : Icons.remove,
-                  buttonColor:
-                      action == "Add" ? AppColors.mainColor : Colors.red,
-                  onPressed: onClick,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color(0xFF9854B2),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color(0xFF9854B2),
+              child: Image.network(
+                questionDetails.image!.contains(baseUrl)
+                    ? questionDetails.image!
+                    : baseUrl + questionDetails.image!,
+                fit: BoxFit.cover,
               ),
             ),
-            child: Image.network(
-              questionDetails.image!.contains(baseUrl)
-                  ? questionDetails.image!
-                  : baseUrl + questionDetails.image!,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
