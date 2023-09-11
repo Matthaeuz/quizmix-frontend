@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/mix_question_search_filter_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
@@ -22,14 +22,15 @@ final List<String> allDifficulty = [
   'Very Hard'
 ];
 
-class AdvancedSearhModal extends ConsumerStatefulWidget {
-  const AdvancedSearhModal({Key? key}) : super(key: key);
+class MixAdvancedSearhModal extends ConsumerStatefulWidget {
+  const MixAdvancedSearhModal({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AdvancedSearhModal> createState() => _AdvancedSearhModalState();
+  ConsumerState<MixAdvancedSearhModal> createState() =>
+      _MixAdvancedSearhModalState();
 }
 
-class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
+class _MixAdvancedSearhModalState extends ConsumerState<MixAdvancedSearhModal> {
   late String searchTerm;
   late List<bool> isCheckedCategories;
   late List<bool> isCheckedDiscrimination;
@@ -39,13 +40,13 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
   @override
   void initState() {
     super.initState();
-    final filters = ref.read(questionSearchFilterProvider);
+    final filters = ref.read(mixQuestionSearchFilterProvider);
     searchTerm = filters["text"];
     isCheckedCategories = List.from(filters["categories"]);
     isCheckedDiscrimination = List.from(filters["discrimination"]);
     isCheckedDifficulty = List.from(filters["difficulty"]);
     categoryNames =
-        ref.read(questionSearchFilterProvider.notifier).categoryNames;
+        ref.read(mixQuestionSearchFilterProvider.notifier).categoryNames;
   }
 
   @override
@@ -256,13 +257,13 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
                                 "exclude": []
                               };
                               ref
-                                  .read(questionBankProvider.notifier)
+                                  .read(availableMixQuestionsProvider.notifier)
                                   .searchQuestions(filters)
                                   .then(
                                 (value) {
                                   ref
-                                      .read(
-                                          questionSearchFilterProvider.notifier)
+                                      .read(mixQuestionSearchFilterProvider
+                                          .notifier)
                                       .updateFilters(filters);
                                   ref
                                       .read(modalStateProvider.notifier)
