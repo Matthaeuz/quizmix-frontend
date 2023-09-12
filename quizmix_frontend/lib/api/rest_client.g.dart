@@ -224,6 +224,40 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<List<User>> getAssignedReviewees(
+    String token,
+    Map<String, int> body,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/users/get_assigned_reviewees/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<void> assignReviewee(
     String token,
     AssignRevieweeDetails details,
@@ -405,9 +439,9 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Reviewee>> getReviewerReviewees(
+  Future<List<User>> getReviewerReviewees(
     String token,
-    int belongsTo,
+    int reviewerId,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -415,14 +449,14 @@ class _RestClient implements RestClient {
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Reviewee>>(Options(
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/reviewees/?belongs_to=${belongsTo}',
+              '/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value=${reviewerId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -432,7 +466,7 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => Reviewee.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

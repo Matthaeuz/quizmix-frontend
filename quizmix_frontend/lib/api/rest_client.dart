@@ -63,6 +63,12 @@ abstract class RestClient {
     @Header("Authorization") String token,
   );
 
+  @POST("/users/get_assigned_reviewees/")
+  Future<List<User>> getAssignedReviewees(
+    @Header("Authorization") String token,
+    @Body() Map<String, int> body,
+  );
+
   @POST("/users/assign_reviewee/")
   Future<void> assignReviewee(
     @Header("Authorization") String token,
@@ -90,10 +96,11 @@ abstract class RestClient {
   Future<List<Reviewee>> getRevieweeByUserId(
       @Header("Authorization") String token, @Path("id") int id);
 
-  @GET("/reviewees/?belongs_to={belongsTo}")
-  Future<List<Reviewee>> getReviewerReviewees(
+  // @GET("/reviewees/?belongs_to={belongsTo}")
+  @GET("/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
+  Future<List<User>> getReviewerReviewees(
     @Header("Authorization") String token,
-    @Path("belongsTo") int belongsTo,
+    @Path("reviewerId") int reviewerId,
   );
 
   @POST("/users/get_top_scores/")
