@@ -44,7 +44,9 @@ class MyRevieweesList extends ConsumerWidget {
         ),
         const SizedBox(height: 20),
         reviewees.when(
-          data: (revieweesData) => SizedBox(
+          data: (revieweesData) {
+            print('Reviewees data length: ${revieweesData.length}');
+            return SizedBox(
               height: 200,
               child: ScrollConfiguration(
                 behavior: MyCustomScrollBehavior(),
@@ -59,16 +61,25 @@ class MyRevieweesList extends ConsumerWidget {
                       return const AddCard(type: "reviewees");
                     } else {
                       final reviewee = revieweesData[index - 1];
-                      final String name = reviewee.user.fullName;
-                      final String? profilePicture = reviewee.user.image;
+                      final String name = reviewee.fullName;
+                      final String? profilePicture = reviewee.image;
+                      print('Reviewee name: $name, image: $profilePicture');
                       return RevieweeDetailCard(
-                          title: name, image: profilePicture);
+                        title: name,
+                        image: profilePicture,
+                      );
                     }
                   },
                 ),
-              )),
-          loading: () => const CircularProgressIndicator(),
-          error: (error, stack) => Text('Error: $error'),
+              ),
+            );
+          },
+          loading: () {
+            return const CircularProgressIndicator();
+          },
+          error: (error, stack) {
+            return Text('Error: $error');
+          },
         ),
       ],
     );
