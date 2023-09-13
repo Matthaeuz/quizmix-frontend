@@ -9,12 +9,38 @@ import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
+class SearchTermNotifier extends StateNotifier<String> {
+  SearchTermNotifier() : super('');
+
+  void setSearchTerm(String term) {
+    state = term;
+  }
+}
+
+final searchTermProvider =
+    StateNotifierProvider<SearchTermNotifier, String>((ref) {
+  return SearchTermNotifier();
+});
+
 class RevieweesListScreen extends ConsumerWidget {
   const RevieweesListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewees = ref.watch(unassignedRevieweesProvider);
+    final unfilteredReviewees = ref.watch(unassignedRevieweesProvider);
+
+    final searchTerm = ref.watch(searchTermProvider);
+
+    final filteredReviewees = unfilteredReviewees.when(
+      data: (reviewees) {
+        return reviewees.where((reviewee) {
+          final fullName = reviewee.fullName.toLowerCase();
+          return fullName.contains(searchTerm.toLowerCase());
+        }).toList();
+      },
+      loading: () => [],
+      error: (_, __) => [],
+    );
 
     return Scaffold(
       body: Row(
@@ -41,7 +67,9 @@ class RevieweesListScreen extends ConsumerWidget {
                             alignment: Alignment.centerLeft,
                             child: SearchInput(
                               onChanged: (value) {
-                                // Handle search input changes
+                                ref
+                                    .read(searchTermProvider.notifier)
+                                    .setSearchTerm(value);
                               },
                             ),
                           ),
@@ -61,36 +89,31 @@ class RevieweesListScreen extends ConsumerWidget {
                       ],
                     ),
                     // List
-                    reviewees.when(
-                      data: (reviewees) => reviewees.isEmpty
-                          ? const Expanded(
-                              child: EmptyDataPlaceholder(
-                                  message:
-                                      "There are currently no unassigned reviewees."))
-                          : Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 25),
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 25,
-                                    mainAxisSpacing: 25,
-                                    mainAxisExtent: 125,
-                                  ),
-                                  itemCount: reviewees.length,
-                                  itemBuilder: (context, index) {
-                                    return RevieweeListCard(
-                                      revieweeDetails: reviewees[index],
-                                    );
-                                  },
+                    filteredReviewees.isEmpty
+                        ? const Expanded(
+                            child: EmptyDataPlaceholder(
+                                message:
+                                    "There are currently no unassigned reviewees."))
+                        : Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 25),
+                              child: GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 25,
+                                  mainAxisSpacing: 25,
+                                  mainAxisExtent: 125,
                                 ),
+                                itemCount: filteredReviewees.length,
+                                itemBuilder: (context, index) {
+                                  return RevieweeListCard(
+                                    revieweeDetails: filteredReviewees[index],
+                                  );
+                                },
                               ),
                             ),
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (err, stack) => Text('Error Found: $err'),
-                    ),
+                          ),
                     const SizedBox(height: 25),
                   ],
                 ),
