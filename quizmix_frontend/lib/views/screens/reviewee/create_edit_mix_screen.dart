@@ -78,9 +78,6 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                ref
-                                    .read(currentMixProvider.notifier)
-                                    .updateCurrentMix(null);
                                 Navigator.pop(context);
                               },
                               style: TextButton.styleFrom(
@@ -347,7 +344,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             ),
                                             child: CreateEditMixQuestionCard(
                                               questionDetails: questions[index],
-                                              action: "Add",
+                                              action: CreateEdixMixAction.add,
                                               condition: screenWidth > 620,
                                               onClick: () async {
                                                 Question? newQuestion = await ref
@@ -411,7 +408,8 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             child: CreateEditMixQuestionCard(
                                               questionDetails:
                                                   currentQuestions[index],
-                                              action: "Remove",
+                                              action:
+                                                  CreateEdixMixAction.remove,
                                               condition: screenWidth > 620,
                                               onClick: () {
                                                 Question? newQuestion = ref
@@ -449,11 +447,11 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                   : Expanded(
                       child: Container(
                         color: AppColors.mainColor,
-                        child: const Center(
+                        child: Center(
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   height: 48.0,
                                   width: 48.0,
                                   child: CircularProgressIndicator(
@@ -461,10 +459,12 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                     color: AppColors.white,
                                   ),
                                 ),
-                                SizedBox(height: 16.0),
+                                const SizedBox(height: 16.0),
                                 Text(
-                                  'Creating Mix...',
-                                  style: TextStyle(
+                                  mix == null
+                                      ? "Creating Mix..."
+                                      : "Applying edits...",
+                                  style: const TextStyle(
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.white,

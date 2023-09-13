@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
 class ViewMixQuestionContainer extends ConsumerWidget {
   const ViewMixQuestionContainer({super.key});
@@ -13,98 +14,75 @@ class ViewMixQuestionContainer extends ConsumerWidget {
     final questionDetails = ref.watch(currentViewedMixQuestionProvider);
     final questionNum = questionDetails["qnum"];
     final question = questionDetails["question"];
+    final choiceLetters = ['A', 'B', 'C', 'D'];
 
     return Expanded(
-      flex: 5,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Container(
-            color: AppColors.fourthColor,
-            height: constraints.maxHeight,
-            child: question.id != 0
-                ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.zero,
-                                child: Wrap(
-                                  runSpacing: 20,
-                                  children: [
-                                    Text(
-                                      'Question $questionNum',
-                                      style: const TextStyle(fontSize: 32),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Flexible(
-                                      child: IntrinsicWidth(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 12,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: getCategoryColor(
-                                                question.category),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              question.category,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              question.image != null
-                                  ? const SizedBox(height: 20)
-                                  : const SizedBox(),
-                              question.image != null
-                                  ? Image.network(
-                                      baseUrl + question.image!,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const SizedBox(),
-                              const SizedBox(height: 20),
-                              Text(
-                                'The correct answer is ${question.answer})',
-                                style: const TextStyle(fontSize: 28),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                'Explanation:',
-                                style: TextStyle(fontSize: 28),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                question.solution ?? 'No explanation',
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+      child: question.id != 0
+          ? SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Question $questionNum',
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  )
-                : const SizedBox(),
-          );
-        },
-      ),
+                    Text(
+                      'Category: ${question.category.name}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      question.question,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 16),
+                    question.image != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Image.network(
+                              baseUrl + question.image!,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : const SizedBox(),
+                    for (var i = 0; i < question.choices.length; i++) ...[
+                      Text(
+                        '${choiceLetters[i]}. ${question.choices[i]}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    Text(
+                      'Answer: ${question.answer.toUpperCase()}. ${question.choices[choiceLetters.indexOf(question.answer.toUpperCase())]}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    question.solution != null && question.solution!.isNotEmpty
+                        ? Text(
+                            'Reviewer\'s Explanation: ${question.solution}',
+                            style: const TextStyle(fontSize: 16),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+            )
+          : const Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: EmptyDataPlaceholder(
+                    message: "Click on a question to view its details",
+                    color: AppColors.mainColor,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
