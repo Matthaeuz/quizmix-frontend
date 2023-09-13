@@ -5,10 +5,15 @@ class EmptyDataPlaceholder extends StatelessWidget {
   final String message;
   final double iconSize;
   final double fontSize;
+  final Color color;
 
-  const EmptyDataPlaceholder(
-      {Key? key, required this.message, this.iconSize = 60, this.fontSize = 16})
-      : super(key: key);
+  const EmptyDataPlaceholder({
+    Key? key,
+    required this.message,
+    this.iconSize = 60,
+    this.fontSize = 16,
+    this.color = AppColors.white,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +26,14 @@ class EmptyDataPlaceholder extends StatelessWidget {
           Icon(
             Icons.info_outline_rounded,
             size: iconSize,
-            color: AppColors.white,
+            color: color,
           ),
           SizedBox(height: padding),
           Text(
             message,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppColors.white,
+              color: color,
               fontWeight: FontWeight.bold,
               fontSize: fontSize,
             ),

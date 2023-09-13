@@ -78,9 +78,6 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                ref
-                                    .read(currentMixProvider.notifier)
-                                    .updateCurrentMix(null);
                                 Navigator.pop(context);
                               },
                               style: TextButton.styleFrom(
@@ -193,6 +190,10 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       text: "Search Question Bank",
                                       condition: screenWidth > 620,
                                       icon: const Icon(Icons.search),
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
                                       elevation: 8.0,
                                       onPressed: () {
                                         ref
@@ -210,8 +211,16 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       icon: const Icon(
                                           Icons.check_circle_outlined),
                                       backgroundColor: AppColors.mainColor,
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
                                       elevation: 8.0,
                                       onPressed: () async {
+                                        ref
+                                            .read(processStateProvider.notifier)
+                                            .updateProcessState(
+                                                ProcessState.loading);
                                         final questions = currentQuestions;
                                         final questionsIdList = currentQuestions
                                             .map((question) => question.id)
@@ -224,6 +233,11 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                         if (questions.isEmpty ||
                                             textFieldValue == null ||
                                             textFieldValue.isEmpty) {
+                                          ref
+                                              .read(
+                                                  processStateProvider.notifier)
+                                              .updateProcessState(
+                                                  ProcessState.done);
                                           return;
                                         }
                                         PlatformFile? imageFile;
@@ -239,11 +253,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             "made_by": revieweeId,
                                             "questions": questionsIdList,
                                           };
-                                          ref
-                                              .read(
-                                                  processStateProvider.notifier)
-                                              .updateProcessState(
-                                                  ProcessState.loading);
+
                                           await createMix(
                                                   newMix, imageFile, ref)
                                               .then((value) {
@@ -269,11 +279,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             createdOn: mix.createdOn,
                                             questions: questions,
                                           );
-                                          ref
-                                              .read(
-                                                  processStateProvider.notifier)
-                                              .updateProcessState(
-                                                  ProcessState.loading);
+
                                           await updateMix(newMix, imageFile,
                                                   isFirstImageRemoved, ref)
                                               .then((value) {
@@ -347,7 +353,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             ),
                                             child: CreateEditMixQuestionCard(
                                               questionDetails: questions[index],
-                                              action: "Add",
+                                              action: CreateEdixMixAction.add,
                                               condition: screenWidth > 620,
                                               onClick: () async {
                                                 Question? newQuestion = await ref
@@ -411,7 +417,8 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             child: CreateEditMixQuestionCard(
                                               questionDetails:
                                                   currentQuestions[index],
-                                              action: "Remove",
+                                              action:
+                                                  CreateEdixMixAction.remove,
                                               condition: screenWidth > 620,
                                               onClick: () {
                                                 Question? newQuestion = ref
@@ -449,11 +456,11 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                   : Expanded(
                       child: Container(
                         color: AppColors.mainColor,
-                        child: const Center(
+                        child: Center(
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   height: 48.0,
                                   width: 48.0,
                                   child: CircularProgressIndicator(
@@ -461,10 +468,12 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                     color: AppColors.white,
                                   ),
                                 ),
-                                SizedBox(height: 16.0),
+                                const SizedBox(height: 16.0),
                                 Text(
-                                  'Creating Mix...',
-                                  style: TextStyle(
+                                  mix == null
+                                      ? "Creating Mix..."
+                                      : "Applying edits...",
+                                  style: const TextStyle(
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.white,

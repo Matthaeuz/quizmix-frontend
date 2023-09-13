@@ -6,9 +6,11 @@ import 'package:quizmix_frontend/state/providers/questions/current_question_prov
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_tiny_solid_button.dart';
 
+enum CreateEdixMixAction { add, remove }
+
 class CreateEditMixQuestionCard extends ConsumerWidget {
   final Question questionDetails;
-  final String action;
+  final CreateEdixMixAction action;
   final void Function() onClick;
   final bool condition;
 
@@ -80,10 +82,13 @@ class CreateEditMixQuestionCard extends ConsumerWidget {
                     ),
                   ),
                   ResponsiveTinySolidButton(
-                    text: action,
-                    icon: action == "Add" ? Icons.add : Icons.remove,
-                    buttonColor:
-                        action == "Add" ? AppColors.mainColor : AppColors.red,
+                    text: action == CreateEdixMixAction.add ? "Add" : "Remove",
+                    icon: action == CreateEdixMixAction.add
+                        ? Icons.add
+                        : Icons.remove,
+                    buttonColor: action == CreateEdixMixAction.add
+                        ? AppColors.mainColor
+                        : AppColors.red,
                     onPressed: onClick,
                     condition: condition,
                   ),

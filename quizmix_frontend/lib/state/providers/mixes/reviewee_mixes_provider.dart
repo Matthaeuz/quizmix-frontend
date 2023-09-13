@@ -22,8 +22,9 @@ class RevieweeMixesNotifier extends StateNotifier<AsyncValue<List<Mix>>> {
   Future<void> fetchMixes() async {
     try {
       var mixes = await client.getMadeByMixes(accessToken, madeBy);
-      allMixes = mixes.reversed.toList();
-      state = AsyncValue.data(allMixes);
+      mixes.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+      allMixes = mixes;
+      state = AsyncValue.data(List.from(mixes));
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
