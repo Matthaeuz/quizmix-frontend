@@ -27,107 +27,150 @@ class AnswerMixItem extends ConsumerWidget {
     final hasSolution =
         question.solution != null && question.solution!.isNotEmpty;
 
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.mainColor,
-            width: 1,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 0),
           ),
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      isResponded ? const EdgeInsets.only(bottom: 25) : null,
-                  child: isResponded
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'The correct answer is ${question.answer.toUpperCase()}.',
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              'Your answer: ${response.toUpperCase()}.',
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 16,
-                              ),
-                            ),
-                            hasSolution
-                                ? Text(
-                                    'Reviewer\'s Explanation: ${question.solution}',
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                : const SizedBox(),
-                          ],
-                        )
-                      : null,
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      alignment: Alignment.centerLeft,
+                      foregroundColor: AppColors.mainColor,
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.arrow_back,
+                          size: 16.0,
+                          color: AppColors.mainColor,
+                        ),
+                        Text('Back to Home'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Text(
+                "Answer Mix",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    question.question,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Question No. ${currentQuestionIndex + 1}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                question.question,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 24),
+              question.image != null
+                  ? Image.network(
+                      question.image!.contains(baseUrl)
+                          ? question.image!
+                          : baseUrl + question.image!,
+                    )
+                  : const SizedBox(),
+              question.image != null
+                  ? const SizedBox(height: 24)
+                  : const SizedBox(),
+              const Text(
+                'Choices',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: question.choices.length,
+                itemBuilder: (context, index) {
+                  return Text(
+                    '${choiceLetters[index]} ${question.choices[index]}',
                     style: const TextStyle(
                       fontSize: 20,
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                question.image != null
-                    ? Image.network(
-                        question.image!.contains(baseUrl)
-                            ? question.image!
-                            : baseUrl + question.image!,
+                  );
+                },
+              ),
+              Container(
+                padding: isResponded
+                    ? const EdgeInsets.fromLTRB(0, 24, 0, 24)
+                    : null,
+                child: isResponded
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Answer',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'The correct answer is ${question.answer.toUpperCase()}.',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            'Your answer: ${response.toUpperCase()}.',
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 20,
+                            ),
+                          ),
+                          hasSolution
+                              ? Text(
+                                  'Reviewer\'s Explanation: ${question.solution}',
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontSize: 20,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
                       )
-                    : const SizedBox(),
-                question.image != null
-                    ? const SizedBox(
-                        height: 25,
-                      )
-                    : const SizedBox(),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Choices',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: question.choices.length,
-                  itemBuilder: (context, index) {
-                    return Text(
-                      '${choiceLetters[index]} ${question.choices[index]}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+                    : null,
+              ),
+            ],
           ),
         ),
       ),
