@@ -28,14 +28,16 @@ class AnswerMixNumber extends ConsumerWidget {
       child: Container(
         height: 40,
         width: 40,
-        color: number == currentNumber
-            ? AppColors.mainColor
-            : thisResponse.isEmpty
-                ? const Color.fromARGB(115, 158, 158, 158)
-                : thisResponse == thisCorrectAnswer
-                    ? Colors.green
-                    : Colors.red,
-        margin: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          color: number == currentNumber
+              ? AppColors.mainColor
+              : thisResponse.isEmpty
+                  ? AppColors.grey
+                  : thisResponse == thisCorrectAnswer
+                      ? Colors.green
+                      : AppColors.red,
+        ),
         child: Center(
           child: Text(
             '$number',

@@ -4,19 +4,19 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/mixes/answer_mix_responses_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
+import 'package:quizmix_frontend/views/widgets/responsive_tiny_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_mix/answer_mix_item.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_mix/answer_mix_number.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
-import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
 class AnswerMixScreen extends ConsumerStatefulWidget {
-  AnswerMixScreen({Key? key}) : super(key: key);
+  const AnswerMixScreen({Key? key}) : super(key: key);
 
   @override
-  _AnswerMixScreenState createState() => _AnswerMixScreenState();
+  AnswerMixScreenState createState() => AnswerMixScreenState();
 }
 
-class _AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
+class AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
   int currentQuestionIndex = 0;
 
   void handleChoicePressed(String choice, List<Question> questions) {
@@ -35,183 +35,172 @@ class _AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
     final currentMix = ref.watch(currentMixProvider);
     final responses = ref.watch(answerMixResponsesProvider);
     final questions = currentMix!.questions;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Answer Mix',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Poppins',
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 0, 25, 25),
-        child: Column(
+      body: Container(
+        color: AppColors.mainColor,
+        child: Row(
           children: [
             Expanded(
-              flex: 10,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              flex: 4,
+              child: Column(
                 children: [
-                  // Left side
                   Expanded(
-                    flex: 10,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AnswerMixItem(
-                            currentQuestionIndex: currentQuestionIndex),
-                        responses[currentQuestionIndex].isEmpty
-                            ? const SizedBox(height: 25)
-                            : const SizedBox(),
-                        responses[currentQuestionIndex].isEmpty
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                    child: SolidButton(
-                                      onPressed: () {
-                                        handleChoicePressed('a', questions);
-                                      },
-                                      text: 'Choice A',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: SolidButton(
-                                      onPressed: () {
-                                        handleChoicePressed('b', questions);
-                                      },
-                                      text: 'Choice B',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: SolidButton(
-                                      onPressed: () {
-                                        handleChoicePressed('c', questions);
-                                      },
-                                      text: 'Choice C',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: SolidButton(
-                                      onPressed: () {
-                                        handleChoicePressed('d', questions);
-                                      },
-                                      text: 'Choice D',
-                                    ),
-                                  )
-                                ],
-                              )
-                            : const SizedBox(),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: AnswerMixItem(
+                        currentQuestionIndex: currentQuestionIndex,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 25,
-                  ),
-
-                  // Right Side
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.mainColor,
-                          width: 1.0,
-                        ),
-                        color: Colors.white,
-                      ),
-                      padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                      child: Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Wrap(
-                                  children: [
-                                    for (int i = 0;
-                                        i < currentMix.questions.length;
-                                        i++) ...[
-                                      AnswerMixNumber(
-                                        number: i + 1,
-                                        currentNumber: currentQuestionIndex + 1,
-                                        onClick: () {
-                                          setState(() {
-                                            currentQuestionIndex = i;
-                                          });
-                                        },
-                                      )
-                                    ]
-                                  ],
+                  responses[currentQuestionIndex].isEmpty && screenHeight > 200
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: SolidButton(
+                                  text: 'A',
+                                  elevation: 8.0,
+                                  onPressed: () {
+                                    handleChoicePressed('a', questions);
+                                  },
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: currentQuestionIndex > 0
-                                      ? TinySolidButton(
-                                          text: 'Previous',
-                                          icon: Icons.arrow_back,
-                                          buttonColor: AppColors.mainColor,
-                                          onPressed: () {
-                                            setState(() {
-                                              currentQuestionIndex--;
-                                            });
-                                          },
-                                        )
-                                      : const SizedBox(),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: SolidButton(
+                                  text: 'B',
+                                  elevation: 8.0,
+                                  onPressed: () {
+                                    handleChoicePressed('b', questions);
+                                  },
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: SolidButton(
+                                  text: 'C',
+                                  elevation: 8.0,
+                                  onPressed: () {
+                                    handleChoicePressed('c', questions);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: SolidButton(
+                                  text: 'D',
+                                  elevation: 8.0,
+                                  onPressed: () {
+                                    handleChoicePressed('d', questions);
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 24, 24, 24),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        spreadRadius: 2,
+                        blurRadius: 8,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            spacing: 4,
+                            runSpacing: 4,
+                            children: [
+                              for (int i = 0;
+                                  i < currentMix.questions.length;
+                                  i++) ...[
+                                AnswerMixNumber(
+                                  number: i + 1,
+                                  currentNumber: currentQuestionIndex + 1,
+                                  onClick: () {
+                                    setState(() {
+                                      currentQuestionIndex = i;
+                                    });
+                                  },
+                                )
+                              ]
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight > 160 ? 12 : 0),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: currentQuestionIndex > 0 &&
+                                    screenHeight > 160 &&
+                                    screenWidth > 896
+                                ? ResponsiveTinySolidButton(
+                                    text: 'Previous',
+                                    icon: Icons.arrow_back,
+                                    buttonColor: AppColors.mainColor,
+                                    condition: screenWidth > 1080,
+                                    onPressed: () {
+                                      setState(() {
+                                        currentQuestionIndex--;
+                                      });
+                                    },
+                                  )
+                                : const SizedBox(),
+                          ),
+                          const SizedBox(width: 4),
+                          screenHeight > 160 && screenWidth > 896
+                              ? Expanded(
                                   child: currentQuestionIndex <
                                           currentMix.questions.length - 1
-                                      ? TinySolidButton(
+                                      ? ResponsiveTinySolidButton(
                                           text: 'Next',
                                           icon: Icons.arrow_forward,
                                           buttonColor: AppColors.mainColor,
+                                          condition: screenWidth > 1080,
                                           onPressed: () {
                                             setState(() {
                                               currentQuestionIndex++;
                                             });
                                           },
                                         )
-                                      : TinySolidButton(
+                                      : ResponsiveTinySolidButton(
                                           text: 'Finish',
                                           icon: Icons.check_circle_outlined,
                                           buttonColor: AppColors.mainColor,
+                                          condition: screenWidth > 1080,
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
                                         ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                            ),
-                          ],
-                        ),
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
-                    ),
-                  )
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
