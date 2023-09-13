@@ -190,6 +190,10 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       text: "Search Question Bank",
                                       condition: screenWidth > 620,
                                       icon: const Icon(Icons.search),
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
                                       elevation: 8.0,
                                       onPressed: () {
                                         ref
@@ -207,8 +211,16 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                       icon: const Icon(
                                           Icons.check_circle_outlined),
                                       backgroundColor: AppColors.mainColor,
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
                                       elevation: 8.0,
                                       onPressed: () async {
+                                        ref
+                                            .read(processStateProvider.notifier)
+                                            .updateProcessState(
+                                                ProcessState.loading);
                                         final questions = currentQuestions;
                                         final questionsIdList = currentQuestions
                                             .map((question) => question.id)
@@ -221,6 +233,11 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                         if (questions.isEmpty ||
                                             textFieldValue == null ||
                                             textFieldValue.isEmpty) {
+                                          ref
+                                              .read(
+                                                  processStateProvider.notifier)
+                                              .updateProcessState(
+                                                  ProcessState.done);
                                           return;
                                         }
                                         PlatformFile? imageFile;
@@ -236,11 +253,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             "made_by": revieweeId,
                                             "questions": questionsIdList,
                                           };
-                                          ref
-                                              .read(
-                                                  processStateProvider.notifier)
-                                              .updateProcessState(
-                                                  ProcessState.loading);
+
                                           await createMix(
                                                   newMix, imageFile, ref)
                                               .then((value) {
@@ -266,11 +279,7 @@ class _CreateEditMixScreenState extends ConsumerState<CreateEditMixScreen> {
                                             createdOn: mix.createdOn,
                                             questions: questions,
                                           );
-                                          ref
-                                              .read(
-                                                  processStateProvider.notifier)
-                                              .updateProcessState(
-                                                  ProcessState.loading);
+
                                           await updateMix(newMix, imageFile,
                                                   isFirstImageRemoved, ref)
                                               .then((value) {
