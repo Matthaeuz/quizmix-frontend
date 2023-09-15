@@ -6,6 +6,7 @@ enum ModalState {
   advancedSearch,
   viewQuestion,
   mixAdvancedSearch,
+  preparingQuiz,
 }
 
 class ModalStateNotifier extends StateNotifier<ModalState> {

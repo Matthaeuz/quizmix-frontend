@@ -7,6 +7,7 @@ import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_prov
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/review_attempts_screen.dart';
@@ -130,6 +131,10 @@ class RevieweeQuizItem extends ConsumerWidget {
                 Expanded(
                   child: SolidButton(
                     onPressed: () async {
+                      ref
+                          .read(modalStateProvider.notifier)
+                          .updateModalState(ModalState.preparingQuiz);
+
                       final hasAttempts =
                           await client.getRevieweeAttemptsByQuiz(
                               token, reviewee.id, quiz.id);
@@ -154,19 +159,18 @@ class RevieweeQuizItem extends ConsumerWidget {
                                 hasAttempts.isEmpty
                                     ? 1
                                     : hasAttempts.length + 1);
-                        if (hasAttempts.isEmpty) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      AnswerQuizScreen(isPretest: true)));
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      AnswerQuizScreen(isPretest: false)));
-                        }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const AnswerQuizScreen()));
+                        ref
+                            .read(modalStateProvider.notifier)
+                            .updateModalState(ModalState.none);
+                      }, onError: (err) {
+                        ref
+                            .read(modalStateProvider.notifier)
+                            .updateModalState(ModalState.none);
                       });
                     },
                     text: 'Answer Quiz',

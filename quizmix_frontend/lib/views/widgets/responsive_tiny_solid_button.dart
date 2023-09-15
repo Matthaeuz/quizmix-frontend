@@ -6,6 +6,7 @@ class ResponsiveTinySolidButton extends StatelessWidget {
   final Color buttonColor;
   final VoidCallback onPressed;
   final bool condition;
+  final double? elevation;
 
   const ResponsiveTinySolidButton({
     super.key,
@@ -14,6 +15,7 @@ class ResponsiveTinySolidButton extends StatelessWidget {
     required this.buttonColor,
     required this.onPressed,
     required this.condition,
+    this.elevation,
   });
 
   @override
@@ -21,6 +23,7 @@ class ResponsiveTinySolidButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        elevation: elevation,
         foregroundColor: Colors.white,
         backgroundColor: buttonColor,
         shape: RoundedRectangleBorder(

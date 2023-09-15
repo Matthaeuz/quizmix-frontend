@@ -46,31 +46,26 @@ class AnswerMixItem extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      alignment: Alignment.centerLeft,
-                      foregroundColor: AppColors.mainColor,
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  alignment: Alignment.centerLeft,
+                  foregroundColor: AppColors.mainColor,
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.arrow_back,
+                      size: 16.0,
+                      color: AppColors.mainColor,
                     ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.arrow_back,
-                          size: 16.0,
-                          color: AppColors.mainColor,
-                        ),
-                        Text('Back to Home'),
-                      ],
-                    ),
-                  ),
-                ],
+                    Text('Back to Home'),
+                  ],
+                ),
               ),
               const Text(
                 "Answer Mix",

@@ -61,6 +61,37 @@ class _RevieweeHomeScreenState extends ConsumerState<RevieweeHomeScreen> {
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const ViewQuestionModal(),
           ),
+        ] else if (modalState == ModalState.preparingQuiz) ...[
+          Scaffold(
+            body: Container(
+              color: AppColors.mainColor,
+              child: const Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 48.0,
+                        width: 48.0,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 6.0,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        "Preparing Quiz...",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ]
       ],
     );
