@@ -10,7 +10,8 @@ class CategoryQuestionsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final questions = ref.watch(categoryQuestionsProvider(title));
+    // TODO: change to category ID implementation
+    final questions = ref.watch(categoryQuestionsProvider(1));
 
     return questions.when(
       data: (questions) {

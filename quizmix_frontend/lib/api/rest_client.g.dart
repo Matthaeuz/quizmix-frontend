@@ -635,7 +635,7 @@ class _RestClient implements RestClient {
   @override
   Future<List<Question>> getQuestionsByCategory(
     String token,
-    String category,
+    int category,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'category': category};

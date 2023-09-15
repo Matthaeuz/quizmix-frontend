@@ -97,7 +97,8 @@ abstract class RestClient {
       @Header("Authorization") String token, @Path("id") int id);
 
   // @GET("/reviewees/?belongs_to={belongsTo}")
-  @GET("/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
+  @GET(
+      "/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
   Future<List<User>> getReviewerReviewees(
     @Header("Authorization") String token,
     @Path("reviewerId") int reviewerId,
@@ -146,7 +147,7 @@ abstract class RestClient {
   @GET("/questions/?category={}")
   Future<List<Question>> getQuestionsByCategory(
     @Header("Authorization") String token,
-    @Query("category") String category,
+    @Query("category") int category,
   );
 
   @GET("/questions/{id}/")

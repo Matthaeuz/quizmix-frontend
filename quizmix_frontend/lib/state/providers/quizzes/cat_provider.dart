@@ -40,13 +40,12 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       // initialize specs
       final specs = await client.getQuizSpecs(accessToken, {"quiz": quizId});
 
-      print(specs);
-
       // initialize pool
       final Map<String, dynamic> pool = {};
       for (String key in specs.keys) {
+        int keyInt = int.parse(key);
         final questionsList =
-            await client.getQuestionsByCategory(accessToken, key);
+            await client.getQuestionsByCategory(accessToken, keyInt);
         List<int> questionIds =
             questionsList.map((question) => question.id).toList();
         pool[key] = questionIds;
@@ -57,6 +56,7 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       if (specs.containsKey(category)) {
         specs[category] = (specs[category] ?? 1) - 1;
       }
+
       final question = await client.selectItem(accessToken, {
         "reviewee": revieweeId,
         "item_pool": pool[category],
