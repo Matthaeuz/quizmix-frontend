@@ -5,8 +5,7 @@ import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 class QuizHistoryItem extends StatelessWidget {
   final QuizAttempt attempt;
 
-  const QuizHistoryItem(
-      {super.key, required this.attempt});
+  const QuizHistoryItem({super.key, required this.attempt});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class QuizHistoryItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(attempt.attemptedBy.user.fullName),
+                Text(attempt.attemptedBy.fullName),
               ],
             ),
           ),

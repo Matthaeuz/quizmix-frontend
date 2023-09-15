@@ -111,26 +111,15 @@ class AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
                 padding: const EdgeInsets.fromLTRB(0, 24, 24, 24),
                 child: Container(
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 0),
-                      ),
-                    ],
-                  ),
+                  color: Colors.transparent,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
                           child: Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
+                            spacing: 8,
+                            runSpacing: 8,
                             children: [
                               for (int i = 0;
                                   i < currentMix.questions.length;
@@ -159,8 +148,9 @@ class AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
                                 ? ResponsiveTinySolidButton(
                                     text: 'Previous',
                                     icon: Icons.arrow_back,
-                                    buttonColor: AppColors.mainColor,
+                                    buttonColor: AppColors.iconColor,
                                     condition: screenWidth > 1080,
+                                    elevation: 8.0,
                                     onPressed: () {
                                       setState(() {
                                         currentQuestionIndex--;
@@ -177,8 +167,9 @@ class AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
                                       ? ResponsiveTinySolidButton(
                                           text: 'Next',
                                           icon: Icons.arrow_forward,
-                                          buttonColor: AppColors.mainColor,
+                                          buttonColor: AppColors.iconColor,
                                           condition: screenWidth > 1080,
+                                          elevation: 8.0,
                                           onPressed: () {
                                             setState(() {
                                               currentQuestionIndex++;
@@ -188,8 +179,9 @@ class AnswerMixScreenState extends ConsumerState<AnswerMixScreen> {
                                       : ResponsiveTinySolidButton(
                                           text: 'Finish',
                                           icon: Icons.check_circle_outlined,
-                                          buttonColor: AppColors.mainColor,
+                                          buttonColor: AppColors.iconColor,
                                           condition: screenWidth > 1080,
+                                          elevation: 8.0,
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },

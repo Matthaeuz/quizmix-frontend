@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
+import 'package:quizmix_frontend/state/models/users/user.dart';
 
 part 'quiz_attempt.g.dart';
 
@@ -20,7 +20,7 @@ class QuizAttempt {
   final int id;
 
   @JsonKey(name: 'attempted_by')
-  final Reviewee attemptedBy;
+  final User attemptedBy;
 
   @JsonKey(name: 'quiz')
   final Quiz quiz;
@@ -36,17 +36,18 @@ class QuizAttempt {
 
   @JsonKey(name: 'attempt_score')
   final int attemptScore;
-  
+
   /// Base quiz creation; call this if you need to reference an empty quiz.
   QuizAttempt.base()
       : id = 0,
-        attemptedBy = Reviewee.base(),
+        attemptedBy = User.base(),
         quiz = Quiz.base(),
         createdOn = DateTime.now(),
         timeStarted = DateTime.now(),
         timeFinished = DateTime.now(),
         attemptScore = 0;
 
-  factory QuizAttempt.fromJson(Map<String, dynamic> json) => _$QuizAttemptFromJson(json);
+  factory QuizAttempt.fromJson(Map<String, dynamic> json) =>
+      _$QuizAttemptFromJson(json);
   Map<String, dynamic> toJson() => _$QuizAttemptToJson(this);
 }

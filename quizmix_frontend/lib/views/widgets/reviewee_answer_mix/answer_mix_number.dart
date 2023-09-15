@@ -31,12 +31,19 @@ class AnswerMixNumber extends ConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           color: number == currentNumber
-              ? AppColors.mainColor
+              ? AppColors.iconColor
               : thisResponse.isEmpty
                   ? AppColors.grey
                   : thisResponse == thisCorrectAnswer
                       ? Colors.green
                       : AppColors.red,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              blurRadius: 4,
+              offset: const Offset(0, 0),
+            ),
+          ],
         ),
         child: Center(
           child: Text(
