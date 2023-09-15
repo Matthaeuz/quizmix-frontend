@@ -53,9 +53,7 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
 
       // initialize first question
       String category = getRandomKey(specs);
-      if (specs.containsKey(category)) {
-        specs[category] = (specs[category] ?? 1) - 1;
-      }
+      specs[category] = (specs[category] ?? 1) - 1;
 
       final question = await client.selectItem(accessToken, {
         "reviewee": revieweeId,
@@ -76,6 +74,8 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
         "question": question,
       };
 
+      print(initialState);
+
       state = AsyncValue.data(initialState);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -88,9 +88,7 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
 
       // get new specs
       String category = getRandomKey(newState["specs"]);
-      if (newState["specs"].containsKey(category)) {
-        newState["specs"][category] = (newState["specs"][category] ?? 1) - 1;
-      }
+      newState["specs"][category] = (newState["specs"][category] ?? 1) - 1;
 
       // get new question
       newState["question"] = await client.selectItem(accessToken, {
@@ -106,6 +104,8 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       if (newState["pool"].containsKey(category)) {
         newState["pool"][category].remove(newState["question"].id);
       }
+
+      print(newState);
 
       // compile new state
       state = AsyncValue.data(newState);
