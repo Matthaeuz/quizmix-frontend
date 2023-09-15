@@ -131,7 +131,6 @@ class _ViewQuizResultScreenState extends ConsumerState<ViewQuizResultScreen> {
                                     ref
                                         .read(currentQuizAttemptedProvider)
                                         .attemptedBy
-                                        .user
                                         .fullName,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,

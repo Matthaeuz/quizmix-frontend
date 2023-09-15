@@ -41,7 +41,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
       data: (data) {
         final Set<String> uniqueNames = {};
         for (final attempt in data) {
-          final studentName = attempt.attemptedBy.user.fullName;
+          final studentName = attempt.attemptedBy.fullName;
           if (!uniqueNames.contains(studentName)) {
             uniqueNames.add(studentName);
             firstAttempts.add(attempt);

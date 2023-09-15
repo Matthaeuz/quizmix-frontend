@@ -12,6 +12,7 @@ import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts
 import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_number.dart';
@@ -56,28 +57,26 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     final client = ref.read(restClientProvider);
     final token = ref.read(authTokenProvider).accessToken;
     final time = DateTime.now().toUtc();
-    final quizId = ref.read(currentQuizAttemptedProvider).quiz.id;
-    final revieweeId = ref.read(revieweeProvider).when(
-          data: (data) => data.id,
-          error: (err, st) => 0,
-          loading: () => 0,
-        );
+    final quizAttempt = ref.read(currentQuizAttemptedProvider);
+    final reviewee = ref.read(userProvider);
 
     Map<String, dynamic> timeFinished = {
       "time_finished": time.toIso8601String()
     };
-    final updatedAttempt = await client.updateQuizAttempt(
-        token, timeFinished, ref.read(currentQuizAttemptedProvider).id);
+    final updatedAttempt =
+        await client.updateQuizAttempt(token, timeFinished, quizAttempt.id);
 
     ref
         .read(currentQuizAttemptedProvider.notifier)
         .updateCurrentQuizAttempted(updatedAttempt, null);
     ref
-        .read(revieweeAttemptsProvider(quizId).notifier)
-        .fetchRevieweeAttempts(revieweeId, quizId);
+        .read(revieweeAttemptsProvider(quizAttempt.quiz.id).notifier)
+        .fetchRevieweeAttempts(reviewee.id, quizAttempt.quiz.id);
   }
 
   void handleChoicePressed(String choice, Question? currentQuestion) async {
+    final currentTakenQuiz = ref.read(currentTakenQuizProvider);
+
     Question question;
     if (currentQuestion != null) {
       question = currentQuestion;
@@ -87,8 +86,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
         ref.read(catProvider.notifier).setLoading();
       }
     } else {
-      question =
-          ref.read(currentTakenQuizProvider).questions[currentQuestionIndex];
+      question = currentTakenQuiz.questions[currentQuestionIndex];
     }
 
     // create QuestionAttempt
@@ -112,7 +110,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             choice
         : currentQuestion.answer == choice;
 
-    final revieweeId = ref.read(revieweeProvider).value!.id;
+    final reviewee = ref.read(userProvider);
 
     if (isCurrentAnswerCorrect) {
       ref
@@ -121,11 +119,10 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     }
 
     itemAnalysisAndScoring(
-        ref, revieweeId, isCurrentAnswerCorrect, currentQuestion);
+        ref, reviewee.id, isCurrentAnswerCorrect, currentQuestion);
 
     setState(() {
-      if (currentQuestionIndex >=
-          ref.read(currentTakenQuizProvider).questions.length - 1) {
+      if (currentQuestionIndex >= currentTakenQuiz.questions.length - 1) {
         allQuestionsAnswered = true;
 
         // Display total score
@@ -135,7 +132,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
             return AlertDialog(
               title: const Text('Quiz Completed!'),
               content: Text(
-                  'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}/${ref.read(currentTakenQuizProvider).questions.length}'),
+                  'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}/${currentTakenQuiz.questions.length}'),
               actions: <Widget>[
                 SolidButton(
                   text: 'Review',

@@ -5,7 +5,7 @@ import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
   final StateNotifierProviderRef<CATNotifier, AsyncValue<Map<String, dynamic>>>
@@ -39,6 +39,8 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
     try {
       // initialize specs
       final specs = await client.getQuizSpecs(accessToken, {"quiz": quizId});
+
+      print(specs);
 
       // initialize pool
       final Map<String, dynamic> pool = {};
@@ -125,13 +127,13 @@ final catProvider =
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
   final quiz = ref.watch(currentTakenQuizProvider);
-  final reviewee = ref.read(revieweeProvider).value;
+  final reviewee = ref.read(userProvider);
 
   return CATNotifier(
     ref: ref,
     client: client,
     accessToken: token.accessToken,
     quizId: quiz.id,
-    revieweeId: reviewee!.id,
+    revieweeId: reviewee.id,
   );
 });
