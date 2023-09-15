@@ -11,7 +11,6 @@ import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_atte
 import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_details_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
@@ -49,8 +48,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     };
 
     // let our notifier know that a change in the api has occured
-    final notifier = ref.read(revieweeProvider.notifier);
-    notifier.updateReviewee(ref, resp);
+    ref.read(userProvider.notifier).updateReviewee(ref, resp);
   }
 
   void endQuiz() async {

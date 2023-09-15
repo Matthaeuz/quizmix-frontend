@@ -75,7 +75,7 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
         "pool": pool,
         "question": question,
       };
-      print(initialState);
+
       state = AsyncValue.data(initialState);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -108,7 +108,6 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
       }
 
       // compile new state
-      print(newState);
       state = AsyncValue.data(newState);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
