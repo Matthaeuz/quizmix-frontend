@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 
 class ReviewAttemptsContainer extends StatelessWidget {
@@ -15,41 +16,43 @@ class ReviewAttemptsContainer extends StatelessWidget {
 
     return Container(
       height: 60,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
+        color: AppColors.mainColor,
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Attempt ${index + 1}'),
-              ],
+            child: Text(
+              '${index + 1}',
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.white,
+              ),
             ),
           ),
+          const SizedBox(width: 12),
           Expanded(
-            child: Center(
-              child: Text("${attempt.attemptScore}/$totalScore"),
+            flex: 6,
+            child: Text(
+              "${dateTimeToWordDate(attempt.createdOn)}, ${dateTimeToTime(attempt.timeStarted)}-${attempt.timeFinished != null ? dateTimeToTime(attempt.timeFinished!) : "N/A"}",
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.white,
+              ),
             ),
           ),
+          const SizedBox(width: 12),
           Expanded(
-            child: Center(
-              child: Text(dateTimeToDate(attempt.createdOn)),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(dateTimeToTime(attempt.timeStarted)),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(attempt.timeFinished != null
-                  ? dateTimeToTime(attempt.timeFinished!)
-                  : "Did not finish attempt"),
+            flex: 2,
+            child: Text(
+              "Score: ${attempt.attemptScore}/$totalScore",
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],

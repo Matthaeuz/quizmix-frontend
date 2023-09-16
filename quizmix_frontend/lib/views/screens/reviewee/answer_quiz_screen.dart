@@ -6,7 +6,6 @@ import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
-import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
@@ -51,7 +50,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     final token = ref.read(authTokenProvider).accessToken;
     final time = DateTime.now().toUtc();
     final quizAttempt = ref.read(currentQuizAttemptedProvider);
-    final reviewee = ref.read(userProvider);
+    // final reviewee = ref.read(userProvider);
 
     Map<String, dynamic> timeFinished = {
       "time_finished": time.toIso8601String()
@@ -62,9 +61,9 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     ref
         .read(currentQuizAttemptedProvider.notifier)
         .updateCurrentQuizAttempted(updatedAttempt, null);
-    ref
-        .read(revieweeAttemptsProvider(quizAttempt.quiz.id).notifier)
-        .fetchRevieweeAttempts(reviewee.id, quizAttempt.quiz.id);
+    // ref
+    //     .read(revieweeAttemptsProvider(quizAttempt.quiz.id).notifier)
+    //     .fetchRevieweeAttempts(reviewee.id, quizAttempt.quiz.id);
   }
 
   void handleChoicePressed(String choice, Question? currentQuestion) async {

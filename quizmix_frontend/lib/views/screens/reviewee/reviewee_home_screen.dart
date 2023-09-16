@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
 import 'package:quizmix_frontend/views/modals/advanced_search_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
+import 'package:quizmix_frontend/views/modals/view_reviewee_quiz_attempts_modal.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_mixes_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_question_bank_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_quizzes_tab.dart';
@@ -91,6 +92,11 @@ class _RevieweeHomeScreenState extends ConsumerState<RevieweeHomeScreen> {
                 ),
               ),
             ),
+          ),
+        ] else if (modalState == ModalState.viewRevieweeQuizAttempts) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const ViewRevieweeQuizAttemptsModal(),
           ),
         ]
       ],
