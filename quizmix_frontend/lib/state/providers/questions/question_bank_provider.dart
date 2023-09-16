@@ -27,6 +27,7 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
       } else {
         hasQuestions = false;
       }
+      questions.sort((a, b) => a.id.compareTo(b.id));
       allQuestions = questions;
       state = AsyncValue.data(questions);
     } catch (e, st) {
@@ -49,6 +50,7 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
   Future<void> searchQuestions(Map<String, dynamic> filters) async {
     try {
       var questions = await client.advancedSearch(accessToken, filters);
+      questions.sort((a, b) => a.id.compareTo(b.id));
       allQuestions = questions;
       state = AsyncValue.data(questions);
     } catch (e, st) {

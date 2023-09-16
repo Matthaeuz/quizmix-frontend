@@ -276,7 +276,9 @@ class _ViewQuizScreenState extends State<ViewQuizStatisticsScreen> {
                                                                 },
                                                                 style: ElevatedButton
                                                                     .styleFrom(
-                                                                  backgroundColor:Colors.green,
+                                                                  backgroundColor:
+                                                                      AppColors
+                                                                          .green,
                                                                   // backgroundColor: Colors.red,
                                                                   padding:
                                                                       EdgeInsets

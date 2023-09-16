@@ -3,8 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
+import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
+import 'package:quizmix_frontend/views/screens/quiz_attempt_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class AnswerQuizItem extends ConsumerWidget {
@@ -26,6 +31,11 @@ class AnswerQuizItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
+    final currentQuiz = ref.watch(currentTakenQuizProvider);
+    final currentQuizAttempt = ref.watch(currentQuizAttemptedProvider);
+    final processState = ref.watch(processStateProvider);
     final choiceLetters = ['A.', 'B.', 'C.', 'D.'];
 
     return Container(
@@ -43,170 +53,223 @@ class AnswerQuizItem extends ConsumerWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: allQuestionsAnswered
-            ? Center(
+        child: processState == ProcessState.loading
+            ? const Center(
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Quiz Completed!',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.mainColor,
-                        ),
+                      SizedBox(
+                        height: 48.0,
+                        width: 48.0,
+                        child: CircularProgressIndicator(strokeWidth: 6.0),
                       ),
+                      SizedBox(height: 16.0),
                       Text(
-                        'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}/${ref.read(currentTakenQuizProvider).questions.length}',
-                        style: const TextStyle(
-                          fontSize: 20,
+                        "Preparing Review...",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      const SizedBox(height: 24.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SolidButton(
-                            width: 148,
-                            text: 'Finish',
-                            onPressed: () {
-                              onEnd();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          const SizedBox(width: 24.0),
-                          SolidButton(
-                            width: 148,
-                            text: 'Review',
-                            onPressed: () {
-                              onEnd();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ViewQuizResultScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
                       ),
                     ],
                   ),
                 ),
               )
-            : question == null
-                ? const Center(
+            : allQuestionsAnswered
+                ? Center(
                     child: SingleChildScrollView(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: 48.0,
-                            width: 48.0,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 6.0,
-                            ),
-                          ),
-                          SizedBox(height: 16.0),
-                          Text(
-                            "Selecting next question...",
+                          const Text(
+                            'Quiz Completed!',
                             style: TextStyle(
-                              fontSize: 24.0,
+                              fontSize: 40,
                               fontWeight: FontWeight.bold,
                               color: AppColors.mainColor,
                             ),
+                          ),
+                          Text(
+                            'Your score is ${ref.read(currentTakenQuizProvider.notifier).score}/${currentQuizAttempt.quiz.questions.length}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(height: 24.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SolidButton(
+                                width: 148,
+                                text: 'Finish',
+                                onPressed: () {
+                                  onEnd();
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              const SizedBox(width: 24.0),
+                              SolidButton(
+                                width: 148,
+                                text: 'Review',
+                                onPressed: () async {
+                                  ref
+                                      .read(processStateProvider.notifier)
+                                      .updateProcessState(ProcessState.loading);
+
+                                  onEnd();
+
+                                  client
+                                      .getQuestionAttemptsByQuizAttempt(
+                                          token, currentQuizAttempt.id)
+                                      .then((value) {
+                                    ref
+                                        .read(currentQuestionAttemptsProvider
+                                            .notifier)
+                                        .updateCurrentQuestionAttempts(value);
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const QuizAttemptScreen(),
+                                      ),
+                                    );
+                                    ref
+                                        .read(processStateProvider.notifier)
+                                        .updateProcessState(ProcessState.done);
+                                  }, onError: (err) {
+                                    ref
+                                        .read(processStateProvider.notifier)
+                                        .updateProcessState(ProcessState.done);
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
                   )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            onEnd();
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            alignment: Alignment.centerLeft,
-                            foregroundColor: AppColors.mainColor,
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
+                : question == null
+                    ? const Center(
+                        child: SingleChildScrollView(
+                          child: Column(
                             children: [
-                              Icon(
-                                Icons.arrow_back,
-                                size: 16.0,
-                                color: AppColors.mainColor,
+                              SizedBox(
+                                height: 48.0,
+                                width: 48.0,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 6.0,
+                                ),
                               ),
-                              Text('Back to Home'),
+                              SizedBox(height: 16.0),
+                              Text(
+                                "Selecting next question...",
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mainColor,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Text(
-                          isPretest ? "Answer Quiz" : "Answer Adaptive Quiz",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Text(
-                          'Question No. ${currentQuestionIndex + 1}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          question!.question,
-                          style: const TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        question!.image != null
-                            ? Image.network(
-                                question!.image!.contains(baseUrl)
-                                    ? question!.image!
-                                    : baseUrl + question!.image!,
-                              )
-                            : const SizedBox(),
-                        question!.image != null
-                            ? const SizedBox(height: 24)
-                            : const SizedBox(),
-                        const Text(
-                          'Choices',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: question!.choices.length,
-                          itemBuilder: (context, index) {
-                            return Text(
-                              '${choiceLetters[index]} ${question!.choices[index]}',
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                onEnd();
+                                Navigator.pop(context);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                alignment: Alignment.centerLeft,
+                                foregroundColor: AppColors.mainColor,
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_back,
+                                    size: 16.0,
+                                    color: AppColors.mainColor,
+                                  ),
+                                  Text('Back to Home'),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              isPretest
+                                  ? "Answer Quiz"
+                                  : "Answer Adaptive Quiz",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${currentQuiz.title} - Attempt No. ${ref.read(currentQuizAttemptedProvider.notifier).attemptNum}",
                               style: const TextStyle(
                                 fontSize: 20,
                               ),
-                            );
-                          },
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Question No. ${currentQuestionIndex + 1}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              question!.question,
+                              style: const TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            question!.image != null
+                                ? Image.network(
+                                    question!.image!.contains(baseUrl)
+                                        ? question!.image!
+                                        : baseUrl + question!.image!,
+                                  )
+                                : const SizedBox(),
+                            question!.image != null
+                                ? const SizedBox(height: 24)
+                                : const SizedBox(),
+                            const Text(
+                              'Choices',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: question!.choices.length,
+                              itemBuilder: (context, index) {
+                                return Text(
+                                  '${choiceLetters[index]} ${question!.choices[index]}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                         ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
+                      ),
       ),
     );
   }

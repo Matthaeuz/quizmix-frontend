@@ -23,7 +23,7 @@ class AnswerMixItem extends ConsumerWidget {
     final choiceLetters = ['A.', 'B.', 'C.', 'D.'];
     final isResponded = response.isNotEmpty;
     final isRespondedCorrectly = isResponded && response == question.answer;
-    final textColor = isRespondedCorrectly ? Colors.green : Colors.red;
+    final textColor = isRespondedCorrectly ? AppColors.green : Colors.red;
     final hasSolution =
         question.solution != null && question.solution!.isNotEmpty;
 

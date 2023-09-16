@@ -11,7 +11,6 @@ QuestionDetails _$QuestionDetailsFromJson(Map<String, dynamic> json) =>
       attempt: json['attempt'] as int,
       question: json['question'] as int,
       revieweeAnswer: json['reviewee_answer'] as String,
-      difficultyScore: json['difficulty_score'] as int,
     );
 
 Map<String, dynamic> _$QuestionDetailsToJson(QuestionDetails instance) =>
@@ -19,5 +18,4 @@ Map<String, dynamic> _$QuestionDetailsToJson(QuestionDetails instance) =>
       'attempt': instance.attempt,
       'question': instance.question,
       'reviewee_answer': instance.revieweeAnswer,
-      'difficulty_score': instance.difficultyScore,
     };

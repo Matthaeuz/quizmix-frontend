@@ -11,7 +11,6 @@ class QuestionAttempt {
     required this.attempt,
     required this.question,
     required this.revieweeAnswer,
-    required this.difficultyScore,
     required this.isCorrect,
   });
 
@@ -27,21 +26,18 @@ class QuestionAttempt {
   @JsonKey(name: 'reviewee_answer')
   final String revieweeAnswer;
 
-  @JsonKey(name: 'difficulty_score')
-  final int difficultyScore;
-
   @JsonKey(name: 'is_correct')
   final bool isCorrect;
-  
+
   /// Base quiz creation; call this if you need to reference an empty quiz.
   QuestionAttempt.base()
       : id = 0,
         attempt = QuizAttempt.base(),
         question = Question.base(),
         revieweeAnswer = '',
-        difficultyScore = 0,
         isCorrect = false;
 
-  factory QuestionAttempt.fromJson(Map<String, dynamic> json) => _$QuestionAttemptFromJson(json);
+  factory QuestionAttempt.fromJson(Map<String, dynamic> json) =>
+      _$QuestionAttemptFromJson(json);
   Map<String, dynamic> toJson() => _$QuestionAttemptToJson(this);
 }

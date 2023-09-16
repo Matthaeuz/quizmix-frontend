@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/reviewee_attempts_provider.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/view_quiz_result_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
 import '../../widgets/reviewee_review_attempts/review_attempts_container.dart';
@@ -153,25 +150,25 @@ class ReviewAttemptsScreen extends ConsumerWidget {
                                                     bottom: 12.0),
                                                 child: InkWell(
                                                   onTap: () {
-                                                    ref
-                                                        .read(
-                                                            currentTakenQuizProvider
-                                                                .notifier)
-                                                        .updateScore(attempt
-                                                            .attemptScore);
-                                                    ref
-                                                        .read(
-                                                            currentQuizAttemptedProvider
-                                                                .notifier)
-                                                        .updateCurrentQuizAttempted(
-                                                            attempt, index + 1);
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const ViewQuizResultScreen(),
-                                                      ),
-                                                    );
+                                                    // ref
+                                                    //     .read(
+                                                    //         currentTakenQuizProvider
+                                                    //             .notifier)
+                                                    //     .updateScore(attempt
+                                                    //         .attemptScore);
+                                                    // ref
+                                                    //     .read(
+                                                    //         currentQuizAttemptedProvider
+                                                    //             .notifier)
+                                                    //     .updateCurrentQuizAttempted(
+                                                    //         attempt, index + 1);
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) =>
+                                                    //         const ViewQuizResultScreen(),
+                                                    //   ),
+                                                    // );
                                                   },
                                                   child:
                                                       ReviewAttemptsContainer(

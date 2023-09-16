@@ -1090,38 +1090,6 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<QuizAttemptQuestionsResponses> getQuizAttemptQuestionsResponses(
-    String token,
-    Map<String, int> attemptId,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(attemptId);
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<QuizAttemptQuestionsResponses>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/quiz_attempts/get_attempt_questions_responses/',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = QuizAttemptQuestionsResponses.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<QuestionAttempt> createQuestionAttempt(
     String token,
     QuestionDetails details,
@@ -1150,6 +1118,39 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = QuestionAttempt.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<QuestionAttempt>> getQuestionAttemptsByQuizAttempt(
+    String token,
+    int attemptId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<QuestionAttempt>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/question_attempts/?attempt=${attemptId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => QuestionAttempt.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 
