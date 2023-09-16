@@ -28,15 +28,16 @@ class MyRevieweesList extends ConsumerWidget {
                 color: AppColors.mainColor,
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                // Handle View All onPress
-              },
-              child: const Text(
-                'View All',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.blue,
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {},
+                child: const Text(
+                  'View All',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
+                  ),
                 ),
               ),
             ),
