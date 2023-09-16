@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
@@ -159,6 +160,11 @@ class RevieweeQuizItem extends ConsumerWidget {
                                 hasAttempts.isEmpty
                                     ? 1
                                     : hasAttempts.length + 1);
+
+                        if (hasAttempts.isNotEmpty) {
+                          ref.read(catProvider.notifier).initializeCAT();
+                        }
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(

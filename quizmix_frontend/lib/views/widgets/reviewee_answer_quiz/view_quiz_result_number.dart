@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 
 class ViewQuizResultNumber extends StatelessWidget {
   const ViewQuizResultNumber({
@@ -19,7 +20,7 @@ class ViewQuizResultNumber extends StatelessWidget {
       child: Container(
         height: 40,
         width: 40,
-        color: isCorrect ? Colors.green : Colors.red,
+        color: isCorrect ? AppColors.green : Colors.red,
         margin: const EdgeInsets.all(4),
         child: Center(
           child: Text('$number'),

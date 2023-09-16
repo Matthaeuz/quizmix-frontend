@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 
 class ViewQuestionItem extends ConsumerWidget {
@@ -7,6 +8,7 @@ class ViewQuestionItem extends ConsumerWidget {
   final Question questionDetails;
   final void Function() onClick;
   final bool condition;
+  final Color color;
 
   const ViewQuestionItem({
     Key? key,
@@ -14,6 +16,7 @@ class ViewQuestionItem extends ConsumerWidget {
     required this.questionDetails,
     required this.onClick,
     required this.condition,
+    this.color = AppColors.white,
   }) : super(key: key);
 
   @override
@@ -26,7 +29,7 @@ class ViewQuestionItem extends ConsumerWidget {
           padding: const EdgeInsets.all(12),
           constraints: const BoxConstraints(maxWidth: 400),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: color,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -70,15 +73,17 @@ class ViewQuestionItem extends ConsumerWidget {
                     ),
                   ],
                 )
-              : Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                  child: Text(
-                    "${questionDetails.id}",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              : Container(
+                  constraints: const BoxConstraints(minWidth: 60, maxWidth: 60),
+                  child: Center(
+                    child: Text(
+                      "$questionNum",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

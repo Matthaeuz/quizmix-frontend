@@ -22,9 +22,7 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
     required this.accessToken,
     required this.quizId,
     required this.revieweeId,
-  }) : super(const AsyncValue.loading()) {
-    initializeCAT();
-  }
+  }) : super(const AsyncValue.loading());
 
   String getRandomKey(Map<String, int> map) {
     if (map.isEmpty) {

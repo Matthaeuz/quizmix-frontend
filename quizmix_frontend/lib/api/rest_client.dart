@@ -6,7 +6,6 @@ import 'package:quizmix_frontend/state/models/question_attempts/question_attempt
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
-import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt_questions_responses.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
@@ -229,15 +228,15 @@ abstract class RestClient {
   Future<QuizAttempt> updateQuizAttempt(@Header("Authorization") String token,
       @Body() Map<String, dynamic> updatedDetails, @Path("id") int id);
 
-  @POST("/quiz_attempts/get_attempt_questions_responses/")
-  Future<QuizAttemptQuestionsResponses> getQuizAttemptQuestionsResponses(
-    @Header("Authorization") String token,
-    @Body() Map<String, int> attemptId,
-  );
-
   /// QUESTION ATTEMPT API
 
   @POST("/question_attempts/")
   Future<QuestionAttempt> createQuestionAttempt(
       @Header("Authorization") String token, @Body() QuestionDetails details);
+
+  @GET("/question_attempts/?attempt={attempt_id}")
+  Future<List<QuestionAttempt>> getQuestionAttemptsByQuizAttempt(
+    @Header("Authorization") String token,
+    @Path("attempt_id") int attemptId,
+  );
 }

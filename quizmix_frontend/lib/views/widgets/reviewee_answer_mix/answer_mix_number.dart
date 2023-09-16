@@ -35,7 +35,7 @@ class AnswerMixNumber extends ConsumerWidget {
               : thisResponse.isEmpty
                   ? AppColors.grey
                   : thisResponse == thisCorrectAnswer
-                      ? Colors.green
+                      ? AppColors.green
                       : AppColors.red,
           boxShadow: [
             BoxShadow(

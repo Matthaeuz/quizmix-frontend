@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
-import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
+import 'package:quizmix_frontend/state/providers/question_attempts/currently_viewed_question_attempt_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
-class ViewMixQuestionContainer extends ConsumerWidget {
-  const ViewMixQuestionContainer({super.key});
+class ViewQuestionAttemptContainer extends ConsumerWidget {
+  const ViewQuestionAttemptContainer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
-    final questionDetails = ref.watch(currentViewedMixQuestionProvider);
-    final questionNum = questionDetails["qnum"];
-    final question = questionDetails["question"];
+    final questionDetails = ref.watch(currentViewedQuestionAttemptProvider);
+    final questionNum = questionDetails["qanum"];
+    final questionAttempt = questionDetails["questionAttempt"];
     final choiceLetters = ['A', 'B', 'C', 'D'];
 
     return Expanded(
@@ -32,39 +32,51 @@ class ViewMixQuestionContainer extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      'Category: ${question.category.name}',
+                      'Category: ${questionAttempt.question.category.name}',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      question.question,
+                      questionAttempt.question.question,
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16),
-                    question.image != null
+                    questionAttempt.question.image != null
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Image.network(
-                              baseUrl + question.image!,
+                              baseUrl + questionAttempt.question.image!,
                               width: double.infinity,
                               fit: BoxFit.cover,
                             ),
                           )
                         : const SizedBox(),
-                    for (var i = 0; i < question.choices.length; i++) ...[
+                    for (var i = 0;
+                        i < questionAttempt.question.choices.length;
+                        i++) ...[
                       Text(
-                        '${choiceLetters[i]}. ${question.choices[i]}',
+                        '${choiceLetters[i]}. ${questionAttempt.question.choices[i]}',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
                     const SizedBox(height: 16),
                     Text(
-                      'Answer: ${question.answer.toUpperCase()}. ${question.choices[choiceLetters.indexOf(question.answer.toUpperCase())]}',
+                      'Answer: ${questionAttempt.question.answer.toUpperCase()}. ${questionAttempt.question.choices[choiceLetters.indexOf(questionAttempt.question.answer.toUpperCase())]}',
                       style: const TextStyle(fontSize: 16),
                     ),
-                    question.solution != null && question.solution!.isNotEmpty
+                    Text(
+                      'Reviewee\'s Answer: ${questionAttempt.revieweeAnswer.toUpperCase()}. ${questionAttempt.question.choices[choiceLetters.indexOf(questionAttempt.revieweeAnswer.toUpperCase())]}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: questionAttempt.isCorrect
+                            ? AppColors.green
+                            : AppColors.red,
+                      ),
+                    ),
+                    questionAttempt.question.solution != null &&
+                            questionAttempt.question.solution!.isNotEmpty
                         ? Text(
-                            'Reviewer\'s Explanation: ${question.solution}',
+                            'Reviewer\'s Explanation: ${questionAttempt.question.solution}',
                             style: const TextStyle(fontSize: 16),
                           )
                         : const SizedBox(),

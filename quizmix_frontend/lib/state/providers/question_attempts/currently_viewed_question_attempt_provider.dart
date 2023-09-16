@@ -1,18 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
 
 class CurrentViewedQuestionAttemptNotifier
     extends StateNotifier<Map<String, dynamic>> {
-  CurrentViewedQuestionAttemptNotifier(Map<String, dynamic> question)
-      : super(question);
+  CurrentViewedQuestionAttemptNotifier(Map<String, dynamic> questionAttempt)
+      : super(questionAttempt);
 
-  void updateCurrentViewedQuestion(Map<String, dynamic> newQuestion) {
-    state = newQuestion;
+  void updateCurrentViewedQuestionAttempt(
+      Map<String, dynamic> newQuestionAttempt) {
+    state = newQuestionAttempt;
   }
 }
 
 final currentViewedQuestionAttemptProvider = StateNotifierProvider<
     CurrentViewedQuestionAttemptNotifier, Map<String, dynamic>>((ref) {
   return CurrentViewedQuestionAttemptNotifier(
-      {"qnum": 0, "question": Question.base()});
+      {"qanum": 0, "questionAttempt": QuestionAttempt.base()});
 });
