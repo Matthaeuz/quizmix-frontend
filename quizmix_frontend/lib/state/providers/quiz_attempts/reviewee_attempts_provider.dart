@@ -3,6 +3,7 @@ import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 
 class RevieweeAttemptsNotifier
@@ -32,18 +33,17 @@ class RevieweeAttemptsNotifier
   }
 }
 
-final revieweeAttemptsProvider = StateNotifierProvider.family<
-    RevieweeAttemptsNotifier,
-    AsyncValue<List<QuizAttempt>>,
-    int>((ref, quizId) {
+final revieweeAttemptsProvider = StateNotifierProvider<RevieweeAttemptsNotifier,
+    AsyncValue<List<QuizAttempt>>>((ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
-  final reviewee = ref.read(userProvider);
+  final reviewee = ref.watch(userProvider);
+  final quiz = ref.watch(currentQuizViewedProvider);
 
   return RevieweeAttemptsNotifier(
     client: client,
     accessToken: token.accessToken,
-    quizId: quizId,
+    quizId: quiz.id,
     revieweeId: reviewee.id,
   );
 });

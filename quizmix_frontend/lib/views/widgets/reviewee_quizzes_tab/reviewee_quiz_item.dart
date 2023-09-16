@@ -8,10 +8,10 @@ import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_prov
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/answer_quiz_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/review_attempts_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class RevieweeQuizItem extends ConsumerWidget {
@@ -114,16 +114,10 @@ class RevieweeQuizItem extends ConsumerWidget {
                   child: SolidButton(
                     onPressed: () {
                       ref
-                          .read(currentTakenQuizProvider.notifier)
+                          .read(currentQuizViewedProvider.notifier)
                           .updateCurrentQuiz(quiz);
-                      ref
-                          .read(currentTakenQuizProvider.notifier)
-                          .updateScore(0);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ReviewAttemptsScreen(quizId: quiz.id)));
+                      ref.read(modalStateProvider.notifier).updateModalState(
+                          ModalState.viewRevieweeQuizAttempts);
                     },
                     text: 'Review Attempts',
                   ),
