@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_history_scores_provider.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_top_scores_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewee/view_reviewee_profile_screen.dart';
+import 'package:quizmix_frontend/views/screens/view_reviewee_profile_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_reviewer_profile_screen.dart';
 
 class ProfileArea extends ConsumerWidget {
@@ -16,10 +15,9 @@ class ProfileArea extends ConsumerWidget {
     return InkWell(
       onTap: () {
         if (details.role == "reviewee") {
-          ref.read(revieweeTopScoresProvider.notifier).fetchRevieweeTopScores();
           ref
-              .read(revieweeHistoryScoresProvider.notifier)
-              .fetchRevieweeHistoryScores();
+              .read(currentViewedRevieweeProvider.notifier)
+              .updateCurrentReviewee(details);
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -44,13 +42,32 @@ class ProfileArea extends ConsumerWidget {
               // Circular Picture
               Align(
                 alignment: Alignment.centerLeft,
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: details.image != null &&
-                          details.image!.isNotEmpty
-                      ? NetworkImage(details.image!)
-                      : const AssetImage('lib/assets/images/default_pic.png')
-                          as ImageProvider<Object>,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        blurRadius: 2,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    clipBehavior: Clip.antiAlias,
+                    child: Image(
+                      width: 60,
+                      height: 60,
+                      image: details.image != null && details.image!.isNotEmpty
+                          ? NetworkImage(details.image!)
+                          : const AssetImage(
+                                  'lib/assets/images/default_pic.png')
+                              as ImageProvider<Object>,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               if (parentWidth > 92) ...[

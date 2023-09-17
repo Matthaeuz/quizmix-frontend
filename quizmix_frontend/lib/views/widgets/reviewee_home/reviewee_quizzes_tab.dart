@@ -69,42 +69,30 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
                   ? Container(
                       padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
                       color: AppColors.mainColor.withOpacity(0.5),
-                      child: LayoutBuilder(
-                        builder: ((context, constraints) {
-                          final spaceWidth = constraints.maxWidth > 352
-                              ? (constraints.maxWidth - 352) * 0.8
-                              : 0.0;
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    hintText: 'Search Quizzes',
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12),
-                                      ),
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 8),
-                                  ),
-                                  onChanged: (value) {
-                                    ref
-                                        .read(revieweeQuizzesProvider.notifier)
-                                        .searchQuizzes(value);
-                                  },
-                                ),
+                      child: SizedBox(
+                        width: 480,
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.white,
+                            hintText: 'Search Quizzes',
+                            prefixIcon: Icon(
+                              Icons.search,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
                               ),
-                              SizedBox(width: spaceWidth),
-                            ],
-                          );
-                        }),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          onChanged: (value) {
+                            ref
+                                .read(revieweeQuizzesProvider.notifier)
+                                .searchQuizzes(value);
+                          },
+                        ),
                       ),
                     )
                   : const SizedBox(),
@@ -118,10 +106,10 @@ class _RevieweeQuizzesTabState extends ConsumerState<RevieweeQuizzesTab> {
             child: CircularProgressIndicator(color: AppColors.white),
           ),
         ),
-        error: (err, stack) => Center(
+        error: (err, stack) => const Center(
           child: SingleChildScrollView(
             child: EmptyDataPlaceholder(
-              message: "Error: $err",
+              message: "Please try again later",
             ),
           ),
         ),

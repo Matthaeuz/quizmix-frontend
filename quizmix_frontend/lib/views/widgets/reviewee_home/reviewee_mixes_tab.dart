@@ -25,6 +25,7 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
   Widget build(BuildContext context) {
     final mixes = ref.watch(revieweeMixesProvider);
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       color: AppColors.mainColor,
@@ -75,74 +76,70 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
                   ? Container(
                       padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
                       color: AppColors.mainColor.withOpacity(0.5),
-                      child: LayoutBuilder(
-                        builder: ((context, constraints) {
-                          final spaceWidth = constraints.maxWidth > 352
-                              ? (constraints.maxWidth - 352) * 0.625
-                              : 0.0;
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    hintText: 'Search Mixes',
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12),
-                                      ),
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: screenWidth > 860 ? 0 : 1,
+                            child: SizedBox(
+                              width: screenWidth > 860 ? 480 : null,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.white,
+                                  hintText: 'Search Mixes',
+                                  prefixIcon: Icon(
+                                    Icons.search,
                                   ),
-                                  onChanged: (value) {
-                                    ref
-                                        .read(revieweeMixesProvider.notifier)
-                                        .searchMixes(value);
-                                  },
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
                                 ),
+                                onChanged: (value) {
+                                  ref
+                                      .read(revieweeMixesProvider.notifier)
+                                      .searchMixes(value);
+                                },
                               ),
-                              SizedBox(width: spaceWidth),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                                child: SolidButton(
-                                  text: "Add Mix",
-                                  icon: const Icon(Icons.add),
-                                  elevation: 8.0,
-                                  onPressed: () {
-                                    ref
-                                        .read(currentMixProvider.notifier)
-                                        .updateCurrentMix(null);
-                                    ref
-                                        .read(availableMixQuestionsProvider
-                                            .notifier)
-                                        .fetchQuestions();
-                                    ref
-                                        .read(currentMixQuestionsProvider
-                                            .notifier)
-                                        .fetchQuestions();
-                                    ref
-                                        .read(mixQuestionSearchFilterProvider
-                                            .notifier)
-                                        .initializeFilters();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CreateEditMixScreen(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+                            child: SolidButton(
+                              text: "Add Mix",
+                              icon: const Icon(Icons.add),
+                              elevation: 8.0,
+                              onPressed: () {
+                                ref
+                                    .read(currentMixProvider.notifier)
+                                    .updateCurrentMix(null);
+                                ref
+                                    .read(
+                                        availableMixQuestionsProvider.notifier)
+                                    .fetchQuestions();
+                                ref
+                                    .read(currentMixQuestionsProvider.notifier)
+                                    .fetchQuestions();
+                                ref
+                                    .read(mixQuestionSearchFilterProvider
+                                        .notifier)
+                                    .initializeFilters();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateEditMixScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   : const SizedBox(),
@@ -156,10 +153,10 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
             child: CircularProgressIndicator(color: AppColors.white),
           ),
         ),
-        error: (err, stack) => Center(
+        error: (err, stack) => const Center(
           child: SingleChildScrollView(
             child: EmptyDataPlaceholder(
-              message: "Error: $err",
+              message: "Please try again later",
             ),
           ),
         ),

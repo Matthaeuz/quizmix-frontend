@@ -71,6 +71,7 @@ class _RevieweeQuestionBankTabState
   Widget build(BuildContext context) {
     final questions = ref.watch(questionBankProvider);
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       color: AppColors.mainColor,
@@ -129,60 +130,57 @@ class _RevieweeQuestionBankTabState
                   ? Container(
                       padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
                       color: AppColors.mainColor.withOpacity(0.5),
-                      child: LayoutBuilder(
-                        builder: ((context, constraints) {
-                          final spaceWidth = constraints.maxWidth > 352
-                              ? (constraints.maxWidth - 352) * 0.625
-                              : 0.0;
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    hintText: 'Search Questions',
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12),
-                                      ),
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: screenWidth > 772 ? 0 : 1,
+                            child: SizedBox(
+                              width: screenWidth > 772 ? 480 : null,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.white,
+                                  hintText: 'Search Questions',
+                                  prefixIcon: Icon(
+                                    Icons.search,
                                   ),
-                                  onChanged: (value) {
-                                    ref
-                                        .read(questionBankProvider.notifier)
-                                        .textSearchQuestions(value);
-                                    setState(() {
-                                      shouldApplyPadding = true;
-                                    });
-                                  },
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
                                 ),
+                                onChanged: (value) {
+                                  ref
+                                      .read(questionBankProvider.notifier)
+                                      .textSearchQuestions(value);
+                                  setState(() {
+                                    shouldApplyPadding = true;
+                                  });
+                                },
                               ),
-                              SizedBox(width: spaceWidth),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                                child: ResponsiveSolidButton(
-                                  text: "Advanced Search",
-                                  condition: constraints.maxWidth > 744,
-                                  icon: const Icon(Icons.search),
-                                  elevation: 8.0,
-                                  onPressed: () {
-                                    ref
-                                        .read(modalStateProvider.notifier)
-                                        .updateModalState(
-                                            ModalState.advancedSearch);
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+                            child: ResponsiveSolidButton(
+                              text: "Advanced Search",
+                              condition: screenWidth > 940,
+                              icon: const Icon(Icons.search),
+                              elevation: 8.0,
+                              onPressed: () {
+                                ref
+                                    .read(modalStateProvider.notifier)
+                                    .updateModalState(
+                                        ModalState.advancedSearch);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   : const SizedBox(),
@@ -196,10 +194,10 @@ class _RevieweeQuestionBankTabState
             child: CircularProgressIndicator(color: AppColors.white),
           ),
         ),
-        error: (err, stack) => Center(
+        error: (err, stack) => const Center(
           child: SingleChildScrollView(
             child: EmptyDataPlaceholder(
-              message: "Error: $err",
+              message: "Please try again later",
             ),
           ),
         ),

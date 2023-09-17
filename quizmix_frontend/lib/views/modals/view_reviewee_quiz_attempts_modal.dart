@@ -26,11 +26,11 @@ class _ViewRevieweeQuizAttemptsModalState
     extends ConsumerState<ViewRevieweeQuizAttemptsModal> {
   @override
   Widget build(BuildContext context) {
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
     final reviewee = ref.watch(userProvider);
     final quiz = ref.watch(currentQuizViewedProvider);
     final attempts = ref.watch(revieweeAttemptsProvider);
-    final client = ref.watch(restClientProvider);
-    final token = ref.watch(authTokenProvider).accessToken;
     final processState = ref.watch(processStateProvider);
 
     return Scaffold(
@@ -120,7 +120,7 @@ class _ViewRevieweeQuizAttemptsModalState
                                     padding: EdgeInsets.all(24),
                                     child: EmptyDataPlaceholder(
                                         message:
-                                            "There are currently no attempts for this quiz."),
+                                            "There are currently no attempts for this quiz"),
                                   ),
                                 );
                               }

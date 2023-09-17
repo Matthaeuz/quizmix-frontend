@@ -9,10 +9,6 @@ import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
-import 'package:quizmix_frontend/state/models/reviewees/attempt_score.dart';
-import 'package:quizmix_frontend/state/models/reviewees/reviewee.dart';
-import 'package:quizmix_frontend/state/models/reviewees/top_scores.dart';
-import 'package:quizmix_frontend/state/models/reviewers/reviewer.dart';
 import 'package:quizmix_frontend/state/models/users/assign_reviewee_details.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
@@ -81,46 +77,12 @@ abstract class RestClient {
 
   /// REVIEWEE API
 
-  @POST("/reviewees/")
-  Future<Reviewee> createReviewee(@Body() Map<String, dynamic> user);
-
-  @GET("/reviewees/")
-  Future<List<Reviewee>> getReviewees(@Header("Authorization") String token);
-
-  @GET("/reviewees/{id}/")
-  Future<User> getRevieweeById(
-      @Header("Authorization") String token, @Path("id") int id);
-
-  @GET("/reviewees/?user={id}")
-  Future<List<Reviewee>> getRevieweeByUserId(
-      @Header("Authorization") String token, @Path("id") int id);
-
   // @GET("/reviewees/?belongs_to={belongsTo}")
   @GET(
       "/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
   Future<List<User>> getReviewerReviewees(
     @Header("Authorization") String token,
     @Path("reviewerId") int reviewerId,
-  );
-
-  @POST("/users/get_top_scores/")
-  Future<TopScores> getRevieweeTopScores(
-    @Header("Authorization") String token,
-    @Body() Map<String, int> reviewee,
-  );
-
-  @POST("/reviewees/get_quiz_history_scores/")
-  Future<List<AttemptScore>> getRevieweeHistoryScores(
-    @Header("Authorization") String token,
-    @Body() Map<String, int> reviewee,
-  );
-
-  /// REVIEWER API
-
-  @GET("/reviewers/?user={id}")
-  Future<List<Reviewer>> getReviewerByUserId(
-    @Header("Authorization") String token,
-    @Path("id") int id,
   );
 
   /// QUESTION API
@@ -206,6 +168,12 @@ abstract class RestClient {
   );
 
   /// QUIZ ATTEMPT API
+
+  @GET("/quiz_attempts/?attempted_by={revieweeId}")
+  Future<List<QuizAttempt>> getRevieweeAttempts(
+    @Header("Authorization") String token,
+    @Path("revieweeId") int revieweeId,
+  );
 
   @GET("/quiz_attempts/?attempted_by={revieweeId}&quiz={quizId}")
   Future<List<QuizAttempt>> getRevieweeAttemptsByQuiz(

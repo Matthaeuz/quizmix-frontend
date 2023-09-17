@@ -33,6 +33,7 @@ class AvailableMixQuestionsNotifier
         questions.removeWhere(
             (question) => currentQuestionIds.contains(question.id));
       }
+      questions.sort((a, b) => a.id.compareTo(b.id));
       state = AsyncValue.data(questions);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
