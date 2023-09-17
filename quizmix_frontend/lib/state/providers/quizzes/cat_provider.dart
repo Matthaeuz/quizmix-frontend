@@ -124,7 +124,7 @@ final catProvider =
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
   final quiz = ref.watch(currentTakenQuizProvider);
-  final reviewee = ref.read(userProvider);
+  final reviewee = ref.watch(userProvider);
 
   return CATNotifier(
     ref: ref,

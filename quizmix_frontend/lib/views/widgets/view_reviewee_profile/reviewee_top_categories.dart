@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/reviewee_top_scores_provider.dart';
 
-class MyCategories extends ConsumerWidget {
-  const MyCategories({
+class RevieweeTopCategories extends ConsumerWidget {
+  const RevieweeTopCategories({
     super.key,
     required this.width,
     required this.height,
@@ -15,14 +14,6 @@ class MyCategories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final topScores = ref.watch(revieweeTopScoresProvider).when(
-          data: (data) {
-            return data;
-          },
-          error: (err, st) {},
-          loading: () {},
-        );
-
     return Container(
       width: width,
       height: height,
@@ -60,34 +51,34 @@ class MyCategories extends ConsumerWidget {
                     ],
                   ),
                 ),
-                topScores != null
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: topScores.categories.length,
-                        itemBuilder: (context, index) {
-                          final categories = topScores.categories;
-                          final scores = topScores.scores;
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(categories[index],
-                                      style: const TextStyle(fontSize: 14)),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(scores[index].toStringAsFixed(4),
-                                      style: const TextStyle(fontSize: 14)),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    : const SizedBox(),
+                // topScores != null
+                //     ? ListView.builder(
+                //         shrinkWrap: true,
+                //         physics: const NeverScrollableScrollPhysics(),
+                //         itemCount: topScores.categories.length,
+                //         itemBuilder: (context, index) {
+                //           final categories = topScores.categories;
+                //           final scores = topScores.scores;
+                //           return Padding(
+                //             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                //             child: Row(
+                //               children: [
+                //                 Expanded(
+                //                   flex: 3,
+                //                   child: Text(categories[index],
+                //                       style: const TextStyle(fontSize: 14)),
+                //                 ),
+                //                 Expanded(
+                //                   flex: 1,
+                //                   child: Text(scores[index].toStringAsFixed(4),
+                //                       style: const TextStyle(fontSize: 14)),
+                //                 ),
+                //               ],
+                //             ),
+                //           );
+                //         },
+                //       )
+                //     : const SizedBox(),
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomRight,
