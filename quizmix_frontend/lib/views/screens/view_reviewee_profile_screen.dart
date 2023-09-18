@@ -1,15 +1,29 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
+import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_user.utils.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
+import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/modals/view_reviewee_recent_attempts_modal.dart';
+import 'package:quizmix_frontend/views/modals/view_reviewee_top_categories_modal.dart';
 import 'package:quizmix_frontend/views/widgets/view_reviewee_profile/reviewee_recent_attempts.dart';
+import 'package:quizmix_frontend/views/widgets/view_reviewee_profile/reviewee_top_categories.dart';
 
-class ViewRevieweeProfileScreen extends ConsumerWidget {
+class ViewRevieweeProfileScreen extends ConsumerStatefulWidget {
   const ViewRevieweeProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  ViewRevieweeProfileScreenState createState() =>
+      ViewRevieweeProfileScreenState();
+}
+
+class ViewRevieweeProfileScreenState
+    extends ConsumerState<ViewRevieweeProfileScreen> {
   static const BoxConstraints detailsBoxConstraintsA = BoxConstraints(
     minWidth: 400.0,
     minHeight: 800.0,
@@ -22,19 +36,45 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
     maxWidth: 600.0,
   );
 
+  bool isChanged = false;
+  Uint8List? selectedImageBytes;
+  ImageProvider? imageProvider;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final baseUrl = ref.read(baseUrlProvider);
+  void initState() {
+    super.initState();
+
+    final revieweeDetails = ref.read(currentViewedRevieweeProvider);
+
+    if (revieweeDetails.image != null && revieweeDetails.image!.isNotEmpty) {
+      imageProvider = NetworkImage(revieweeDetails.image!);
+    }
+  }
+
+  void _selectImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      ImageProvider<Object> image = MemoryImage(file.bytes!);
+      setState(() {
+        imageProvider = image;
+        selectedImageBytes = file.bytes;
+        isChanged = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
     final revieweeDetails = ref.watch(currentViewedRevieweeProvider);
     final modalState = ref.watch(modalStateProvider);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    ImageProvider? imageProvider;
-    if (revieweeDetails.image != null && revieweeDetails.image!.isNotEmpty) {
-      imageProvider = NetworkImage(baseUrl + revieweeDetails.image!);
-    } else {
-      imageProvider = const AssetImage("lib/assets/images/default_pic.png");
-    }
 
     return Stack(
       children: [
@@ -57,8 +97,18 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
+                          onPressed: () async {
+                            PlatformFile? imageFile;
+                            if (isChanged && imageProvider != null) {
+                              imageFile = bytesToPlatform(selectedImageBytes!);
+                            }
+                            if (isChanged) {
+                              updateUser(imageFile, ref).then((value) {
+                                Navigator.pop(context);
+                              });
+                            } else {
+                              Navigator.pop(context);
+                            }
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -92,14 +142,48 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          child: ClipOval(
-                            clipBehavior: Clip.antiAlias,
-                            child: Image(
-                              width: 180,
-                              height: 180,
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                          child: Stack(
+                            children: [
+                              ClipOval(
+                                clipBehavior: Clip.antiAlias,
+                                child: InkWell(
+                                  onTap: user.id == revieweeDetails.id
+                                      ? _selectImage
+                                      : null,
+                                  child: Image(
+                                    width: 180,
+                                    height: 180,
+                                    image: imageProvider ??
+                                        const AssetImage(
+                                            "lib/assets/images/default_pic.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              imageProvider != null
+                                  ? Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: RawMaterialButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            imageProvider = null;
+                                            isChanged = true;
+                                          });
+                                        },
+                                        fillColor: AppColors.red,
+                                        shape: const CircleBorder(),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 36.0,
+                                          minHeight: 36.0,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                        ),
+                                      ))
+                                  : const SizedBox(),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -157,32 +241,7 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
                                 ),
                               ],
                             ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Top Categories",
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        alignment: Alignment.centerLeft,
-                                        foregroundColor: AppColors.mainColor,
-                                      ),
-                                      child: const Text("See All"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                            child: const RevieweeTopCategories(),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -247,6 +306,11 @@ class ViewRevieweeProfileScreen extends ConsumerWidget {
           Container(
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const ViewRevieweeRecentAttemptsModal(),
+          ),
+        ] else if (modalState == ModalState.viewRevieweeTopCategories) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const ViewRevieweeTopCategoriesModal(),
           ),
         ]
       ],

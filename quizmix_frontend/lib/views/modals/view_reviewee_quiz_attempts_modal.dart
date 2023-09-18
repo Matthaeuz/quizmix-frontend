@@ -119,8 +119,10 @@ class _ViewRevieweeQuizAttemptsModalState
                                   child: Padding(
                                     padding: EdgeInsets.all(24),
                                     child: EmptyDataPlaceholder(
-                                        message:
-                                            "There are currently no attempts for this quiz"),
+                                      message:
+                                          "There are currently no attempts for this quiz",
+                                      color: AppColors.mainColor,
+                                    ),
                                   ),
                                 );
                               }

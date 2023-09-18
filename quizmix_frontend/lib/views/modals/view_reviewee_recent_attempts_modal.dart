@@ -86,15 +86,17 @@ class _ViewRevieweeRecentAttemptsModalState
                     ),
                     const SizedBox(height: 16),
                     processState == ProcessState.loading
-                        ? const Text(
-                            'Preparing Review...',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.mainColor,
+                        ? const Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              'Preparing Review...',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.mainColor,
+                              ),
                             ),
                           )
                         : const SizedBox(),
-                    const SizedBox(height: 8),
                     attempts.when(
                       data: (data) {
                         if (data.isEmpty) {
@@ -184,10 +186,12 @@ class _ViewRevieweeRecentAttemptsModalState
                           ],
                         );
                       },
-                      error: (error, stack) => Center(
+                      error: (error, stack) => const Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: EmptyDataPlaceholder(message: "Error: $error"),
+                          padding: EdgeInsets.all(24),
+                          child: EmptyDataPlaceholder(
+                            message: "Please try again later",
+                          ),
                         ),
                       ),
                       loading: () => const Center(

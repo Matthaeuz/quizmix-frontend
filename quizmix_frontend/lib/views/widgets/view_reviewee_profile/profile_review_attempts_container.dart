@@ -27,7 +27,6 @@ class ProfileReviewAttemptsContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             flex: 2,
