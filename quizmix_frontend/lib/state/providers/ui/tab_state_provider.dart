@@ -1,6 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum TabState { revieweeQuizzes, revieweeMixes, revieweeQuestionBank }
+enum TabState {
+  revieweeQuizzes,
+  revieweeMixes,
+  revieweeQuestionBank,
+  reviewerDashboard,
+  reviewerQuizzes,
+  reviewerReviewees,
+  reviewerQuestionBank
+}
 
 class TabStateNotifier extends StateNotifier<TabState> {
   TabStateNotifier(TabState initTabState) : super(initTabState);

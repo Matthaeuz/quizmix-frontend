@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/state/providers/file_picker/pdf_file_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/update_quiz_bank_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/uploaded_questions_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_add_questions/upload_buttons_set.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -18,13 +17,11 @@ class AddQuestionScreen extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          const UpdateQuizBankScreen(),
           Container(
             color: const Color(0x800077B6),
           ),
           Scaffold(
             appBar: null,
-            backgroundColor: Colors.transparent,
             body: Center(
               child: Padding(
                 padding: const EdgeInsets.all(25.0),
@@ -63,7 +60,8 @@ class AddQuestionScreen extends ConsumerWidget {
                                       ref.read(pdfFileProvider('q_file')).state;
                                   if (aFilePath != null && qFilePath != null) {
                                     // Upload questions to question bank
-                                    questionBank.addQuestionsFromPdf(
+                                    questionBank
+                                        .addQuestionsFromPdf(
                                             aFilePath, qFilePath, ref)
                                         .then((value) => Navigator.push(
                                             context,

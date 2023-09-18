@@ -6,7 +6,6 @@ import 'package:quizmix_frontend/state/models/quizzes/tos_data.dart';
 import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:flutter/services.dart';
 
@@ -88,13 +87,11 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
 
     return Stack(
       children: [
-        const DashboardScreen(),
         Container(
           color: const Color(0x800077B6),
         ),
         Scaffold(
           appBar: null,
-          backgroundColor: Colors.transparent,
           body: Center(
             child: Padding(
               padding: const EdgeInsets.all(25.0),

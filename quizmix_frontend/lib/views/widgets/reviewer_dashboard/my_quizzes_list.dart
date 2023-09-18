@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/quizzes_list_screen.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/add_card.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/quiz_detail_card.dart';
 
@@ -33,12 +32,7 @@ class MyQuizzesList extends ConsumerWidget {
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QuizzesListScreen()));
-                },
+                onTap: () {},
                 child: const Text(
                   'View All',
                   style: TextStyle(
