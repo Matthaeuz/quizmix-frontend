@@ -7,8 +7,8 @@ import 'package:quizmix_frontend/state/models/question_attempts/question_details
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
-import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
+import 'package:quizmix_frontend/state/models/user_attribute_values/user_attribute_value.dart';
 import 'package:quizmix_frontend/state/models/users/assign_reviewee_details.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
@@ -75,16 +75,6 @@ abstract class RestClient {
   @GET("/categories/")
   Future<List<Category>> getCategories(@Header("Authorization") String token);
 
-  /// REVIEWEE API
-
-  // @GET("/reviewees/?belongs_to={belongsTo}")
-  @GET(
-      "/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
-  Future<List<User>> getReviewerReviewees(
-    @Header("Authorization") String token,
-    @Path("reviewerId") int reviewerId,
-  );
-
   /// QUESTION API
 
   @POST("/questions/")
@@ -127,12 +117,6 @@ abstract class RestClient {
   Future<Quiz> createQuizFromTOS(
     @Header("Authorization") String token,
     @Body() TOS tos,
-  );
-
-  @POST("/quizzes/get_reviewee_quizzes/")
-  Future<List<Quiz>> getRevieweeQuizzes(
-    @Header("Authorization") String token,
-    @Body() RevieweeQuizzesDetails details,
   );
 
   @GET("/quizzes/?made_by={madeBy}")
@@ -206,5 +190,28 @@ abstract class RestClient {
   Future<List<QuestionAttempt>> getQuestionAttemptsByQuizAttempt(
     @Header("Authorization") String token,
     @Path("attempt_id") int attemptId,
+  );
+
+  /// USER ATTRIBUTE VALUE API
+
+  @GET(
+      "/user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
+  Future<List<UserAttributeValue>> getReviewerReviewees(
+    @Header("Authorization") String token,
+    @Path("reviewerId") int reviewerId,
+  );
+
+  @GET(
+      "/user_attribute_values/?role_attribute__attribute__name=belongs_to&user={revieweeId}")
+  Future<List<UserAttributeValue>> getRevieweeBelongsTo(
+    @Header("Authorization") String token,
+    @Path("revieweeId") int revieweeId,
+  );
+
+  @GET(
+      "/user_attribute_values/?role_attribute__attribute__name=category_scores&user={revieweeId}")
+  Future<List<UserAttributeValue>> getRevieweeCategoryScores(
+    @Header("Authorization") String token,
+    @Path("revieweeId") int revieweeId,
   );
 }

@@ -317,39 +317,6 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<User>> getReviewerReviewees(
-    String token,
-    int reviewerId,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/filtered_user_attribute_values/?role_attribute__attribute__name=belongs_to&value=${reviewerId}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
-  }
-
-  @override
   Future<Question> createQuestion(
     String token,
     Question newQuestion,
@@ -538,40 +505,6 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = Quiz.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<List<Quiz>> getRevieweeQuizzes(
-    String token,
-    RevieweeQuizzesDetails details,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(details.toJson());
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Quiz>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/quizzes/get_reviewee_quizzes/',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => Quiz.fromJson(i as Map<String, dynamic>))
-        .toList();
     return value;
   }
 
@@ -962,6 +895,108 @@ class _RestClient implements RestClient {
             ))));
     var value = _result.data!
         .map((dynamic i) => QuestionAttempt.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<UserAttributeValue>> getReviewerReviewees(
+    String token,
+    int reviewerId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<UserAttributeValue>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user_attribute_values/?role_attribute__attribute__name=belongs_to&value=${reviewerId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            UserAttributeValue.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<UserAttributeValue>> getRevieweeBelongsTo(
+    String token,
+    int revieweeId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<UserAttributeValue>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user_attribute_values/?role_attribute__attribute__name=belongs_to&user=${revieweeId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            UserAttributeValue.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<UserAttributeValue>> getRevieweeCategoryScores(
+    String token,
+    int revieweeId,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<UserAttributeValue>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user_attribute_values/?role_attribute__attribute__name=category_scores&user=${revieweeId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            UserAttributeValue.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

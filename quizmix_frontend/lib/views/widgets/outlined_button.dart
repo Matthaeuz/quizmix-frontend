@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 
 class ButtonOutlined extends StatelessWidget {
   final String text;
@@ -15,13 +16,13 @@ class ButtonOutlined extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        foregroundColor: const Color(0xFF333333),
-        backgroundColor: Colors.white,
+        foregroundColor: AppColors.black,
+        backgroundColor: AppColors.white,
         side: const BorderSide(
-          color: Color(0xFF3A0CA3), // Border color
+          color: AppColors.iconColor,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0), // Border radius
+          borderRadius: BorderRadius.circular(12.0),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         minimumSize: const Size(50.0, 50.0),

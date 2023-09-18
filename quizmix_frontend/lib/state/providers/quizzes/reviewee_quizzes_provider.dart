@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
-import 'package:quizmix_frontend/state/models/quizzes/reviewee_quizzes_details.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
@@ -23,10 +22,13 @@ class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
 
   Future<void> fetchQuizzes() async {
     try {
-      final details = RevieweeQuizzesDetails(revieweeId: revieweeId);
-      final quizzes = await client.getRevieweeQuizzes(accessToken, details);
-      allQuizzes = quizzes.reversed.toList();
-      state = AsyncValue.data(allQuizzes);
+      final belongsTo =
+          await client.getRevieweeBelongsTo(accessToken, revieweeId);
+      final reviewerId = int.parse(belongsTo[0].value);
+      final quizzes = await client.getMadeByQuizzes(accessToken, reviewerId);
+      quizzes.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+      allQuizzes = quizzes;
+      state = AsyncValue.data(quizzes);
     } catch (e, st) {
       if (e is DioException && e.response?.statusCode == 400) {
         state = const AsyncValue.data([]);

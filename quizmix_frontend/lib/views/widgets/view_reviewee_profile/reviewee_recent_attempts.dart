@@ -40,7 +40,7 @@ class RevieweeRecentAttempts extends ConsumerWidget {
               },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 foregroundColor: AppColors.mainColor,
               ),
               child: const Text("See All"),
@@ -63,7 +63,9 @@ class RevieweeRecentAttempts extends ConsumerWidget {
             return Expanded(
               child: Column(
                 children: [
-                  for (var index = 0; index < 3; index++) ...[
+                  for (var index = 0;
+                      index < (data.length < 3 ? data.length : 3);
+                      index++) ...[
                     Builder(
                       builder: (BuildContext context) {
                         final currentQuizAttempt =
