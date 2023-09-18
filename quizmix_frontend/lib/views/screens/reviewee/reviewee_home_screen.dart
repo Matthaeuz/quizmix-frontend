@@ -9,7 +9,7 @@ import 'package:quizmix_frontend/views/modals/view_reviewee_quiz_attempts_modal.
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_mixes_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_question_bank_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_quizzes_tab.dart';
-import 'package:quizmix_frontend/views/widgets/tabs.dart';
+import 'package:quizmix_frontend/views/widgets/reviewee_home/reviewee_tabs.dart';
 
 class RevieweeHomeScreen extends ConsumerStatefulWidget {
   const RevieweeHomeScreen({Key? key}) : super(key: key);
@@ -43,7 +43,7 @@ class _RevieweeHomeScreenState extends ConsumerState<RevieweeHomeScreen> {
             children: [
               const Expanded(
                 flex: 2,
-                child: TabsWidget(),
+                child: RevieweeTabs(),
               ),
               Expanded(
                 flex: 8,

@@ -5,8 +5,9 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/providers/ui/login_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
+import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/reviewee_home_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/dashboard_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/reviewer_home_screen.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
 import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
@@ -117,16 +118,19 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
                   );
 
                   await signIn(details, ref).then((role) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DashboardScreen()));
                     if (role == 'reviewer') {
+                      ref
+                          .read(tabStateProvider.notifier)
+                          .updateTabState(TabState.reviewerDashboard);
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const DashboardScreen()));
+                              builder: (context) =>
+                                  const ReviewerHomeScreen()));
                     } else {
+                      ref
+                          .read(tabStateProvider.notifier)
+                          .updateTabState(TabState.revieweeQuizzes);
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

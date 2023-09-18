@@ -5,8 +5,8 @@ import 'package:quizmix_frontend/views/widgets/profile_area.dart';
 import 'package:quizmix_frontend/views/widgets/sign_out_area.dart';
 import 'package:quizmix_frontend/views/widgets/tab_item.dart';
 
-class TabsWidget extends ConsumerWidget {
-  const TabsWidget({Key? key}) : super(key: key);
+class RevieweeTabs extends ConsumerWidget {
+  const RevieweeTabs({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
