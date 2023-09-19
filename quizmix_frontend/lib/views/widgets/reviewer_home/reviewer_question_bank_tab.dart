@@ -81,52 +81,51 @@ class _ReviewerQuestionBankTabState
         data: (data) {
           final hasQuestions =
               ref.read(questionBankProvider.notifier).hasQuestions;
-          if (data.isEmpty && !hasQuestions) {
-            return const Center(
-              child: SingleChildScrollView(
-                child: EmptyDataPlaceholder(
-                  message: "There are no questions in the bank",
-                ),
-              ),
-            );
-          }
           return Stack(
             children: [
-              LayoutBuilder(builder: ((context, constraints) {
-                final crossAxisCount = constraints.maxWidth > 1160
-                    ? 3
-                    : constraints.maxWidth > 800
-                        ? 2
-                        : 1;
-                double childAspectRatio =
-                    calculateAspectRatio(crossAxisCount, constraints.maxWidth);
-                double rightMargin =
-                    calculateRightMargin(crossAxisCount, constraints.maxWidth);
-                return Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    24,
-                    shouldApplyPadding && screenHeight > 160 ? 100 : 0,
-                    24,
-                    0,
-                  ),
-                  child: GridView.builder(
-                    controller: _scrollController,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: childAspectRatio,
-                      crossAxisSpacing: 24.0,
-                      mainAxisSpacing: 24.0,
-                      crossAxisCount: crossAxisCount,
-                    ),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
+              data.isEmpty || !hasQuestions
+                  ? const Center(
+                      child: SingleChildScrollView(
+                      child: EmptyDataPlaceholder(
+                          message: "There are no questions in the bank."),
+                    ))
+                  : LayoutBuilder(builder: ((context, constraints) {
+                      final crossAxisCount = constraints.maxWidth > 1160
+                          ? 3
+                          : constraints.maxWidth > 800
+                              ? 2
+                              : 1;
+                      double childAspectRatio = calculateAspectRatio(
+                          crossAxisCount, constraints.maxWidth);
+                      double rightMargin = calculateRightMargin(
+                          crossAxisCount, constraints.maxWidth);
                       return Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, rightMargin, 0),
-                        child: QuestionBankItem(question: data[index]),
+                        padding: EdgeInsets.fromLTRB(
+                          24,
+                          shouldApplyPadding && screenHeight > 160 ? 100 : 0,
+                          24,
+                          0,
+                        ),
+                        child: GridView.builder(
+                          controller: _scrollController,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: childAspectRatio,
+                            crossAxisSpacing: 24.0,
+                            mainAxisSpacing: 24.0,
+                            crossAxisCount: crossAxisCount,
+                          ),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(0, 0, rightMargin, 0),
+                              child: QuestionBankItem(question: data[index]),
+                            );
+                          },
+                        ),
                       );
-                    },
-                  ),
-                );
-              })),
+                    })),
               // Search Input & Add Mix
               screenHeight > 160
                   ? Container(
