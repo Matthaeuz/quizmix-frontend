@@ -61,14 +61,14 @@ final revieweeTopCategoriesProvider = StateNotifierProvider<
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
   final reviewee = ref.watch(currentViewedRevieweeProvider);
-  final categories = ref.watch(categoryProvider);
+  final categories = ref.watch(categoryProvider.notifier);
   final listener = ref.watch(currentQuizAttemptedProvider);
 
   return RevieweeTopCategoriesNotifier(
     client: client,
     accessToken: token.accessToken,
     revieweeId: reviewee.id,
-    categories: categories,
+    categories: categories.categories(),
     listener: listener,
   );
 });

@@ -41,7 +41,7 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
   @override
   void initState() {
     super.initState();
-    final categoryObjs = ref.read(categoryProvider);
+    final categoryObjs = ref.read(categoryProvider.notifier).categories();
     allCategories = categoryObjs.map((category) => category.name).toList();
   }
 
