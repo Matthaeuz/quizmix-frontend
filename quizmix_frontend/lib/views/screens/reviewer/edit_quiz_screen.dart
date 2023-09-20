@@ -12,7 +12,7 @@ import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_pro
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 // import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
-import 'package:quizmix_frontend/views/modals/mix_advanced_search_modal.dart';
+import 'package:quizmix_frontend/views/modals/quiz_advanced_search_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
@@ -456,7 +456,7 @@ class _CreateEditQuizScreenState extends ConsumerState<EditQuizScreen> {
           // make this
           Container(
             color: AppColors.fourthColor.withOpacity(0.8),
-            child: const MixAdvancedSearhModal(),
+            child: const QuizAdvancedSearchModal(),
           ),
         ] else if (modalState == ModalState.viewQuestion) ...[
           Container(
