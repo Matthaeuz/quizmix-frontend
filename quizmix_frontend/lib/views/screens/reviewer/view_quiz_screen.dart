@@ -4,7 +4,11 @@ import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/available_quiz_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_quiz_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/quiz_question_search_filter_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/edit_quiz_screen.dart';
 // import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz/view_quiz_question_container.dart';
@@ -133,28 +137,28 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                   icon: const Icon(Icons.edit),
                                   elevation: 8.0,
                                   onPressed: () {
-                                    // ref
-                                    //     .read(currentQuizViewedProvider.notifier)
-                                    //     .updateCurrentQuiz(currentQuiz);
-                                    // ref
-                                    //     .read(availableMixQuestionsProvider
-                                    //         .notifier)
-                                    //     .fetchQuestions();
-                                    // ref
-                                    //     .read(currentMixQuestionsProvider
-                                    //         .notifier)
-                                    //     .fetchQuestions();
-                                    // ref
-                                    //     .read(mixQuestionSearchFilterProvider
-                                    //         .notifier)
-                                    //     .initializeFilters();
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         const CreateEditMixScreen(),
-                                    //   ),
-                                    // );
+                                    ref
+                                        .read(currentQuizViewedProvider.notifier)
+                                        .updateCurrentQuiz(currentQuiz);
+                                    ref
+                                        .read(availableQuizQuestionsProvider
+                                            .notifier)
+                                        .fetchQuestions();
+                                    ref
+                                        .read(currentQuizQuestionsProvider
+                                            .notifier)
+                                        .fetchQuestions();
+                                    ref
+                                        .read(quizQuestionSearchFilterProvider
+                                            .notifier)
+                                        .initializeFilters();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const EditQuizScreen(),
+                                      ),
+                                    );
                                   },
                                 ),
                               ],
