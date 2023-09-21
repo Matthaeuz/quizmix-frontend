@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
 import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_question.utils.dart';
-import 'package:quizmix_frontend/constants/categories.constants.dart';
-import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/categories/category.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/current_edited_question_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:file_picker/file_picker.dart';
@@ -77,6 +76,11 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     final question = ref.watch(currentEditedQuestionProvider)!;
+    final categories = ref
+        .watch(categoryProvider)
+        .value!
+        .map((category) => category.name)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -105,7 +109,6 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
                 margin: const EdgeInsets.only(left: 25.0),
                 padding: const EdgeInsets.all(10.0),
                 child: Material(
-                  color: getCategoryColor(dropdownValue),
                   borderRadius: BorderRadius.circular(10),
                   child: DropdownButton<String>(
                     value: dropdownValue,
@@ -121,7 +124,6 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Container(
-                          color: getCategoryColor(value),
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             value,

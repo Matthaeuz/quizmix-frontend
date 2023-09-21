@@ -6,21 +6,7 @@ import 'package:quizmix_frontend/state/providers/questions/question_search_filte
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-final List<String> allDiscrimination = [
-  'High Negative',
-  'Negative',
-  'Low',
-  'Positive',
-  'High Positive'
-];
-
-final List<String> allDifficulty = [
-  'Very Easy',
-  'Easy',
-  'Average',
-  'Hard',
-  'Very Hard'
-];
+import '../../constants/interpretations.constants.dart';
 
 class AdvancedSearhModal extends ConsumerStatefulWidget {
   const AdvancedSearhModal({Key? key}) : super(key: key);

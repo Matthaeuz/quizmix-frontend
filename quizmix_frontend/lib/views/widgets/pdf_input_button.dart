@@ -45,41 +45,71 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        _pickPdfFile();
-      },
-      style: ElevatedButton.styleFrom(
-        foregroundColor: AppColors.mainColor,
-        backgroundColor: AppColors.fifthColor,
-        padding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Expanded(
-        child: SizedBox(
-          height: 200,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isPdfUploaded ? Icons.picture_as_pdf : widget.buttonIcon,
-                size: widget.buttonIconSize,
-                color: AppColors.mainColor,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                isPdfUploaded ? pdfFileName : widget.buttonText,
-                style: TextStyle(
-                  fontSize: widget.buttonTextSize,
-                  color: AppColors.mainColor,
+    return Stack(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            _pickPdfFile();
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: AppColors.white,
+            backgroundColor: AppColors.iconColor,
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Container(
+            height: 200,
+            constraints: const BoxConstraints(minWidth: 190, maxWidth: 190),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isPdfUploaded ? Icons.picture_as_pdf : widget.buttonIcon,
+                  size: widget.buttonIconSize,
+                  color: AppColors.white,
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  isPdfUploaded ? pdfFileName : widget.buttonText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: widget.buttonTextSize,
+                    color: AppColors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        isPdfUploaded
+            ? Positioned(
+                top: 0,
+                right: 0,
+                child: RawMaterialButton(
+                  onPressed: () {
+                    ref.read(pdfFileProvider(widget.type)).state = null;
+                    setState(() {
+                      isPdfUploaded = false;
+                      pdfFileName = '';
+                    });
+                  },
+                  fillColor: AppColors.red,
+                  shape: const CircleBorder(),
+                  constraints: const BoxConstraints(
+                    minWidth: 36.0,
+                    minHeight: 36.0,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ))
+            : const SizedBox(),
+      ],
     );
   }
 }
