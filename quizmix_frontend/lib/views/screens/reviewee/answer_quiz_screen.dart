@@ -8,6 +8,8 @@ import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/cat_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_taken_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_recent_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_top_categories_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_item.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_answer_quiz/answer_quiz_number.dart';
@@ -61,9 +63,12 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     ref
         .read(currentQuizAttemptedProvider.notifier)
         .updateCurrentQuizAttempted(updatedAttempt, null);
-    // ref
-    //     .read(revieweeAttemptsProvider(quizAttempt.quiz.id).notifier)
-    //     .fetchRevieweeAttempts(reviewee.id, quizAttempt.quiz.id);
+    ref
+        .read(revieweeRecentAttemptsProvider.notifier)
+        .fetchRevieweeRecentAttempts();
+    ref
+        .read(revieweeTopCategoriesProvider.notifier)
+        .fetchRevieweeTopCategories();
   }
 
   void handleChoicePressed(String choice, Question? currentQuestion) async {

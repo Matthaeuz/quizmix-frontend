@@ -3,7 +3,6 @@ import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
-import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 
 class RevieweeRecentAttemptsNotifier
@@ -11,13 +10,11 @@ class RevieweeRecentAttemptsNotifier
   final RestClient client;
   final String accessToken;
   final int revieweeId;
-  final QuizAttempt listener;
 
   RevieweeRecentAttemptsNotifier({
     required this.client,
     required this.accessToken,
     required this.revieweeId,
-    required this.listener,
   }) : super(const AsyncValue.loading()) {
     fetchRevieweeRecentAttempts();
   }
@@ -38,12 +35,10 @@ final revieweeRecentAttemptsProvider = StateNotifierProvider<
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
   final reviewee = ref.watch(currentViewedRevieweeProvider);
-  final listener = ref.watch(currentQuizAttemptedProvider);
 
   return RevieweeRecentAttemptsNotifier(
     client: client,
     accessToken: token.accessToken,
     revieweeId: reviewee.id,
-    listener: listener,
   );
 });
