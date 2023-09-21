@@ -180,6 +180,11 @@ abstract class RestClient {
   Future<QuizAttempt> updateQuizAttempt(@Header("Authorization") String token,
       @Body() Map<String, dynamic> updatedDetails, @Path("id") int id);
 
+  @GET("/quiz_attempts/first_attempts/")
+  Future<List<QuizAttempt>> getFirstAttemptsOfQuizzes(
+    @Header("Authorization") String token
+  );
+
   /// QUESTION ATTEMPT API
 
   @POST("/question_attempts/")

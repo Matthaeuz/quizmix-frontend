@@ -49,7 +49,7 @@ class ReviewerDashboardTab extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const RecentAttemptsCard()
+            const Expanded(child: RecentAttemptsCard())
           ],
         ),
       ),
