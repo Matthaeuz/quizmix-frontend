@@ -1,29 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_quizzes_list.dart';
-import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/my_reviewees_list.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/recent_attempts_card.dart';
 
-class ReviewerDashboardTab extends ConsumerStatefulWidget {
+class ReviewerDashboardTab extends StatelessWidget {
   const ReviewerDashboardTab({Key? key}) : super(key: key);
 
-  @override
-  ConsumerState<ReviewerDashboardTab> createState() =>
-      _ReviewerDashboardTabState();
-}
-
-class _ReviewerDashboardTabState extends ConsumerState<ReviewerDashboardTab> {
   @override
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.mainColor,
-      child: const Padding(
-        padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
+      child: Padding(
+        padding: const EdgeInsets.all(25),
         child: Column(
           children: [
-            MyQuizzesList(),
-            SizedBox(height: 25),
-            MyRevieweesList(),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.white,
+                      ),
+                      child: const SizedBox(
+                        child: Center(
+                          child: Text('Top Categories',
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.white,
+                      ),
+                      child: const SizedBox(
+                        child: Center(
+                          child: Text('Top Reviewees',
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Expanded(child: RecentAttemptsCard())
           ],
         ),
       ),
