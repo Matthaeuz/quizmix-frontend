@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         scaffoldBackgroundColor: AppColors.white,
+        popupMenuTheme: const PopupMenuThemeData(color: AppColors.iconColor),
       ),
       home: const LoginScreen(),
     );

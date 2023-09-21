@@ -22,20 +22,6 @@ class _TosModalScreenState extends ConsumerState<TosModalScreen> {
   Map<String, CategoryData> categoryDataMap = {};
   String quizName = '';
 
-  // List<String> allCategories = [
-  //   'Basic Theories',
-  //   'Algorithms and Programming',
-  //   'Computer Components and Hardware',
-  //   'System Components',
-  //   'Software',
-  //   'Development Technology and Management',
-  //   'Database',
-  //   'Network',
-  //   'Security',
-  //   'System Audit, Strategy and Planning',
-  //   'Business, Corporate & Legal Affairs'
-  // ];
-
   late List<String> allCategories;
 
   @override

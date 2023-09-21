@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
+import 'package:quizmix_frontend/views/modals/add_question_pdf_modal.dart';
 import 'package:quizmix_frontend/views/modals/advanced_search_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_home/reviewer_dashboard_tab.dart';
@@ -63,6 +64,11 @@ class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
           Container(
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const ViewQuestionModal(),
+          ),
+        ] else if (modalState == ModalState.uploadPDFs) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const AddQuestionPdfModal(),
           ),
         ]
       ],
