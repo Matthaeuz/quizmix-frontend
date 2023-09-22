@@ -121,7 +121,12 @@ class _ViewQuestionModalState extends ConsumerState<ViewQuestionModal> {
                                     SolidButton(
                                       text: "Edit",
                                       icon: const Icon(Icons.edit),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ref
+                                            .read(modalStateProvider.notifier)
+                                            .updateModalState(
+                                                ModalState.createEditQuestion);
+                                      },
                                     ),
                                   ]
                                 ],

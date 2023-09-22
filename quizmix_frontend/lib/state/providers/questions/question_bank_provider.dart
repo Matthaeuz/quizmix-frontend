@@ -58,13 +58,15 @@ class QuestionBankNotifier extends StateNotifier<AsyncValue<List<Question>>> {
     }
   }
 
-  Future<void> addQuestionsFromPdf(
+  Future<List<Question>> addQuestionsFromPdf(
       PlatformFile aFile, PlatformFile qFile, WidgetRef ref) async {
     try {
-      await createQuestionsFromPdf(aFile, qFile, ref);
+      final questions = await createQuestionsFromPdf(aFile, qFile, ref);
       await fetchQuestions();
+      return questions;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+      return [];
     }
   }
 }

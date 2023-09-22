@@ -41,7 +41,7 @@ class _ViewRevieweeQuizAttemptsModalState
           padding: const EdgeInsets.all(24.0),
           child: IntrinsicHeight(
             child: Container(
-              width: 800,
+              width: processState == ProcessState.loading ? 400 : 800,
               padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -50,20 +50,21 @@ class _ViewRevieweeQuizAttemptsModalState
               child: processState == ProcessState.loading
                   ? const Center(
                       child: Padding(
-                        padding: EdgeInsets.all(24),
+                        padding: EdgeInsets.fromLTRB(24, 48, 24, 48),
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 32.0,
-                                width: 32.0,
-                                child: CircularProgressIndicator(),
+                                height: 48.0,
+                                width: 48.0,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 6.0),
                               ),
-                              SizedBox(height: 8.0),
+                              SizedBox(height: 16.0),
                               Text(
                                 "Preparing Review...",
                                 style: TextStyle(
-                                  fontSize: 16.0,
+                                  fontSize: 24.0,
                                   color: AppColors.mainColor,
                                 ),
                               ),
