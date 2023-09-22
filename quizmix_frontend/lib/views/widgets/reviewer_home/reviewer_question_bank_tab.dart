@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/questions/current_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
@@ -212,11 +213,24 @@ class _ReviewerQuestionBankTabState
                                     );
                                   }).toList(),
                                 ).then((selectedValue) {
-                                  if (selectedValue == "Upload PDFs") {
+                                  if (selectedValue == "Add Question") {
+                                    ref
+                                        .read(currentQuestionProvider.notifier)
+                                        .updateCurrentQuestion(null);
+                                    ref
+                                        .read(modalStateProvider.notifier)
+                                        .updateModalState(
+                                            ModalState.createEditQuestion);
+                                  } else if (selectedValue == "Upload PDFs") {
                                     ref
                                         .read(modalStateProvider.notifier)
                                         .updateModalState(
                                             ModalState.uploadPDFs);
+                                  } else if (selectedValue == "Retrain Model") {
+                                    ref
+                                        .read(modalStateProvider.notifier)
+                                        .updateModalState(
+                                            ModalState.retrainModel);
                                   }
                                 });
                               },
