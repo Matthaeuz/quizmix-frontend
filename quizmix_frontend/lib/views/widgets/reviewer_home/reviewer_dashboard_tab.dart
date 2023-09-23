@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/recent_attempts_card.dart';
 
-class ReviewerDashboardTab extends StatelessWidget {
+class ReviewerDashboardTab extends ConsumerWidget {
   const ReviewerDashboardTab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       color: AppColors.mainColor,
       child: Padding(
@@ -49,7 +50,7 @@ class ReviewerDashboardTab extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Expanded(child: RecentAttemptsCard())
+            const Expanded(child: RecentPretestAttemptsCard())
           ],
         ),
       ),

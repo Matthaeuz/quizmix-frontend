@@ -2,54 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/quiz_attempts/first_quiz_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewee_recent_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
+import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
+import 'package:quizmix_frontend/views/screens/quiz_attempt_screen.dart';
+import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
+import 'package:quizmix_frontend/views/widgets/view_reviewee_profile/profile_review_attempts_container.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/first_quiz_attempts_provider.dart';
 
-class RecentPretestAttemptsCard extends ConsumerWidget {
-  const RecentPretestAttemptsCard({Key? key}) : super(key: key);
+class ViewRevieweeRecentFirstAttemptsModal extends ConsumerStatefulWidget {
+  const ViewRevieweeRecentFirstAttemptsModal({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ViewRevieweeRecentFirstAttemptsModal> createState() =>
+      _ViewRevieweeRecentFirstAttemptsModalState();
+}
+
+class _ViewRevieweeRecentFirstAttemptsModalState
+    extends ConsumerState<ViewRevieweeRecentFirstAttemptsModal> {
+  @override
+  Widget build(BuildContext context) {
+    final processState = ref.watch(processStateProvider);
     final firstQuizAttempts = ref.watch(firstQuizAttemptProvider);
 
-    return Consumer(
-      builder: (context, watch, child) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: Colors.white,
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Recent Pretest Attempts',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+    return Scaffold(
+      appBar: null,
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Container(
+            width: 800,
+            padding: const EdgeInsets.all(24.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ref
+                        .read(modalStateProvider.notifier)
+                        .updateModalState(ModalState.none);
+                  },
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    alignment: Alignment.centerLeft,
+                    foregroundColor: AppColors.mainColor,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      ref.read(modalStateProvider.notifier).updateModalState(
-                          ModalState.viewRevieweeRecentFirstAttempts);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      alignment: Alignment.center,
-                      foregroundColor: AppColors.mainColor,
-                    ),
-                    child: const Text("See All"),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.arrow_back,
+                        size: 16.0,
+                        color: AppColors.mainColor,
+                      ),
+                      Text('Back to Reviewee Profile'),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 20.0),
-              Expanded(
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Recent Pretest Attempts",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                processState == ProcessState.loading
+                    ? const Padding(
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          'Preparing Review...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.mainColor,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: firstQuizAttempts.maybeMap(
@@ -80,10 +121,8 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Expanded(
-                                    flex: 1,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -101,16 +140,13 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 1,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          dateTimeToWordDate(
-                                              attempt!.createdOn),
+                                          dateTimeToWordDate(attempt!.createdOn),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
@@ -132,10 +168,8 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 1,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -162,10 +196,8 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 1,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -199,11 +231,13 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                             )
                           ],
                         );
-                      })),
-            ],
+                      }),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
