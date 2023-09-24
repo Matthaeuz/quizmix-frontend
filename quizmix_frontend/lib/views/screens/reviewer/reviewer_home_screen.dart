@@ -69,6 +69,7 @@ class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
           ),
         ] else if (modalState == ModalState.createEditQuestion) ...[
           Container(
+            padding: const EdgeInsets.all(24),
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const CreateEditQuestionModal(),
           ),

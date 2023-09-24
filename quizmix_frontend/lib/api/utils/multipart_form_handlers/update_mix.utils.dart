@@ -59,27 +59,6 @@ Future<Mix> updateMix(
     dataToSend = formData;
   }
 
-  // If there's an image file to be updated, pass it through form data, else can use json map
-  // if (imageFile != null) {
-  //   final image = convertToMultipartFile(imageFile);
-  //   final formData = FormData.fromMap({
-  //     ...mixData,
-  //     "made_by": mix.madeBy.id,
-  //     "image": image,
-  //     "questions": questionIdList,
-  //   });
-  //   dataToSend = formData;
-  // } else {
-  //   mixData.remove('image');
-  //   final formData = FormData.fromMap({
-  //     ...mixData,
-  //     "made_by": mix.madeBy.id,
-  //     "questions": questionIdList,
-  //   });
-  //   dataToSend = formData;
-  // }
-  // print('${dataToSend.fields}');
-
   try {
     var response = await dio.put(
       "http://127.0.0.1:8000/mixes/${mix.id}/",

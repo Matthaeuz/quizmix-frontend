@@ -9,7 +9,7 @@ class TextFieldWidget extends StatefulWidget {
     Key? key,
     required this.labelText,
     required this.controller,
-    required this.obscureText,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override

@@ -9,7 +9,7 @@ import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/reviewee_home_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/reviewer_home_screen.dart';
 import 'package:quizmix_frontend/views/widgets/outlined_button.dart';
-import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class LoginFields extends ConsumerStatefulWidget {
@@ -76,7 +76,6 @@ class _LoginFieldsState extends ConsumerState<LoginFields> {
             const SizedBox(height: 16.0),
             TextFieldWidget(
               labelText: 'Email',
-              obscureText: false,
               controller: emailController,
             ),
             const SizedBox(height: 16.0),

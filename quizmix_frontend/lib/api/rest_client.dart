@@ -105,6 +105,10 @@ abstract class RestClient {
   Future<Question> getQuestionById(
       @Header("Authorization") String token, @Path("id") int id);
 
+  @DELETE("/questions/{id}/")
+  Future<void> deleteQuestionById(
+      @Header("Authorization") String token, @Path("id") int id);
+
   @POST("/questions/advanced_search/")
   Future<List<Question>> advancedSearch(
     @Header("Authorization") String token,
@@ -182,8 +186,7 @@ abstract class RestClient {
 
   @GET("/quiz_attempts/first_attempts/")
   Future<List<QuizAttempt>> getFirstAttemptsOfQuizzes(
-    @Header("Authorization") String token
-  );
+      @Header("Authorization") String token);
 
   /// QUESTION ATTEMPT API
 
