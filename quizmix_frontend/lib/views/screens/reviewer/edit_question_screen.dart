@@ -322,13 +322,13 @@ class _EditQuestionScreenState extends ConsumerState<EditQuestionScreen> {
                         if (selectedImageBytes != null) {
                           imageFile = bytesToPlatform(selectedImageBytes!);
                         }
-                        updateQuestion(newQuestion, imageFile, ref)
-                            .then((value) {
-                          ref
-                              .read(currentEditedQuestionProvider.notifier)
-                              .updateCurrentEditedQuestion(Question.base());
-                          Navigator.pop(context);
-                        });
+                        // updateQuestion(newQuestion, imageFile, ref)
+                        //     .then((value) {
+                        //   ref
+                        //       .read(currentEditedQuestionProvider.notifier)
+                        //       .updateCurrentEditedQuestion(Question.base());
+                        //   Navigator.pop(context);
+                        // });
                       },
                     ),
                   ),
