@@ -155,6 +155,10 @@ abstract class RestClient {
     @Path("madeBy") int madeBy,
   );
 
+  @DELETE("/mixes/{id}/")
+  Future<void> deleteMixById(
+      @Header("Authorization") String token, @Path("id") int id);
+
   /// QUIZ ATTEMPT API
 
   @GET("/quiz_attempts/?attempted_by={revieweeId}")
