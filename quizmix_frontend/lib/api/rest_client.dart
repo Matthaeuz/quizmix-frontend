@@ -210,7 +210,7 @@ abstract class RestClient {
       "/user_attribute_values/?role_attribute__attribute__name=belongs_to&value={reviewerId}")
   Future<List<UserAttributeValue>> getReviewerReviewees(
     @Header("Authorization") String token,
-    @Path("reviewerId") int reviewerId,
+    @Path("reviewerId") String reviewerId,
   );
 
   @GET(

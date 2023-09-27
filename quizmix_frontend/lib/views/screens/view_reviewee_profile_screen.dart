@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/bytes_to_platform.dart';
 import 'package:quizmix_frontend/api/utils/multipart_form_handlers/update_user.utils.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
@@ -44,10 +45,13 @@ class ViewRevieweeProfileScreenState
   void initState() {
     super.initState();
 
+    final baseUrl = ref.read(baseUrlProvider);
     final revieweeDetails = ref.read(currentViewedRevieweeProvider);
 
     if (revieweeDetails.image != null && revieweeDetails.image!.isNotEmpty) {
-      imageProvider = NetworkImage(revieweeDetails.image!);
+      imageProvider = NetworkImage(revieweeDetails.image!.contains(baseUrl)
+          ? revieweeDetails.image!
+          : baseUrl + revieweeDetails.image!);
     }
   }
 

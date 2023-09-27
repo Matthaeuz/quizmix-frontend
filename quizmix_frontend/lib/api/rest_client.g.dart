@@ -988,7 +988,7 @@ class _RestClient implements RestClient {
   @override
   Future<List<UserAttributeValue>> getReviewerReviewees(
     String token,
-    int reviewerId,
+    String reviewerId,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

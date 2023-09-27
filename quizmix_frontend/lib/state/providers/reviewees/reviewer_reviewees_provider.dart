@@ -10,6 +10,7 @@ class ReviewerRevieweesNotifier extends StateNotifier<AsyncValue<List<User>>> {
   final RestClient client;
   final String accessToken;
   final int reviewerId;
+  late List<User> allReviewees;
 
   ReviewerRevieweesNotifier({
     required this.client,
@@ -21,14 +22,31 @@ class ReviewerRevieweesNotifier extends StateNotifier<AsyncValue<List<User>>> {
 
   Future<void> fetchReviewerReviewees() async {
     try {
-      var reviewees = await client.getAssignedReviewees(
-        accessToken,
-        {"reviewerId": reviewerId},
-      );
+      // var reviewees = await client.getAssignedReviewees(
+      //   accessToken,
+      //   {"reviewerId": reviewerId},
+      // );
+      final revieweeUAVs =
+          await client.getReviewerReviewees(accessToken, reviewerId.toString());
+      final reviewees =
+          revieweeUAVs.map((revieweeUAV) => revieweeUAV.user).toList();
+      allReviewees = reviewees;
       state = AsyncValue.data(reviewees);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       debugPrint("Provider error");
+    }
+  }
+
+  void searchReviewees(String value) {
+    if (value.isEmpty) {
+      state = AsyncValue.data(allReviewees);
+    } else {
+      final searchResult = allReviewees
+          .where((reviewee) =>
+              reviewee.fullName.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      state = AsyncValue.data(searchResult);
     }
   }
 }

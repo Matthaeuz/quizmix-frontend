@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
+import 'package:quizmix_frontend/views/screens/view_reviewee_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
-import 'package:quizmix_frontend/views/widgets/reviewee_list_card.dart';
-import 'package:quizmix_frontend/views/widgets/search_input.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_reviewees_tab/reviewer_reviewee_item.dart';
 
 class SearchTermNotifier extends StateNotifier<String> {
   SearchTermNotifier() : super('');
@@ -32,84 +33,142 @@ class ReviewerRevieweesTab extends ConsumerStatefulWidget {
 class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
   @override
   Widget build(BuildContext context) {
-    final unfilteredReviewees = ref.watch(unassignedRevieweesProvider);
-
-    final searchTerm = ref.watch(searchTermProvider);
-
-    final filteredReviewees = unfilteredReviewees.when(
-      data: (reviewees) {
-        return reviewees.where((reviewee) {
-          final fullName = reviewee.fullName.toLowerCase();
-          return fullName.contains(searchTerm.toLowerCase());
-        }).toList();
-      },
-      loading: () => [],
-      error: (_, __) => [],
-    );
+    final reviewees = ref.watch(reviewerRevieweesProvider);
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       color: AppColors.mainColor,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // Search Input - On the very left
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: SearchInput(
-                      onChanged: (value) {
-                        ref
-                            .read(searchTermProvider.notifier)
-                            .setSearchTerm(value);
-                      },
-                    ),
-                  ),
-                ),
-                // Add Reviewee Button - On the very right
-                SolidButton(
-                  text: 'Add Reviewee',
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AddRevieweeScreen()));
-                  },
-                  icon: const Icon(Icons.person_add),
-                ),
-              ],
-            ),
-            // List
-            filteredReviewees.isEmpty
-                ? const Expanded(
-                    child: EmptyDataPlaceholder(
-                        message:
-                            "There are currently no unassigned reviewees."))
-                : Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 25),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 25,
-                          mainAxisSpacing: 25,
-                          mainAxisExtent: 125,
+      child: reviewees.when(
+        data: (data) {
+          final allRevieweesLen =
+              ref.read(reviewerRevieweesProvider.notifier).allReviewees.length;
+          return Stack(
+            children: [
+              data.isEmpty && allRevieweesLen == 0
+                  ? const Center(
+                      child: SingleChildScrollView(
+                        child: EmptyDataPlaceholder(
+                          message: "You currently have no reviewees",
                         ),
-                        itemCount: filteredReviewees.length,
-                        itemBuilder: (context, index) {
-                          return RevieweeListCard(
-                            revieweeDetails: filteredReviewees[index],
-                          );
-                        },
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  0, screenHeight > 160 ? 100 : 0, 0, 0),
+                              child: Wrap(
+                                spacing: 24.0,
+                                runSpacing: 24.0,
+                                children: [
+                                  for (var index = 0;
+                                      index < data.length;
+                                      index++) ...[
+                                    ReviewerRevieweeItem(
+                                      reviewee: data[index],
+                                      onClick: () {
+                                        ref
+                                            .read(currentViewedRevieweeProvider
+                                                .notifier)
+                                            .updateCurrentReviewee(data[index]);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ViewRevieweeProfileScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ]
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: SizedBox(),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-            const SizedBox(height: 25),
-          ],
+              // Search Input & Add Mix
+              screenHeight > 160
+                  ? Container(
+                      padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
+                      color: AppColors.mainColor.withOpacity(0.5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: screenWidth > 940 ? 0 : 1,
+                            child: SizedBox(
+                              width: screenWidth > 940 ? 480 : null,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.white,
+                                  hintText: 'Search Reviewees',
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12),
+                                    ),
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
+                                ),
+                                onChanged: (value) {
+                                  ref
+                                      .read(reviewerRevieweesProvider.notifier)
+                                      .searchReviewees(value);
+                                },
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+                            child: ResponsiveSolidButton(
+                              text: "Assign/Unassign",
+                              icon: const Icon(Icons.edit),
+                              elevation: 8.0,
+                              condition: screenWidth > 660,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AddRevieweeScreen()));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          );
+        },
+        loading: () => const Center(
+          child: SizedBox(
+            width: 48.0,
+            height: 48.0,
+            child: CircularProgressIndicator(color: AppColors.white),
+          ),
+        ),
+        error: (err, stack) => const Center(
+          child: SingleChildScrollView(
+            child: EmptyDataPlaceholder(
+              message: "Please try again later",
+            ),
+          ),
         ),
       ),
     );
