@@ -3,15 +3,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/available_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/current_mix_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/mixes/mix_question_search_filter_provider.dart';
+import 'package:quizmix_frontend/state/providers/mixes/reviewee_mixes_provider.dart';
+import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
+import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_view_mix/view_mix_question_container.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_item.dart';
 
 class ViewMixScreen extends ConsumerStatefulWidget {
@@ -24,6 +28,9 @@ class ViewMixScreen extends ConsumerStatefulWidget {
 class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
   @override
   Widget build(BuildContext context) {
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
+    final processState = ref.watch(processStateProvider);
     final currentMix = ref.watch(currentMixProvider);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -131,34 +138,87 @@ class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                SolidButton(
-                                  text: "Edit Mix",
-                                  icon: const Icon(Icons.edit),
-                                  elevation: 8.0,
-                                  onPressed: () {
-                                    ref
-                                        .read(currentMixProvider.notifier)
-                                        .updateCurrentMix(currentMix);
-                                    ref
-                                        .read(availableMixQuestionsProvider
-                                            .notifier)
-                                        .fetchQuestions();
-                                    ref
-                                        .read(currentMixQuestionsProvider
-                                            .notifier)
-                                        .fetchQuestions();
-                                    ref
-                                        .read(mixQuestionSearchFilterProvider
-                                            .notifier)
-                                        .initializeFilters();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CreateEditMixScreen(),
-                                      ),
-                                    );
-                                  },
+                                Row(
+                                  children: [
+                                    ResponsiveSolidButton(
+                                      text: "Edit Mix",
+                                      condition: screenWidth > 1000,
+                                      icon: const Icon(Icons.edit),
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
+                                      elevation: 8.0,
+                                      onPressed: () {
+                                        ref
+                                            .read(currentMixProvider.notifier)
+                                            .updateCurrentMix(currentMix);
+                                        ref
+                                            .read(availableMixQuestionsProvider
+                                                .notifier)
+                                            .fetchQuestions();
+                                        ref
+                                            .read(currentMixQuestionsProvider
+                                                .notifier)
+                                            .fetchQuestions();
+                                        ref
+                                            .read(
+                                                mixQuestionSearchFilterProvider
+                                                    .notifier)
+                                            .initializeFilters();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CreateEditMixScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 16),
+                                    ResponsiveSolidButton(
+                                      text: "Delete Mix",
+                                      condition: screenWidth > 1000,
+                                      icon: const Icon(Icons.delete),
+                                      backgroundColor: AppColors.red,
+                                      isUnpressable:
+                                          processState == ProcessState.done
+                                              ? false
+                                              : true,
+                                      elevation: 8.0,
+                                      onPressed: () async {
+                                        ref
+                                            .read(processStateProvider.notifier)
+                                            .updateProcessState(
+                                                ProcessState.loading);
+                                        try {
+                                          await client.deleteMixById(
+                                              token, currentMix.id);
+
+                                          ref
+                                              .read(revieweeMixesProvider
+                                                  .notifier)
+                                              .fetchMixes()
+                                              .then(
+                                            (value) {
+                                              ref
+                                                  .read(processStateProvider
+                                                      .notifier)
+                                                  .updateProcessState(
+                                                      ProcessState.done);
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        } catch (err) {
+                                          ref
+                                              .read(
+                                                  processStateProvider.notifier)
+                                              .updateProcessState(
+                                                  ProcessState.done);
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

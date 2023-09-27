@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
-import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class ForgotPasswordModal extends ConsumerStatefulWidget {
@@ -42,7 +42,6 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                       const SizedBox(height: 16),
                       TextFieldWidget(
                         labelText: 'Email',
-                        obscureText: false,
                         controller: emailController,
                       ),
                       const SizedBox(height: 24),

@@ -2,43 +2,33 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/file_picker/pdf_file_provider.dart';
+import 'package:quizmix_frontend/state/providers/file_picker/dataset_file_provider.dart';
 
-class PdfInputButton extends ConsumerStatefulWidget {
-  final String buttonText;
-  final IconData buttonIcon;
-  final double buttonTextSize;
-  final double buttonIconSize;
-  final String type;
+class DatasetInputButton extends ConsumerStatefulWidget {
 
-  const PdfInputButton({
+  const DatasetInputButton({
     super.key,
-    required this.buttonText,
-    required this.buttonIcon,
-    required this.buttonTextSize,
-    required this.buttonIconSize,
-    required this.type,
   });
 
   @override
-  ConsumerState<PdfInputButton> createState() => _PdfInputButtonState();
+  ConsumerState<DatasetInputButton> createState() => _DatasetInputButtonState();
 }
 
-class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
-  bool isPdfUploaded = false;
-  String pdfFileName = '';
+class _DatasetInputButtonState extends ConsumerState<DatasetInputButton> {
+  bool isFileUploaded = false;
+  String fileName = '';
 
-  void _pickPdfFile() async {
+  void pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      allowedExtensions: ['xlsx', 'csv'],
     );
 
     if (result != null) {
-      ref.read(pdfFileProvider(widget.type)).state = result.files.single;
+      ref.read(datasetFileProvider).state = result.files.single;
       setState(() {
-        isPdfUploaded = true;
-        pdfFileName = result.files.single.name;
+        isFileUploaded = true;
+        fileName = result.files.single.name;
       });
     }
   }
@@ -49,7 +39,7 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
       children: [
         ElevatedButton(
           onPressed: () {
-            _pickPdfFile();
+            pickFile();
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: AppColors.white,
@@ -67,17 +57,17 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  isPdfUploaded ? Icons.picture_as_pdf : widget.buttonIcon,
-                  size: widget.buttonIconSize,
+                  isFileUploaded ? Icons.picture_as_pdf : Icons.upload_rounded,
+                  size: 100,
                   color: AppColors.white,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  isPdfUploaded ? pdfFileName : widget.buttonText,
+                  isFileUploaded ? fileName : "Upload Dataset",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: widget.buttonTextSize,
+                  style: const TextStyle(
+                    fontSize: 16,
                     color: AppColors.white,
                   ),
                 ),
@@ -85,16 +75,16 @@ class _PdfInputButtonState extends ConsumerState<PdfInputButton> {
             ),
           ),
         ),
-        isPdfUploaded
+        isFileUploaded
             ? Positioned(
                 top: 0,
                 right: 0,
                 child: RawMaterialButton(
                   onPressed: () {
-                    ref.read(pdfFileProvider(widget.type)).state = null;
+                    ref.read(datasetFileProvider).state = null;
                     setState(() {
-                      isPdfUploaded = false;
-                      pdfFileName = '';
+                      isFileUploaded = false;
+                      fileName = '';
                     });
                   },
                   fillColor: AppColors.red,

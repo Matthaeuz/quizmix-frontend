@@ -1,15 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 
-class CurrentViewedQuizQuestionNotifier extends StateNotifier<Question> {
-  CurrentViewedQuizQuestionNotifier(Question question) : super(question);
+class CurrentViewedQuizQuestionNotifier
+    extends StateNotifier<Map<String, dynamic>> {
+  CurrentViewedQuizQuestionNotifier(Map<String, dynamic> question)
+      : super(question);
 
-  void updateCurrentViewedQuestion(Question newQuestion) {
+  void updateCurrentViewedQuestion(Map<String, dynamic> newQuestion) {
     state = newQuestion;
   }
 }
 
-final currentViewedQuizQuestionProvider =
-    StateNotifierProvider<CurrentViewedQuizQuestionNotifier, Question?>((ref) {
-  return CurrentViewedQuizQuestionNotifier(Question.base());
+final currentViewedQuizQuestionProvider = StateNotifierProvider<
+    CurrentViewedQuizQuestionNotifier, Map<String, dynamic>>((ref) {
+  return CurrentViewedQuizQuestionNotifier(
+      {"qnum": 0, "question": Question.base()});
 });

@@ -12,6 +12,9 @@ enum ModalState {
   viewRevieweeRecentAttempts,
   viewRevieweeRecentFirstAttempts,
   viewRevieweeTopCategories,
+  uploadPDFs,
+  retrainModel,
+  createEditQuestion,
 }
 
 class ModalStateNotifier extends StateNotifier<ModalState> {

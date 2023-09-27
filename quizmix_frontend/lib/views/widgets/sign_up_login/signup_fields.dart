@@ -4,7 +4,7 @@ import 'package:quizmix_frontend/api/utils/sign_up.helper.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/providers/ui/login_state_provider.dart';
-import 'package:quizmix_frontend/views/widgets/sign_up_login/text_field.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
 class SignUpFields extends ConsumerStatefulWidget {
@@ -100,25 +100,21 @@ class _SignUpFieldsState extends ConsumerState<SignUpFields> {
             const SizedBox(height: 16.0),
             TextFieldWidget(
               labelText: 'First Name',
-              obscureText: false,
               controller: firstNameController,
             ),
             const SizedBox(height: 16.0),
             TextFieldWidget(
               labelText: 'Middle Name',
-              obscureText: false,
               controller: middleNameController,
             ),
             const SizedBox(height: 16.0),
             TextFieldWidget(
               labelText: 'Last Name',
-              obscureText: false,
               controller: lastNameController,
             ),
             const SizedBox(height: 16.0),
             TextFieldWidget(
               labelText: 'Email',
-              obscureText: false,
               controller: emailController,
             ),
             const SizedBox(height: 16.0),

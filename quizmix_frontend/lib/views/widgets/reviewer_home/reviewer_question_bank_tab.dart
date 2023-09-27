@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/questions/current_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/add_question_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/question_bank/question_bank_item.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
@@ -73,7 +73,6 @@ class _ReviewerQuestionBankTabState
     final questions = ref.watch(questionBankProvider);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    print(screenWidth);
 
     return Container(
       color: AppColors.mainColor,
@@ -81,52 +80,51 @@ class _ReviewerQuestionBankTabState
         data: (data) {
           final hasQuestions =
               ref.read(questionBankProvider.notifier).hasQuestions;
-          if (data.isEmpty && !hasQuestions) {
-            return const Center(
-              child: SingleChildScrollView(
-                child: EmptyDataPlaceholder(
-                  message: "There are no questions in the bank",
-                ),
-              ),
-            );
-          }
           return Stack(
             children: [
-              LayoutBuilder(builder: ((context, constraints) {
-                final crossAxisCount = constraints.maxWidth > 1160
-                    ? 3
-                    : constraints.maxWidth > 800
-                        ? 2
-                        : 1;
-                double childAspectRatio =
-                    calculateAspectRatio(crossAxisCount, constraints.maxWidth);
-                double rightMargin =
-                    calculateRightMargin(crossAxisCount, constraints.maxWidth);
-                return Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    24,
-                    shouldApplyPadding && screenHeight > 160 ? 100 : 0,
-                    24,
-                    0,
-                  ),
-                  child: GridView.builder(
-                    controller: _scrollController,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: childAspectRatio,
-                      crossAxisSpacing: 24.0,
-                      mainAxisSpacing: 24.0,
-                      crossAxisCount: crossAxisCount,
-                    ),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
+              data.isEmpty || !hasQuestions
+                  ? const Center(
+                      child: SingleChildScrollView(
+                      child: EmptyDataPlaceholder(
+                          message: "There are no questions in the bank."),
+                    ))
+                  : LayoutBuilder(builder: ((context, constraints) {
+                      final crossAxisCount = constraints.maxWidth > 1160
+                          ? 3
+                          : constraints.maxWidth > 800
+                              ? 2
+                              : 1;
+                      double childAspectRatio = calculateAspectRatio(
+                          crossAxisCount, constraints.maxWidth);
+                      double rightMargin = calculateRightMargin(
+                          crossAxisCount, constraints.maxWidth);
                       return Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, rightMargin, 0),
-                        child: QuestionBankItem(question: data[index]),
+                        padding: EdgeInsets.fromLTRB(
+                          24,
+                          shouldApplyPadding && screenHeight > 160 ? 100 : 0,
+                          24,
+                          0,
+                        ),
+                        child: GridView.builder(
+                          controller: _scrollController,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: childAspectRatio,
+                            crossAxisSpacing: 24.0,
+                            mainAxisSpacing: 24.0,
+                            crossAxisCount: crossAxisCount,
+                          ),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(0, 0, rightMargin, 0),
+                              child: QuestionBankItem(question: data[index]),
+                            );
+                          },
+                        ),
                       );
-                    },
-                  ),
-                );
-              })),
+                    })),
               // Search Input & Add Mix
               screenHeight > 160
                   ? Container(
@@ -171,7 +169,7 @@ class _ReviewerQuestionBankTabState
                             padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
                             child: ResponsiveSolidButton(
                               text: "Advanced Search",
-                              condition: screenWidth > 1200,
+                              condition: screenWidth > 1260,
                               icon: const Icon(Icons.search),
                               elevation: 8.0,
                               onPressed: () {
@@ -185,18 +183,56 @@ class _ReviewerQuestionBankTabState
                           Padding(
                             padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
                             child: ResponsiveSolidButton(
-                              text: "Add Questions",
-                              condition: screenWidth > 1200,
-                              icon: const Icon(Icons.add),
+                              text: "Manage Question Bank",
+                              condition: screenWidth > 1260,
+                              icon: const Icon(Icons.edit),
                               elevation: 8.0,
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddQuestionScreen(),
-                                  ),
-                                );
+                                final RenderBox button =
+                                    context.findRenderObject() as RenderBox;
+                                final Offset offset =
+                                    button.localToGlobal(Offset.zero);
+
+                                showMenu(
+                                  context: context,
+                                  position: RelativeRect.fromLTRB(
+                                      offset.dx, 72, 0, 0),
+                                  items: [
+                                    "Add Question",
+                                    "Upload PDFs",
+                                    "Retrain Model",
+                                  ].map((item) {
+                                    return PopupMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ).then((selectedValue) {
+                                  if (selectedValue == "Add Question") {
+                                    ref
+                                        .read(currentQuestionProvider.notifier)
+                                        .updateCurrentQuestion(null);
+                                    ref
+                                        .read(modalStateProvider.notifier)
+                                        .updateModalState(
+                                            ModalState.createEditQuestion);
+                                  } else if (selectedValue == "Upload PDFs") {
+                                    ref
+                                        .read(modalStateProvider.notifier)
+                                        .updateModalState(
+                                            ModalState.uploadPDFs);
+                                  } else if (selectedValue == "Retrain Model") {
+                                    ref
+                                        .read(modalStateProvider.notifier)
+                                        .updateModalState(
+                                            ModalState.retrainModel);
+                                  }
+                                });
                               },
                             ),
                           ),

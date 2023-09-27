@@ -34,16 +34,16 @@ class MixQuestionSearchFilterNotifier
 
 final mixQuestionSearchFilterProvider = StateNotifierProvider<
     MixQuestionSearchFilterNotifier, Map<String, dynamic>>((ref) {
-  final categories = ref.watch(categoryProvider);
+  final categories = ref.watch(categoryProvider.notifier);
   final initialFilters = {
     "text": "",
-    "categories": List.generate(categories.length, (index) => true),
+    "categories": List.generate(categories.categoryLength, (index) => true),
     "discrimination": [true, true, true, true, true],
     "difficulty": [true, true, true, true, true]
   };
   final categoryNames = List.generate(
-    categories.length,
-    (index) => categories[index].name,
+    categories.categoryLength,
+    (index) => categories.categoryIndex(index)!.name,
   );
   return MixQuestionSearchFilterNotifier(
     initialFilters: initialFilters,

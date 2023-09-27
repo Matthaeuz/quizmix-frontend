@@ -1,11 +1,12 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/state/providers/categories/category_provider.dart';
 
-class QuestionSearchFilterNotifier extends StateNotifier<Map<String, dynamic>> {
+class QuizQuestionSearchFilterNotifier
+    extends StateNotifier<Map<String, dynamic>> {
   Map<String, dynamic> initialFilters;
   List<String> categoryNames;
 
-  QuestionSearchFilterNotifier({
+  QuizQuestionSearchFilterNotifier({
     required this.initialFilters,
     required this.categoryNames,
   }) : super(initialFilters);
@@ -31,11 +32,9 @@ class QuestionSearchFilterNotifier extends StateNotifier<Map<String, dynamic>> {
   }
 }
 
-final questionSearchFilterProvider =
-    StateNotifierProvider<QuestionSearchFilterNotifier, Map<String, dynamic>>(
-        (ref) {
+final quizQuestionSearchFilterProvider = StateNotifierProvider<
+    QuizQuestionSearchFilterNotifier, Map<String, dynamic>>((ref) {
   final categories = ref.watch(categoryProvider.notifier);
-  
   final initialFilters = {
     "text": "",
     "categories": List.generate(categories.categoryLength, (index) => true),
@@ -46,7 +45,7 @@ final questionSearchFilterProvider =
     categories.categoryLength,
     (index) => categories.categoryIndex(index)!.name,
   );
-  return QuestionSearchFilterNotifier(
+  return QuizQuestionSearchFilterNotifier(
     initialFilters: initialFilters,
     categoryNames: categoryNames,
   );

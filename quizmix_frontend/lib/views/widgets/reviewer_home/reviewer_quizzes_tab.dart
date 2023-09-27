@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/tos_modal_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/quiz_detail_card.dart';
 import 'package:quizmix_frontend/views/widgets/search_input.dart';
@@ -74,7 +75,14 @@ class _ReviewerQuizzesTabState extends ConsumerState<ReviewerQuizzesTab> {
                 // Add Reviewee Button - On the very right
                 SolidButton(
                   text: 'Create Quiz',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TosModalScreen(),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.add),
                 ),
               ],

@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_bank_provider.dart';
-import 'package:quizmix_frontend/state/providers/questions/question_search_filter_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/available_quiz_questions_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/quiz_question_search_filter_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_button.dart';
 
-import '../../constants/interpretations.constants.dart';
+final List<String> allDiscrimination = [
+  'High Negative',
+  'Negative',
+  'Low',
+  'Positive',
+  'High Positive'
+];
 
-class AdvancedSearhModal extends ConsumerStatefulWidget {
-  const AdvancedSearhModal({Key? key}) : super(key: key);
+final List<String> allDifficulty = [
+  'Very Easy',
+  'Easy',
+  'Average',
+  'Hard',
+  'Very Hard'
+];
+
+class QuizAdvancedSearchModal extends ConsumerStatefulWidget {
+  const QuizAdvancedSearchModal({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AdvancedSearhModal> createState() => _AdvancedSearhModalState();
+  ConsumerState<QuizAdvancedSearchModal> createState() =>
+      _QuizAdvancedSearchModalState();
 }
 
-class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
+class _QuizAdvancedSearchModalState extends ConsumerState<QuizAdvancedSearchModal> {
   late String searchTerm;
   late List<bool> isCheckedCategories;
   late List<bool> isCheckedDiscrimination;
@@ -25,13 +40,13 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
   @override
   void initState() {
     super.initState();
-    final filters = ref.read(questionSearchFilterProvider);
+    final filters = ref.read(quizQuestionSearchFilterProvider);
     searchTerm = filters["text"];
     isCheckedCategories = List.from(filters["categories"]);
     isCheckedDiscrimination = List.from(filters["discrimination"]);
     isCheckedDifficulty = List.from(filters["difficulty"]);
     categoryNames =
-        ref.read(questionSearchFilterProvider.notifier).categoryNames;
+        ref.read(quizQuestionSearchFilterProvider.notifier).categoryNames;
   }
 
   @override
@@ -242,13 +257,13 @@ class _AdvancedSearhModalState extends ConsumerState<AdvancedSearhModal> {
                                 "exclude": []
                               };
                               ref
-                                  .read(questionBankProvider.notifier)
+                                  .read(availableQuizQuestionsProvider.notifier)
                                   .searchQuestions(filters)
                                   .then(
                                 (value) {
                                   ref
-                                      .read(
-                                          questionSearchFilterProvider.notifier)
+                                      .read(quizQuestionSearchFilterProvider
+                                          .notifier)
                                       .updateFilters(filters);
                                   ref
                                       .read(modalStateProvider.notifier)

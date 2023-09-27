@@ -2,52 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/providers/api/base_url_provider.dart';
-import 'package:quizmix_frontend/state/providers/mix_questions/current_viewed_mix_question_provider.dart';
-import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 
-class ViewMixQuestionContainer extends ConsumerWidget {
-  const ViewMixQuestionContainer({super.key});
+class ViewQuizQuestionContainer extends ConsumerWidget {
+  const ViewQuizQuestionContainer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final baseUrl = ref.watch(baseUrlProvider);
-    final processState = ref.watch(processStateProvider);
-    final questionDetails = ref.watch(currentViewedMixQuestionProvider);
+    final questionDetails = ref.watch(currentViewedQuizQuestionProvider);
     final questionNum = questionDetails["qnum"];
     final question = questionDetails["question"];
     final choiceLetters = ['A', 'B', 'C', 'D'];
-
-    if (processState == ProcessState.loading) {
-      return const Expanded(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 48.0,
-                  width: 48.0,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 6.0,
-                    color: AppColors.white,
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  "Deleting Mix...",
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
 
     return Expanded(
       child: questionNum != 0

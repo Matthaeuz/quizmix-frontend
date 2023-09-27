@@ -1,150 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
-import 'package:quizmix_frontend/views/widgets/tiny_solid_button.dart';
 
-class UploadedQuestionItemContainer extends StatelessWidget {
-  final Question questionDetails;
+class UploadedQuestionItemContainer extends ConsumerWidget {
+  final Question currentQuestion;
   final int index;
 
   const UploadedQuestionItemContainer({
     super.key,
-    required this.questionDetails,
+    required this.currentQuestion,
     required this.index,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final choiceLetters = ['A', 'B', 'C', 'D'];
+
     return Container(
-      height: null,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(25),
+      width: 796,
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.mainColor),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.6),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 0),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Question ${index + 1}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: getCategoryColor(questionDetails.category.name),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  questionDetails.category.name,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              const Spacer(),
-              TinySolidButton(
-                text: 'Edit',
-                buttonColor: AppColors.mainColor,
-                onPressed: () {
-                  // Handle edit button press
-                },
-                icon: Icons.edit,
-              ),
-              const SizedBox(width: 10),
-              TinySolidButton(
-                text: 'Delete',
-                buttonColor: Colors.red,
-                onPressed: () {
-                  // Handle delete button press
-                },
-                icon: Icons.delete,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  questionDetails.question,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Image.network(
-                  questionDetails.image!,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Choices: ',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(questionDetails.choices[0],
-                        style: const TextStyle(fontSize: 16)),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(questionDetails.choices[1],
-                        style: const TextStyle(fontSize: 16)),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(questionDetails.choices[2],
-                        style: const TextStyle(fontSize: 16)),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Text(questionDetails.choices[3],
-                        style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                const Text(
-                  'Answer: ',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(questionDetails.answer,
-                    style: const TextStyle(fontSize: 16)),
-              ],
+          Text(
+            'Question ${currentQuestion.id}',
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          Text(
+            'Category: ${currentQuestion.category.name}',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            currentQuestion.question,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 12),
+          currentQuestion.image != null
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Image.network(
+                    currentQuestion.image!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const SizedBox(),
+          for (var i = 0; i < currentQuestion.choices.length; i++) ...[
+            Text(
+              '${choiceLetters[i]}. ${currentQuestion.choices[i]}',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+          const SizedBox(height: 12),
+          Text(
+            'Answer: ${currentQuestion.answer.toUpperCase()}. ${currentQuestion.choices[choiceLetters.indexOf(currentQuestion.answer.toUpperCase())]}',
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
