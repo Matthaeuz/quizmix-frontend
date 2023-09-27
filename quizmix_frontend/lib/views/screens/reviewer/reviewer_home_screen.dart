@@ -8,6 +8,7 @@ import 'package:quizmix_frontend/views/modals/advanced_search_modal.dart';
 import 'package:quizmix_frontend/views/modals/create_edit_question_modal.dart';
 import 'package:quizmix_frontend/views/modals/retrain_model_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
+import 'package:quizmix_frontend/views/modals/view_reviewee_recent_first_attempts_modal.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_home/reviewer_dashboard_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_home/reviewer_question_bank_tab.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_home/reviewer_quizzes_tab.dart';
@@ -67,6 +68,11 @@ class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const ViewQuestionModal(),
           ),
+        ] else if (modalState ==
+            ModalState.viewRevieweeRecentFirstAttempts) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const ViewRevieweeRecentFirstAttemptsModal(),
         ] else if (modalState == ModalState.createEditQuestion) ...[
           Container(
             padding: const EdgeInsets.all(24),
