@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewees/unassigned_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
 import 'package:quizmix_frontend/views/screens/view_reviewee_profile_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
@@ -100,11 +101,14 @@ class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
                                             token,
                                             {"value": "0"},
                                             revieweeUAV[0].id);
-                                        ref
+                                        await ref
+                                            .read(unassignedRevieweesProvider
+                                                .notifier)
+                                            .fetchUnassignedReviewees();
+                                        await ref
                                             .read(reviewerRevieweesProvider
                                                 .notifier)
                                             .fetchReviewerReviewees();
-                                        //TODO: also notify unassigned reviewees
                                       },
                                     ),
                                   ]
@@ -159,7 +163,7 @@ class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
                             child: ResponsiveSolidButton(
-                              text: "Assign Reviewee",
+                              text: "Assign Reviewees",
                               icon: const Icon(Icons.add),
                               elevation: 8.0,
                               condition: screenWidth > 660,

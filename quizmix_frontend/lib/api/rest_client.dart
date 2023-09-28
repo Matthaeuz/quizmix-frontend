@@ -9,7 +9,6 @@ import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/models/quizzes/tos.dart';
 import 'package:quizmix_frontend/state/models/user_attribute_values/user_attribute_value.dart';
-import 'package:quizmix_frontend/state/models/users/assign_reviewee_details.dart';
 import 'package:quizmix_frontend/state/models/users/signup_details.dart';
 import 'package:quizmix_frontend/state/models/users/user.dart';
 import 'package:retrofit/retrofit.dart';
@@ -45,23 +44,14 @@ abstract class RestClient {
 
   @GET("/users/{id}/")
   Future<User> getUserById(
-      @Header("Authorization") String token, @Path("id") int id);
+    @Header("Authorization") String token,
+    @Path("id") int id,
+  );
 
   @GET("/users/?email={email}")
   Future<List<User>> getUserByEmail(
     @Header("Authorization") String token,
     @Path("email") String email,
-  );
-
-  @POST("/users/get_unassigned_reviewees/")
-  Future<List<User>> getUnassignedReviewees(
-    @Header("Authorization") String token,
-  );
-
-  @POST("/users/assign_reviewee/")
-  Future<void> assignReviewee(
-    @Header("Authorization") String token,
-    @Body() AssignRevieweeDetails details,
   );
 
   /// CATEGORY API
@@ -97,11 +87,15 @@ abstract class RestClient {
 
   @GET("/questions/{id}/")
   Future<Question> getQuestionById(
-      @Header("Authorization") String token, @Path("id") int id);
+    @Header("Authorization") String token,
+    @Path("id") int id,
+  );
 
   @DELETE("/questions/{id}/")
   Future<void> deleteQuestionById(
-      @Header("Authorization") String token, @Path("id") int id);
+    @Header("Authorization") String token,
+    @Path("id") int id,
+  );
 
   @POST("/questions/advanced_search/")
   Future<List<Question>> advancedSearch(
@@ -151,7 +145,9 @@ abstract class RestClient {
 
   @DELETE("/mixes/{id}/")
   Future<void> deleteMixById(
-      @Header("Authorization") String token, @Path("id") int id);
+    @Header("Authorization") String token,
+    @Path("id") int id,
+  );
 
   /// QUIZ ATTEMPT API
 
@@ -179,12 +175,16 @@ abstract class RestClient {
       @Header("Authorization") String token, @Body() Map<String, int> details);
 
   @PATCH("/quiz_attempts/{id}/")
-  Future<QuizAttempt> updateQuizAttempt(@Header("Authorization") String token,
-      @Body() Map<String, dynamic> updatedDetails, @Path("id") int id);
+  Future<QuizAttempt> updateQuizAttempt(
+    @Header("Authorization") String token,
+    @Body() Map<String, dynamic> updatedDetails,
+    @Path("id") int id,
+  );
 
   @GET("/quiz_attempts/first_attempts/")
   Future<List<QuizAttempt>> getFirstAttemptsOfQuizzes(
-      @Header("Authorization") String token);
+    @Header("Authorization") String token,
+  );
 
   /// QUESTION ATTEMPT API
 
@@ -208,6 +208,12 @@ abstract class RestClient {
   );
 
   @GET(
+      "/user_attribute_values/?role_attribute__attribute__name=belongs_to&value=0")
+  Future<List<UserAttributeValue>> getUnassignedReviewees(
+    @Header("Authorization") String token,
+  );
+
+  @GET(
       "/user_attribute_values/?role_attribute__attribute__name=belongs_to&user={revieweeId}")
   Future<List<UserAttributeValue>> getRevieweeBelongsTo(
     @Header("Authorization") String token,
@@ -223,7 +229,8 @@ abstract class RestClient {
 
   @PATCH("/user_attribute_values/{id}/")
   Future<UserAttributeValue> updateUserAttributeValue(
-      @Header("Authorization") String token,
-      @Body() Map<String, dynamic> updatedDetails,
-      @Path("id") int id);
+    @Header("Authorization") String token,
+    @Body() Map<String, dynamic> updatedDetails,
+    @Path("id") int id,
+  );
 }
