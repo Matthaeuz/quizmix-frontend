@@ -46,7 +46,7 @@ final revieweeMixesProvider =
     StateNotifierProvider<RevieweeMixesNotifier, AsyncValue<List<Mix>>>((ref) {
   final client = ref.watch(restClientProvider);
   final token = ref.watch(authTokenProvider);
-  final madeBy = ref.read(userProvider).id;
+  final madeBy = ref.watch(userProvider).id;
 
   return RevieweeMixesNotifier(
     client: client,

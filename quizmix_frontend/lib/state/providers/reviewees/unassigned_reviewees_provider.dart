@@ -16,9 +16,15 @@ class UnassignedRevieweesNotifier
     fetchUnassignedReviewees();
   }
 
+  void setLoading() {
+    state = const AsyncValue.loading();
+  }
+
   Future<void> fetchUnassignedReviewees() async {
     try {
-      var reviewees = await client.getUnassignedReviewees(accessToken);
+      final revieweeUAVs = await client.getUnassignedReviewees(accessToken);
+      final reviewees =
+          revieweeUAVs.map((revieweeUAV) => revieweeUAV.user).toList();
       state = AsyncValue.data(reviewees);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

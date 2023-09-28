@@ -10,7 +10,7 @@ class RevieweeQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
   final RestClient client;
   final String accessToken;
   final int revieweeId;
-  late List<Quiz> allQuizzes;
+  List<Quiz> allQuizzes = [];
 
   RevieweeQuizzesNotifier({
     required this.client,
