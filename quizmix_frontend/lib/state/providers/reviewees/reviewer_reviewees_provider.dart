@@ -10,7 +10,7 @@ class ReviewerRevieweesNotifier extends StateNotifier<AsyncValue<List<User>>> {
   final RestClient client;
   final String accessToken;
   final int reviewerId;
-  late List<User> allReviewees;
+  List<User> allReviewees = [];
 
   ReviewerRevieweesNotifier({
     required this.client,
@@ -20,12 +20,12 @@ class ReviewerRevieweesNotifier extends StateNotifier<AsyncValue<List<User>>> {
     fetchReviewerReviewees();
   }
 
+  void setLoading() {
+    state = const AsyncValue.loading();
+  }
+
   Future<void> fetchReviewerReviewees() async {
     try {
-      // var reviewees = await client.getAssignedReviewees(
-      //   accessToken,
-      //   {"reviewerId": reviewerId},
-      // );
       final revieweeUAVs =
           await client.getReviewerReviewees(accessToken, reviewerId.toString());
       final reviewees =

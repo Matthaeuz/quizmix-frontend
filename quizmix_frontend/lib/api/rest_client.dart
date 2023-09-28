@@ -58,12 +58,6 @@ abstract class RestClient {
     @Header("Authorization") String token,
   );
 
-  @POST("/users/get_assigned_reviewees/")
-  Future<List<User>> getAssignedReviewees(
-    @Header("Authorization") String token,
-    @Body() Map<String, int> body,
-  );
-
   @POST("/users/assign_reviewee/")
   Future<void> assignReviewee(
     @Header("Authorization") String token,
@@ -226,4 +220,10 @@ abstract class RestClient {
     @Header("Authorization") String token,
     @Path("revieweeId") int revieweeId,
   );
+
+  @PATCH("/user_attribute_values/{id}/")
+  Future<UserAttributeValue> updateUserAttributeValue(
+      @Header("Authorization") String token,
+      @Body() Map<String, dynamic> updatedDetails,
+      @Path("id") int id);
 }

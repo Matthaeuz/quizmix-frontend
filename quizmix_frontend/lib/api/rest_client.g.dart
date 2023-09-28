@@ -224,40 +224,6 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<User>> getAssignedReviewees(
-    String token,
-    Map<String, int> body,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/users/get_assigned_reviewees/',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
-  }
-
-  @override
   Future<void> assignReviewee(
     String token,
     AssignRevieweeDetails details,
@@ -1084,6 +1050,39 @@ class _RestClient implements RestClient {
         .map((dynamic i) =>
             UserAttributeValue.fromJson(i as Map<String, dynamic>))
         .toList();
+    return value;
+  }
+
+  @override
+  Future<UserAttributeValue> updateUserAttributeValue(
+    String token,
+    Map<String, dynamic> updatedDetails,
+    int id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(updatedDetails);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserAttributeValue>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user_attribute_values/${id}/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = UserAttributeValue.fromJson(_result.data!);
     return value;
   }
 

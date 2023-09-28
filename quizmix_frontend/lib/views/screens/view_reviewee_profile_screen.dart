@@ -164,7 +164,8 @@ class ViewRevieweeProfileScreenState
                                   ),
                                 ),
                               ),
-                              imageProvider != null
+                              imageProvider != null &&
+                                      user.id == revieweeDetails.id
                                   ? Positioned(
                                       top: 0,
                                       right: 0,

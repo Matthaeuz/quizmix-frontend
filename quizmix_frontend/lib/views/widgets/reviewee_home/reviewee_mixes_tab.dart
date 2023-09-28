@@ -80,33 +80,40 @@ class _RevieweeMixesTabState extends ConsumerState<RevieweeMixesTab> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            flex: screenWidth > 860 ? 0 : 1,
-                            child: SizedBox(
-                              width: screenWidth > 860 ? 480 : null,
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.white,
-                                  hintText: 'Search Mixes',
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(12),
+                            flex: screenWidth > 860 &&
+                                    data.isNotEmpty &&
+                                    allMixesLen > 0
+                                ? 0
+                                : 1,
+                            child: data.isEmpty && allMixesLen == 0
+                                ? const SizedBox()
+                                : SizedBox(
+                                    width: screenWidth > 860 ? 480 : null,
+                                    child: TextField(
+                                      decoration: const InputDecoration(
+                                        filled: true,
+                                        fillColor: AppColors.white,
+                                        hintText: 'Search Mixes',
+                                        prefixIcon: Icon(
+                                          Icons.search,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                        ),
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                      ),
+                                      onChanged: (value) {
+                                        ref
+                                            .read(
+                                                revieweeMixesProvider.notifier)
+                                            .searchMixes(value);
+                                      },
                                     ),
                                   ),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 8),
-                                ),
-                                onChanged: (value) {
-                                  ref
-                                      .read(revieweeMixesProvider.notifier)
-                                      .searchMixes(value);
-                                },
-                              ),
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),

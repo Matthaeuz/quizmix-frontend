@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
+import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/current_viewed_reviewee_provider.dart';
 import 'package:quizmix_frontend/state/providers/reviewees/reviewer_reviewees_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/add_reviewee_screen.dart';
@@ -33,6 +35,8 @@ class ReviewerRevieweesTab extends ConsumerStatefulWidget {
 class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
   @override
   Widget build(BuildContext context) {
+    final client = ref.watch(restClientProvider);
+    final token = ref.watch(authTokenProvider).accessToken;
     final reviewees = ref.watch(reviewerRevieweesProvider);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -70,6 +74,7 @@ class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
                                       index++) ...[
                                     ReviewerRevieweeItem(
                                       reviewee: data[index],
+                                      action: ReviewerRevieweeAction.unassign,
                                       onClick: () {
                                         ref
                                             .read(currentViewedRevieweeProvider
@@ -82,6 +87,24 @@ class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
                                                 const ViewRevieweeProfileScreen(),
                                           ),
                                         );
+                                      },
+                                      onButtonPress: () async {
+                                        ref
+                                            .read(reviewerRevieweesProvider
+                                                .notifier)
+                                            .setLoading();
+                                        final revieweeUAV =
+                                            await client.getRevieweeBelongsTo(
+                                                token, data[index].id);
+                                        await client.updateUserAttributeValue(
+                                            token,
+                                            {"value": "0"},
+                                            revieweeUAV[0].id);
+                                        ref
+                                            .read(reviewerRevieweesProvider
+                                                .notifier)
+                                            .fetchReviewerReviewees();
+                                        //TODO: also notify unassigned reviewees
                                       },
                                     ),
                                   ]
@@ -136,8 +159,8 @@ class _ReviewerRevieweesTabState extends ConsumerState<ReviewerRevieweesTab> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
                             child: ResponsiveSolidButton(
-                              text: "Assign/Unassign",
-                              icon: const Icon(Icons.edit),
+                              text: "Assign Reviewee",
+                              icon: const Icon(Icons.add),
                               elevation: 8.0,
                               condition: screenWidth > 660,
                               onPressed: () {
