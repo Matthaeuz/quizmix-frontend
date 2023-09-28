@@ -73,6 +73,7 @@ class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
           Container(
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const ViewRevieweeRecentFirstAttemptsModal(),
+          ),
         ] else if (modalState == ModalState.createEditQuestion) ...[
           Container(
             padding: const EdgeInsets.all(24),
