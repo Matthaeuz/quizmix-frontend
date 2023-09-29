@@ -6,6 +6,7 @@ import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
 import 'package:quizmix_frontend/views/modals/add_question_pdf_modal.dart';
 import 'package:quizmix_frontend/views/modals/advanced_search_modal.dart';
 import 'package:quizmix_frontend/views/modals/create_edit_question_modal.dart';
+import 'package:quizmix_frontend/views/modals/create_quiz_modal.dart';
 import 'package:quizmix_frontend/views/modals/retrain_model_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_question_modal.dart';
 import 'package:quizmix_frontend/views/modals/view_reviewee_recent_first_attempts_modal.dart';
@@ -89,6 +90,11 @@ class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
           Container(
             color: AppColors.fourthColor.withOpacity(0.8),
             child: const RetrainModelModal(),
+          ),
+        ] else if (modalState == ModalState.createQuiz) ...[
+          Container(
+            color: AppColors.fourthColor.withOpacity(0.8),
+            child: const CreateQuizModal(),
           ),
         ]
       ],

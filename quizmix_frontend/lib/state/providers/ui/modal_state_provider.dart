@@ -15,6 +15,7 @@ enum ModalState {
   uploadPDFs,
   retrainModel,
   createEditQuestion,
+  createQuiz,
 }
 
 class ModalStateNotifier extends StateNotifier<ModalState> {
