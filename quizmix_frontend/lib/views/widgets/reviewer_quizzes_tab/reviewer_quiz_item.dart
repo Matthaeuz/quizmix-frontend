@@ -3,7 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/helpers/datetime_convert.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
 
 class ReviewerQuizItem extends ConsumerWidget {
@@ -16,11 +18,25 @@ class ReviewerQuizItem extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          ref
+              .read(processStateProvider.notifier)
+              .updateProcessState(ProcessState.loading);
           ref.read(currentQuizViewedProvider.notifier).updateCurrentQuiz(quiz);
-
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ViewQuizScreen()));
+          await ref
+              .read(currentQuizListAttemptsProvider.notifier)
+              .fetchCurrentQuizListAttempts()
+              .then((value) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ViewQuizScreen(),
+              ),
+            );
+            ref
+                .read(processStateProvider.notifier)
+                .updateProcessState(ProcessState.done);
+          });
         },
         child: Container(
           width: 352,

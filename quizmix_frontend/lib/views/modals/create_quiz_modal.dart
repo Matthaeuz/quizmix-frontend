@@ -110,7 +110,7 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Container(
-            width: 452,
+            width: 800,
             padding: const EdgeInsets.fromLTRB(24, 0, 4, 0),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -260,30 +260,28 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
                                   categories.isEmpty ? 1 : categories.length,
                               itemBuilder: (context, index) {
                                 if (categories.isEmpty) {
-                                  return const Expanded(
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.category,
-                                            size: 64,
+                                  return const Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          size: 64,
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "No Categories Added",
+                                          style: TextStyle(
+                                            fontSize: 18,
                                             color: Colors.grey,
                                           ),
-                                          SizedBox(height: 16),
-                                          Text(
-                                            "No Categories Added",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 } else {

@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/available_quiz_questions_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_quiz_questions_provider.dart';
@@ -33,6 +34,8 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
     final token = ref.watch(authTokenProvider).accessToken;
     final processState = ref.watch(processStateProvider);
     final currentQuiz = ref.watch(currentQuizViewedProvider);
+    final attempts =
+        ref.watch(currentQuizListAttemptsProvider.notifier).quizAttempts();
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -176,8 +179,9 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                       condition: screenWidth > 1380,
                                       icon: const Icon(Icons.edit),
                                       elevation: 8.0,
-                                      isUnpressable:
-                                          processState == ProcessState.done
+                                      isUnpressable: attempts.isNotEmpty
+                                          ? true
+                                          : processState == ProcessState.done
                                               ? false
                                               : true,
                                       onPressed: () {

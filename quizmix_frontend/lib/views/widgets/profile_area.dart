@@ -11,19 +11,8 @@ class ProfileArea extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final details = ref.watch(userProvider);
 
-    return InkWell(
-      onTap: () {
-        if (details.role == "reviewee") {
-          ref
-              .read(currentViewedRevieweeProvider.notifier)
-              .updateCurrentReviewee(details);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ViewRevieweeProfileScreen()));
-        }
-      },
-      child: Container(
+    Widget buildProfileArea() {
+      return Container(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: LayoutBuilder(builder: (context, constraints) {
           final parentWidth = constraints.maxWidth;
@@ -92,7 +81,23 @@ class ProfileArea extends ConsumerWidget {
             ],
           );
         }),
-      ),
-    );
+      );
+    }
+
+    if (details.role == "reviewee") {
+      return InkWell(
+        onTap: () {
+          ref
+              .read(currentViewedRevieweeProvider.notifier)
+              .updateCurrentReviewee(details);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ViewRevieweeProfileScreen()));
+        },
+        child: buildProfileArea(),
+      );
+    }
+    return buildProfileArea();
   }
 }
