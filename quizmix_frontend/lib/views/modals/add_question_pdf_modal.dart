@@ -18,8 +18,6 @@ class AddQuestionPdfModal extends ConsumerStatefulWidget {
 }
 
 class AddQuestionPdfModalState extends ConsumerState<AddQuestionPdfModal> {
-  final TextEditingController emailController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final processState = ref.watch(processStateProvider);

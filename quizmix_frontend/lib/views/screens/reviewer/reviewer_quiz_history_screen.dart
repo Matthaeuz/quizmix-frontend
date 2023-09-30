@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
-import 'package:quizmix_frontend/state/providers/quiz_attempts/quiz_attempts_list_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_history/quiz_history_item.dart';
@@ -28,7 +28,7 @@ class ReviewerQuizHistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final attempts = ref.watch(quizAttemptsListProvider(quiz.id));
+    final attempts = ref.watch(currentQuizListAttemptsProvider);
     final List<QuizAttempt> firstAttempts = [];
 
     // Use the Riverpod sorting state
