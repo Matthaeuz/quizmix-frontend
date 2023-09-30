@@ -227,6 +227,12 @@ abstract class RestClient {
     @Path("revieweeId") int revieweeId,
   );
 
+  @GET(
+      "/user_attribute_values/?role_attribute__attribute__name=category_scores")
+  Future<List<UserAttributeValue>> getCategoryScores(
+    @Header("Authorization") String token,
+  );
+
   @PATCH("/user_attribute_values/{id}/")
   Future<UserAttributeValue> updateUserAttributeValue(
     @Header("Authorization") String token,

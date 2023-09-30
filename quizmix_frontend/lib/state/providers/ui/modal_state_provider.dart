@@ -12,6 +12,7 @@ enum ModalState {
   viewRevieweeRecentAttempts,
   viewRevieweeRecentFirstAttempts,
   viewRevieweeTopCategories,
+  viewReviewerTopCategories,
   uploadPDFs,
   retrainModel,
   createEditQuestion,
