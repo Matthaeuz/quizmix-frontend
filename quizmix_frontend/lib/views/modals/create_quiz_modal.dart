@@ -9,7 +9,8 @@ import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provid
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/users/user_details_provider.dart';
-import 'package:quizmix_frontend/views/widgets/solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
+import 'package:quizmix_frontend/views/widgets/text_field.dart';
 
 class CreateQuizModal extends ConsumerStatefulWidget {
   const CreateQuizModal({Key? key}) : super(key: key);
@@ -19,10 +20,10 @@ class CreateQuizModal extends ConsumerStatefulWidget {
 }
 
 class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
+  final TextEditingController quizNameController = TextEditingController();
   List<String> categories = [];
   String selectedCategory = "No Categories Added";
   Map<String, CategoryData> categoryDataMap = {};
-  String quizName = '';
 
   late List<String> allCategories;
 
@@ -53,12 +54,27 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
         items: allCategories.map((category) {
           return PopupMenuItem<String>(
             value: category,
-            child: Text(category),
+            child: Text(
+              category,
+              style: const TextStyle(
+                color: AppColors.white,
+              ),
+            ),
           );
         }).toList(),
       ).then((selectedValue) {
         if (selectedValue != null) {
           setState(() {
+            updateCategoryData(
+              category: selectedValue,
+              number: 1,
+              isDifficulty: false,
+            );
+            updateCategoryData(
+              category: selectedValue,
+              number: 0,
+              isDifficulty: true,
+            );
             allCategories.remove(selectedValue);
             categories.add(selectedValue);
             selectedCategory = selectedValue;
@@ -102,13 +118,14 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
   Widget build(BuildContext context) {
     final reviewerId = ref.watch(userProvider).id;
     final processState = ref.watch(processStateProvider);
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: null,
       backgroundColor: Colors.transparent,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.all(24),
           child: Container(
             width: 800,
             padding: const EdgeInsets.fromLTRB(24, 0, 4, 0),
@@ -149,118 +166,167 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 24),
-                          TextButton(
-                            onPressed: () {
-                              ref
-                                  .read(modalStateProvider.notifier)
-                                  .updateModalState(ModalState.none);
-                            },
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              alignment: Alignment.centerLeft,
-                              foregroundColor: AppColors.mainColor,
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.arrow_back,
-                                  size: 16.0,
-                                  color: AppColors.mainColor,
-                                ),
-                                Text('Back to Quizzes'),
-                              ],
-                            ),
-                          ),
-                          const Text(
-                            "Create Quiz",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Text(
-                            "Note:",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          const SizedBox(height: 24),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: "Enter quiz name",
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                quizName = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 24),
-                          SolidButton(
-                            text: "Add Category",
-                            onPressed: () {
-                              _showCategoryDropdown(context);
-                            },
-                            icon: const Icon(Icons.add),
-                          ),
-                          const SizedBox(height: 24),
-                          const Row(
+                          Row(
                             children: [
                               Expanded(
-                                flex: 3,
-                                child: Text(
-                                  "Category",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: AppColors.mainColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              SizedBox(width: 25),
-                              Expanded(
-                                flex: 2,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "No. of questions",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: AppColors.mainColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 25),
-                              Expanded(
-                                  flex: 2,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Difficulty",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: AppColors.mainColor,
-                                          fontWeight: FontWeight.bold),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        ref
+                                            .read(modalStateProvider.notifier)
+                                            .updateModalState(ModalState.none);
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        alignment: Alignment.centerLeft,
+                                        foregroundColor: AppColors.mainColor,
+                                      ),
+                                      child: const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_back,
+                                            size: 16.0,
+                                            color: AppColors.mainColor,
+                                          ),
+                                          Text('Back to Quizzes'),
+                                        ],
+                                      ),
                                     ),
-                                  )),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.white,
+                                    const Text(
+                                      "Create Quiz",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                onPressed: null,
-                                color: Colors.white,
+                              ),
+                              ResponsiveSolidButton(
+                                text: "Add Category",
+                                icon: const Icon(Icons.add),
+                                condition: screenWidth > 580,
+                                onPressed: () {
+                                  _showCategoryDropdown(context);
+                                },
+                              ),
+                              const SizedBox(width: 12),
+                              ResponsiveSolidButton(
+                                text: 'Create Quiz',
+                                icon: const Icon(Icons.play_circle_outline),
+                                condition: true,
+                                onPressed: () {
+                                  if (categories.isNotEmpty &&
+                                      quizNameController.text.isNotEmpty) {
+                                    ref
+                                        .read(processStateProvider.notifier)
+                                        .updateProcessState(
+                                            ProcessState.loading);
+                                    final TOS tos = TOS(
+                                      madeBy: reviewerId,
+                                      title: quizNameController.text,
+                                      categories: categories,
+                                      quantities: categories
+                                          .map((category) =>
+                                              categoryDataMap[category]
+                                                  ?.numberOfQuestions ??
+                                              1)
+                                          .toList(),
+                                      difficulties: categories
+                                          .map((category) =>
+                                              categoryDataMap[category]
+                                                  ?.difficulty ??
+                                              0)
+                                          .toList(),
+                                    );
+
+                                    // let our notifier know that a change in the api has occured
+                                    ref
+                                        .read(reviewerQuizzesProvider.notifier)
+                                        .addQuiz(tos)
+                                        .then(
+                                      (value) {
+                                        ref
+                                            .read(modalStateProvider.notifier)
+                                            .updateModalState(ModalState.none);
+                                        ref
+                                            .read(processStateProvider.notifier)
+                                            .updateProcessState(
+                                                ProcessState.done);
+                                      },
+                                      onError: (err) {
+                                        ref
+                                            .read(processStateProvider.notifier)
+                                            .updateProcessState(
+                                                ProcessState.done);
+                                      },
+                                    );
+                                  }
+                                },
                               ),
                             ],
                           ),
+                          const Text(
+                            "Note: The Difficulty ranges are -50 to -30 (Very Easy), -30 to -10 (Easy), -10 to 10 (Average), 10 to 30 (Hard), 30 to 50 (Very Hard)",
+                            style: TextStyle(fontSize: 12),
+                          ),
                           const SizedBox(height: 24),
-                          SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              itemCount:
-                                  categories.isEmpty ? 1 : categories.length,
-                              itemBuilder: (context, index) {
-                                if (categories.isEmpty) {
-                                  return const Center(
+                          TextFieldWidget(
+                            labelText: "Quiz Name",
+                            controller: quizNameController,
+                          ),
+                          const SizedBox(height: 8),
+                          categories.isNotEmpty
+                              ? const Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        "Category",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 24),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        "Quantity",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 24),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        "Difficulty",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.clear,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: null,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                )
+                              : const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 24),
+                                  child: Center(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
@@ -283,111 +349,74 @@ class CreateQuizModalState extends ConsumerState<CreateQuizModal> {
                                         ),
                                       ],
                                     ),
-                                  );
-                                } else {
-                                  String category = categories[index];
-                                  return Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          category,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: AppColors.mainColor,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
+                                  ),
+                                ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: categories.length,
+                            itemBuilder: (context, index) {
+                              String category = categories[index];
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      category,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(width: 25),
-                                      Expanded(
-                                        flex: 2,
-                                        child: buildCategoryFormField(
-                                          initialValue:
-                                              categoryDataMap[category]
-                                                  ?.numberOfQuestions
-                                                  .toString(),
-                                          onChanged: (value) {
-                                            updateCategoryData(
-                                              category: category,
-                                              number: int.parse(value),
-                                              isDifficulty: false,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 25),
-                                      Expanded(
-                                        flex: 2,
-                                        child: buildCategoryFormField(
-                                          initialValue:
-                                              categoryDataMap[category]
-                                                      ?.difficulty
-                                                      .toString() ??
-                                                  '0',
-                                          onChanged: (value) {
-                                            updateCategoryData(
-                                              category: category,
-                                              number: int.parse(value),
-                                              isDifficulty: true,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.clear),
-                                        onPressed: () {
-                                          setState(() {
-                                            String removedCategory =
-                                                categories.removeAt(index);
-                                            allCategories.add(removedCategory);
-                                            allCategories.sort();
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: SolidButton(
-                              text: 'Create Quiz',
-                              width: 160,
-                              icon: const Icon(Icons.play_circle_outline),
-                              onPressed: () {
-                                final TOS tos = TOS(
-                                  madeBy: reviewerId,
-                                  title: quizName,
-                                  categories: categories,
-                                  quantities: categories
-                                      .map((category) =>
-                                          categoryDataMap[category]
-                                              ?.numberOfQuestions ??
-                                          0)
-                                      .toList(),
-                                  difficulties: categories
-                                      .map((category) =>
-                                          categoryDataMap[category]
-                                              ?.difficulty ??
-                                          0)
-                                      .toList(),
-                                );
-
-                                // let our notifier know that a change in the api has occured
-                                ref
-                                    .read(reviewerQuizzesProvider.notifier)
-                                    .addQuiz(tos)
-                                    .then((value) => {
-                                          ref
-                                              .read(modalStateProvider.notifier)
-                                              .updateModalState(ModalState.none)
-                                        });
-                              },
-                            ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Expanded(
+                                    flex: 2,
+                                    child: buildCategoryFormField(
+                                      initialValue: categoryDataMap[category]
+                                              ?.numberOfQuestions
+                                              .toString() ??
+                                          '1',
+                                      onChanged: (value) {
+                                        updateCategoryData(
+                                          category: category,
+                                          number: int.parse(value),
+                                          isDifficulty: false,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Expanded(
+                                    flex: 2,
+                                    child: buildCategoryFormField(
+                                      initialValue: categoryDataMap[category]
+                                              ?.difficulty
+                                              .toString() ??
+                                          '0',
+                                      onChanged: (value) {
+                                        updateCategoryData(
+                                          category: category,
+                                          number: int.parse(value),
+                                          isDifficulty: true,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      setState(() {
+                                        String removedCategory =
+                                            categories.removeAt(index);
+                                        allCategories.add(removedCategory);
+                                        allCategories.sort();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                           const SizedBox(height: 24),
                         ],
