@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/api/rest_client.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
@@ -10,6 +11,7 @@ class ReviewerQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
   final RestClient client;
   final String accessToken;
   final int reviewerId;
+  List<Quiz> allQuizzes = [];
 
   ReviewerQuizzesNotifier({
     required this.client,
@@ -19,13 +21,18 @@ class ReviewerQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
     fetchQuizzes();
   }
 
-  // TODO: fix the implementation
   Future<void> fetchQuizzes() async {
     try {
       final quizzes = await client.getMadeByQuizzes(accessToken, reviewerId);
+      quizzes.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+      allQuizzes = quizzes;
       state = AsyncValue.data(quizzes);
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      if (e is DioException && e.response?.statusCode == 400) {
+        state = const AsyncValue.data([]);
+      } else {
+        state = AsyncValue.error(e, st);
+      }
     }
   }
 
@@ -35,6 +42,18 @@ class ReviewerQuizzesNotifier extends StateNotifier<AsyncValue<List<Quiz>>> {
       fetchQuizzes(); // Refetch quizzes after adding.
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    }
+  }
+
+  void searchQuizzes(String value) {
+    if (value.isEmpty) {
+      state = AsyncValue.data(allQuizzes);
+    } else {
+      final searchResult = allQuizzes
+          .where(
+              (quiz) => quiz.title.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      state = AsyncValue.data(searchResult);
     }
   }
 }
