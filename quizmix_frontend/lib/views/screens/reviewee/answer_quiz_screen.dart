@@ -184,7 +184,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
                                       currentQuestion == null,
                                   onPressed: () {
                                     handleChoicePressed('a',
-                                        isPretest ? currentQuestion! : null);
+                                        !isPretest ? currentQuestion! : null);
                                   },
                                 ),
                               ),

@@ -14,7 +14,7 @@ import 'package:quizmix_frontend/state/providers/quizzes/quiz_question_search_fi
 import 'package:quizmix_frontend/state/providers/quizzes/reviewer_quizzes_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/edit_quiz_screen.dart';
-import 'package:quizmix_frontend/views/screens/reviewer/reviewer_quiz_history_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_statistics_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz/view_quiz_question_container.dart';
@@ -167,7 +167,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                ReviewerQuizHistoryScreen(
+                                                ViewQuizStatisticsScreen(
                                                     quiz: currentQuiz),
                                           ),
                                         );
