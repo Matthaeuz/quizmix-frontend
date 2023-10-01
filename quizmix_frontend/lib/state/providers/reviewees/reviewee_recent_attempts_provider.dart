@@ -23,6 +23,7 @@ class RevieweeRecentAttemptsNotifier
     try {
       final revieweeRecentAttempts =
           await client.getRevieweeAttempts(accessToken, revieweeId);
+      revieweeRecentAttempts.sort((a, b) => a.id.compareTo(b.id));
       state = AsyncValue.data(revieweeRecentAttempts);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -23,14 +24,25 @@ class QuizHistogram extends ConsumerWidget {
         print("Score Frequencies: $scoreFrequencies");
 
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
           child: SfCartesianChart(
             primaryXAxis: CategoryAxis(
-                title: AxisTitle(text: 'Attempt Score'), interval: 1),
+              title: AxisTitle(
+                text: 'Attempt Score',
+                textStyle: const TextStyle(color: AppColors.white),
+              ),
+              interval: 1,
+              labelStyle: const TextStyle(color: AppColors.white),
+            ),
             primaryYAxis: NumericAxis(
-                title: AxisTitle(text: 'Frequency'),
-                numberFormat: NumberFormat('0'),
-                interval: 1),
+              title: AxisTitle(
+                text: 'Frequency',
+                textStyle: const TextStyle(color: AppColors.white),
+              ),
+              numberFormat: NumberFormat('0'),
+              interval: 1,
+              labelStyle: const TextStyle(color: AppColors.white),
+            ),
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries>[
               ColumnSeries<MapEntry<int, int>, String>(
@@ -39,6 +51,7 @@ class QuizHistogram extends ConsumerWidget {
                     entry.key.toString(),
                 yValueMapper: (MapEntry<int, int> entry, _) => entry.value,
                 name: 'Frequency of Attempt Scores',
+                color: AppColors.thirdColor,
               ),
             ],
           ),
