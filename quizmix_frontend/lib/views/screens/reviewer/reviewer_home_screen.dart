@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/first_quiz_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/reviewers/reviewer_top_categories_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/tab_state_provider.dart';
 import 'package:quizmix_frontend/views/modals/add_question_pdf_modal.dart';
@@ -27,6 +29,8 @@ class ReviewerHomeScreen extends ConsumerStatefulWidget {
 class _ReviewerHomeScreenState extends ConsumerState<ReviewerHomeScreen> {
   Widget getWidgetFromTabState(TabState tabState) {
     if (tabState == TabState.reviewerDashboard) {
+      ref.read(firstQuizAttemptProvider.notifier).fetchFirstQuizAttempts();
+      ref.read(reviewerTopCategoriesProvider.notifier).fetchReviewerTopCategories();
       return const ReviewerDashboardTab();
     } else if (tabState == TabState.reviewerQuizzes) {
       return const ReviewerQuizzesTab();

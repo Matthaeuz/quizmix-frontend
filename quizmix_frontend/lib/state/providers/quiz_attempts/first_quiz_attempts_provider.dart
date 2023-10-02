@@ -32,7 +32,6 @@ class FirstQuizAttemptNotifier
             .any((reviewee) => reviewee.user.id == attempt.attemptedBy.id);
       }).toList();
 
-       // Sort firstQuizAttempts by created_on in descending order
       firstQuizAttempts.sort((a, b) => a.createdOn.compareTo(b.createdOn));
 
       state = AsyncValue.data(firstQuizAttempts);
