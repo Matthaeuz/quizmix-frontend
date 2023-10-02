@@ -93,6 +93,20 @@ class _ViewRevieweeRecentFirstAttemptsModalState
                     : const SizedBox(),
                 firstQuizAttempts.when(
                   data: (data) {
+                    if (data.isEmpty) {
+                      return const Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(24),
+                            child: EmptyDataPlaceholder(
+                              color: AppColors.mainColor,
+                              message:
+                                  "There are no recent pretest attempts to show",
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                     return Expanded(
                         child: ListView.builder(
                             shrinkWrap: true,

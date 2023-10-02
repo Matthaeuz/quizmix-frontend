@@ -61,6 +61,20 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
               const SizedBox(height: 20.0),
               firstQuizAttempts.when(
                 data: (data) {
+                  if (data.isEmpty) {
+                    return const Expanded(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(24),
+                          child: EmptyDataPlaceholder(
+                            color: AppColors.mainColor,
+                            message:
+                                "There are no recent pretest attempts to show",
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                   return Expanded(
                       child: ListView.builder(
                           shrinkWrap: true,
@@ -79,7 +93,6 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                               data: (data) => data.value[reversedIndex],
                               orElse: () => null,
                             );
-
                             return Column(
                               children: [
                                 InkWell(

@@ -76,6 +76,7 @@ class _ViewReviewerTopCategoriesModalState
                           child: Padding(
                             padding: EdgeInsets.all(24),
                             child: EmptyDataPlaceholder(
+                              color: AppColors.mainColor,
                               message: "There are no category scores to show",
                             ),
                           ),
