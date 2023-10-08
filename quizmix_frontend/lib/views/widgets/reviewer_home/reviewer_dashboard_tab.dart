@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/recent_attempts_card.dart';
+import 'package:quizmix_frontend/views/widgets/reviewer_dashboard/top_reviewees_card.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_top_categories/reviewer_top_category_container.dart';
 
 class ReviewerDashboardTab extends ConsumerWidget {
@@ -38,10 +39,7 @@ class ReviewerDashboardTab extends ConsumerWidget {
                         color: Colors.white,
                       ),
                       child: const SizedBox(
-                        child: Center(
-                          child: Text('Top Reviewees',
-                              style: TextStyle(color: Colors.black)),
-                        ),
+                        child: TopRevieweesCard(),
                       ),
                     ),
                   ),
