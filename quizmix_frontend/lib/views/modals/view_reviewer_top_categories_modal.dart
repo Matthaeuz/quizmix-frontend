@@ -56,7 +56,7 @@ class _ViewReviewerTopCategoriesModalState
                           size: 16.0,
                           color: AppColors.mainColor,
                         ),
-                        Text('Back to Reviewee Profile'),
+                        Text('Back to Dashboard'),
                       ],
                     ),
                   ),
