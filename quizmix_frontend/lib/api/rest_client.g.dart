@@ -1117,6 +1117,62 @@ class _RestClient implements RestClient {
     return value;
   }
 
+  @override
+  Future<JSONResponse> sendCode(Map<String, dynamic> email) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(email);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<JSONResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/forgot_password/send_verification_code/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = JSONResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<JSONResponse> verifyCode(Map<String, dynamic> userDetails) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(userDetails);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<JSONResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/forgot_password/verify_code/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = JSONResponse.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

@@ -1,6 +1,7 @@
 import 'package:quizmix_frontend/state/models/auth/auth_details.dart';
 import 'package:quizmix_frontend/state/models/auth/auth_token.dart';
 import 'package:quizmix_frontend/state/models/categories/category.dart';
+import 'package:quizmix_frontend/state/models/jsonresponse/jsonresponse.dart';
 import 'package:quizmix_frontend/state/models/mixes/mix.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
 import 'package:quizmix_frontend/state/models/question_attempts/question_details.dart';
@@ -244,5 +245,17 @@ abstract class RestClient {
     @Header("Authorization") String token,
     @Body() Map<String, dynamic> updatedDetails,
     @Path("id") int id,
+  );
+
+  // FORGOT PASSWORD API
+
+  @POST("/forgot_password/send_verification_code/")
+  Future<JSONResponse> sendCode(
+    @Body() Map<String, dynamic> email,
+  );
+
+  @POST("/forgot_password/verify_code/")
+  Future<JSONResponse> verifyCode(
+    @Body() Map<String, dynamic> userDetails,
   );
 }
