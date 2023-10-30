@@ -44,7 +44,7 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                       style: TextStyle(fontSize: 24),
                     ),
                     SizedBox(
-                      height: 160,
+                      height: 180,
                       child: PageView(
                         controller: pageController,
                         onPageChanged: (index) {
@@ -54,9 +54,8 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                         },
                         children: [
                           buildSendCodePage(context, ref),
-                          buildVerifyCodePage(context, ref), 
-                          buildChangePasswordPage(context, ref), 
-                          Placeholder(), // Step 4
+                          buildVerifyCodePage(context, ref),
+                          buildChangePasswordPage(context, ref),
                         ],
                       ),
                     ),
@@ -257,15 +256,14 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                 ref
                     .read(processStateProvider.notifier)
                     .updateProcessState(ProcessState.loading);
-
+                // after change pass close modal
                 changePassword(email, newPassword, ref).then((value) {
                   ref
                       .read(processStateProvider.notifier)
                       .updateProcessState(ProcessState.done);
-                  pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                  );
+                  ref
+                      .read(modalStateProvider.notifier)
+                      .updateModalState(ModalState.none);
                 }).catchError((e) {
                   ref
                       .read(processStateProvider.notifier)
