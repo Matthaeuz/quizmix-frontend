@@ -29,13 +29,24 @@ Future<String> verifyCode(String email, String code, WidgetRef ref) async {
   final client = ref.watch(restClientProvider);
 
   try {
-
-    Map<String, dynamic> payload = {
-      "email": email,
-      "code": code
-    };
+    Map<String, dynamic> payload = {"email": email, "code": code};
 
     var result = await client.verifyCode(payload);
+
+    return result.message;
+  } on DioException catch (_) {
+    rethrow;
+  }
+}
+
+Future<String> changePassword(
+    String email, String password, WidgetRef ref) async {
+  final client = ref.watch(restClientProvider);
+
+  try {
+    Map<String, dynamic> payload = {"email": email, "new_password": password};
+
+    var result = await client.changePassword(payload);
 
     return result.message;
   } on DioException catch (_) {

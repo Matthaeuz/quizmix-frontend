@@ -54,8 +54,8 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                         },
                         children: [
                           buildSendCodePage(context, ref),
-                          buildVerifyCodePage(context, ref), // Step 2
-                          Placeholder(), // Step 3
+                          buildVerifyCodePage(context, ref), 
+                          buildChangePasswordPage(context, ref), 
                           Placeholder(), // Step 4
                         ],
                       ),
@@ -252,12 +252,13 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
               isUnpressable: processState == ProcessState.loading,
               condition: true,
               onPressed: () async {
-                // send verification code and move on to next
+                final newPassword = newPasswordController.text;
+                // change pass using unauth pass endpoint
                 ref
                     .read(processStateProvider.notifier)
                     .updateProcessState(ProcessState.loading);
 
-                sendCode(email, ref).then((value) {
+                changePassword(email, newPassword, ref).then((value) {
                   ref
                       .read(processStateProvider.notifier)
                       .updateProcessState(ProcessState.done);
