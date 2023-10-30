@@ -258,4 +258,9 @@ abstract class RestClient {
   Future<JSONResponse> verifyCode(
     @Body() Map<String, dynamic> userDetails,
   );
+
+  @POST("/forgot_password/change_password/")
+  Future<JSONResponse> changePassword(
+    @Body() Map<String, dynamic> userDetails, 
+  );
 }

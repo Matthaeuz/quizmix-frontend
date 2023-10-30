@@ -155,7 +155,7 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                 ref
                     .read(processStateProvider.notifier)
                     .updateProcessState(ProcessState.loading);
-                
+
                 sendCode(email, ref).then((value) {
                   ref
                       .read(processStateProvider.notifier)
@@ -190,6 +190,74 @@ class ForgotPasswordModalState extends ConsumerState<ForgotPasswordModal> {
                 final code = verificationCodeController.text;
                 // verify code
                 verifyCode(email, code, ref).then((value) {
+                  ref
+                      .read(processStateProvider.notifier)
+                      .updateProcessState(ProcessState.done);
+                  pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                }).catchError((e) {
+                  ref
+                      .read(processStateProvider.notifier)
+                      .updateProcessState(ProcessState.done);
+                });
+              },
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildChangePasswordPage(BuildContext context, WidgetRef ref) {
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmNewPasswordController =
+        TextEditingController();
+    final processState = ref.watch(processStateProvider);
+    final email = ref.read(currentEmailProvider);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextFieldWidget(
+          labelText: 'New Password',
+          controller: newPasswordController,
+        ),
+        const SizedBox(height: 8),
+        TextFieldWidget(
+          labelText: 'Confirm New Password',
+          controller: confirmNewPasswordController,
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SolidButton(
+              text: 'Previous',
+              width: 160,
+              onPressed: () {
+                pageController.previousPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+              },
+            ),
+            const SizedBox(width: 16),
+            ResponsiveSolidButton(
+              text: processState == ProcessState.loading
+                  ? 'Loading...'
+                  : 'Change Password',
+              width: 160,
+              isUnpressable: processState == ProcessState.loading,
+              condition: true,
+              onPressed: () async {
+                // send verification code and move on to next
+                ref
+                    .read(processStateProvider.notifier)
+                    .updateProcessState(ProcessState.loading);
+
+                sendCode(email, ref).then((value) {
                   ref
                       .read(processStateProvider.notifier)
                       .updateProcessState(ProcessState.done);
