@@ -6,6 +6,7 @@ import 'package:quizmix_frontend/state/models/question_attempts/question_attempt
 import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/question_attempts/currently_viewed_question_attempt_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
+import 'package:quizmix_frontend/views/widgets/question_grid.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_attempt_container.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_item.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_item_dna.dart';
@@ -20,6 +21,7 @@ class QuizAttemptScreen extends ConsumerStatefulWidget {
 class _QuizAttemptScreenState extends ConsumerState<QuizAttemptScreen> {
   @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
     final currentQuizAttempt = ref.watch(currentQuizAttemptedProvider);
     final currentQuestionAttempts = ref.watch(currentQuestionAttemptsProvider);
     final currentQuiz = currentQuizAttempt.quiz;
@@ -153,6 +155,17 @@ class _QuizAttemptScreenState extends ConsumerState<QuizAttemptScreen> {
                     ),
                   ),
                 ),
+                QuestionGrid(
+                    itemCount: currentQuiz.questions.length,
+                    onPressed: (index) {
+                      final double offset = (index - 1) *
+                          136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
+                      scrollController.animateTo(
+                        offset,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }),
                 const ViewQuestionAttemptContainer(),
               ],
             ),
@@ -161,6 +174,7 @@ class _QuizAttemptScreenState extends ConsumerState<QuizAttemptScreen> {
             child: Container(
               color: AppColors.mainColor,
               child: ListView.builder(
+                controller: scrollController,
                 itemCount: currentQuiz.questions.length,
                 itemBuilder: (context, index) {
                   return Center(
