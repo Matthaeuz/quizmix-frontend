@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
-import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/views/widgets/solid_grid_item.dart';
 
 class QuestionGrid extends ConsumerWidget {
-  final VoidCallback onPressed;
+  final void Function(int) onPressed;
+  final int itemCount;
 
-  const QuestionGrid({super.key, required this.onPressed});
+  const QuestionGrid({super.key, required this.onPressed, required this.itemCount});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final questions = ref.watch(currentQuizViewedProvider).questions;
 
     // try intrinsicheight also :))
     return Expanded(
@@ -32,10 +31,10 @@ class QuestionGrid extends ConsumerWidget {
                         child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Wrap(spacing: 8, runSpacing: 8, children: [
-                              for (int i = 0; i < questions.length; i++) ...[
+                              for (int i = 0; i < itemCount; i++) ...[
                                 SolidGridItem(
                                   label: "${i + 1}",
-                                  onPressed: onPressed,
+                                  onPressed: () => onPressed(i),
                                 )
                               ]
                             ])))))));

@@ -31,6 +31,7 @@ class ViewQuizScreen extends ConsumerStatefulWidget {
 class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
   @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
     final processState = ref.watch(processStateProvider);
@@ -265,9 +266,17 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                     ),
                   ),
                 ),
-                // const Placeholder(),
-                // const SizedBox(height: 20,),
-                QuestionGrid(onPressed: () {}),
+                QuestionGrid(
+                    itemCount: currentQuiz.questions.length,
+                    onPressed: (index) {
+                      final double offset = (index - 1) *
+                          136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
+                      scrollController.animateTo(
+                        offset,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }),
                 const ViewQuizQuestionContainer(),
               ],
             ),
@@ -277,6 +286,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
               color: AppColors.mainColor,
               child: currentQuiz.questions.isNotEmpty
                   ? ListView.builder(
+                      controller: scrollController,
                       itemCount: currentQuiz.questions.length,
                       itemBuilder: (context, index) {
                         return Center(

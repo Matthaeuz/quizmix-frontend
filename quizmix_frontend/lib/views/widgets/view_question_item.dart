@@ -27,6 +27,7 @@ class ViewQuestionItem extends ConsumerWidget {
         onTap: onClick,
         child: Container(
           padding: const EdgeInsets.all(12),
+          height: 128,
           constraints: const BoxConstraints(maxWidth: 400),
           decoration: BoxDecoration(
             color: color,

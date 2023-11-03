@@ -14,6 +14,7 @@ import 'package:quizmix_frontend/state/providers/mixes/reviewee_mixes_provider.d
 import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewee/create_edit_mix_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
+import 'package:quizmix_frontend/views/widgets/question_grid.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/reviewee_view_mix/view_mix_question_container.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_item.dart';
@@ -28,6 +29,7 @@ class ViewMixScreen extends ConsumerStatefulWidget {
 class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
   @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
     final processState = ref.watch(processStateProvider);
@@ -228,6 +230,17 @@ class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
                     ),
                   ),
                 ),
+                QuestionGrid(
+                  itemCount: currentMix.questions.length,
+                  onPressed: (index) {
+                  final double offset = (index - 1) *
+                      136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
+                  scrollController.animateTo(
+                    offset,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }),
                 const ViewMixQuestionContainer(),
               ],
             ),
@@ -237,6 +250,7 @@ class _ViewMixScreenState extends ConsumerState<ViewMixScreen> {
               color: AppColors.mainColor,
               child: currentMix.questions.isNotEmpty
                   ? ListView.builder(
+                      controller: scrollController,
                       itemCount: currentMix.questions.length,
                       itemBuilder: (context, index) {
                         return Center(
