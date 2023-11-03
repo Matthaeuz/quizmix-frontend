@@ -16,6 +16,7 @@ import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart'
 import 'package:quizmix_frontend/views/screens/reviewer/edit_quiz_screen.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_statistics_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
+import 'package:quizmix_frontend/views/widgets/question_grid.dart';
 import 'package:quizmix_frontend/views/widgets/responsive_solid_button.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz/view_quiz_question_container.dart';
 import 'package:quizmix_frontend/views/widgets/view_question_item.dart';
@@ -264,6 +265,9 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                     ),
                   ),
                 ),
+                // const Placeholder(),
+                // const SizedBox(height: 20,),
+                QuestionGrid(onPressed: () {}),
                 const ViewQuizQuestionContainer(),
               ],
             ),
