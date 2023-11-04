@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
@@ -8,6 +9,7 @@ import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
 import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/quiz_attempt_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
@@ -27,6 +29,25 @@ final sortingProvider = StateNotifierProvider<SortingNotifier, bool>((ref) {
   return SortingNotifier();
 });
 
+class CurrentPageNotifier extends StateNotifier<int> {
+  CurrentPageNotifier() : super(0);
+
+  void increment() {
+    state++;
+  }
+
+  void decrement() {
+    if (state > 0) {
+      state--;
+    }
+  }
+}
+
+final currentPageProvider =
+    StateNotifierProvider<CurrentPageNotifier, int>((ref) {
+  return CurrentPageNotifier();
+});
+
 class ViewQuizStatisticsScreen extends ConsumerWidget {
   final Quiz quiz;
 
@@ -36,11 +57,22 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
-    final attempts = ref.watch(currentQuizListAttemptsProvider);
+    // final attempts = ref.watch(currentQuizListAttemptsProvider);
     final List<QuizAttempt> firstAttempts = [];
-
-    // Use the Riverpod sorting state
     final isAscending = ref.watch(sortingProvider);
+
+    final currentQuiz = ref.watch(currentQuizViewedProvider);
+
+    // Get the list of questions from the currentQuiz
+    final List<Question> currentQuestions = currentQuiz.questions;
+
+    // Extract the question names from the list of questions
+    final List<String> questionNames =
+        currentQuestions.map((question) => question.question).toList();
+
+    // Get the list of attempts from the currentQuizListAttemptsProvider
+    final AsyncValue<List<QuizAttempt>> attempts =
+        ref.watch(currentQuizListAttemptsProvider);
 
     attempts.maybeWhen(
       data: (data) {
@@ -57,6 +89,74 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
         return const Center(child: CircularProgressIndicator());
       },
     );
+
+    // Pagination settings
+    const questionsPerPage = 5;
+
+    final currentPage = ref.watch(currentPageProvider);
+
+    // Calculate the start and end indices for the current page
+    final startIndex = currentPage * questionsPerPage;
+    final endIndex = (startIndex + questionsPerPage < questionNames.length)
+        ? startIndex + questionsPerPage
+        : questionNames.length;
+
+    // Create a sublist of question names for the current page
+    List<String> currentQuestionPage =
+        questionNames.sublist(startIndex, endIndex);
+
+    int numberOfQuestions = currentQuestionPage.length;
+
+    // Generate rows for the DataTable based on the attempts for the current page
+    final List<DataRow> dataRows = firstAttempts.asMap().entries.map((entry) {
+      final int index = entry.key;
+      final QuizAttempt attempt = entry.value;
+      final List<DataCell> cells = [
+        DataCell(Text(attempt.attemptedBy.fullName)),
+        for (int i = 0; i < numberOfQuestions; i++)
+          DataCell(
+            FutureBuilder(
+              future:
+                  client.getQuestionAttemptsByQuizAttempt(token, attempt.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Loading indicator while waiting for the data
+                } else if (snapshot.hasData) {
+                  final allQuestionAttempts = snapshot.data;
+                  final isCorrect = allQuestionAttempts![i].isCorrect;
+                  return Text(
+                    isCorrect ? 'Correct' : 'Wrong',
+                    style: TextStyle(
+                      color: isCorrect ? AppColors.green : AppColors.red,
+                    ),
+                  );
+                } else {
+                  return Text('Error: ${snapshot.error}');
+                }
+              },
+            ),
+          ),
+      ];
+      return DataRow(cells: cells);
+    }).toList();
+
+    // Function to generate dataColumns
+    List<DataColumn> generateDataColumns(
+        int currentPage, int questionsPerPage, int totalQuestions) {
+      final List<DataColumn> columns = [
+        const DataColumn(label: Text('Name')),
+      ];
+      final int startIndex = currentPage * questionsPerPage;
+      final int endIndex = startIndex + questionsPerPage;
+      for (int i = startIndex; i < endIndex && i < totalQuestions; i++) {
+        columns.add(DataColumn(label: Text('Q${i + 1}')));
+      }
+      return columns;
+    }
+
+    // Generate DataColumn widgets for the current page
+    List<DataColumn> dataColumns = generateDataColumns(
+        currentPage, questionsPerPage, questionNames.length);
 
     return Scaffold(
       backgroundColor: AppColors.mainColor,
@@ -104,6 +204,64 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                   ),
                 ),
                 QuizHistogram(attempts: AsyncValue.data(firstAttempts)),
+                // Insert Table Here
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Container(
+                    width: 800,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Navigation Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // "Previous" button
+                            ElevatedButton(
+                              onPressed: () {
+                                ref
+                                    .read(currentPageProvider.notifier)
+                                    .decrement();
+                              },
+                              child: const Text("< Previous"),
+                            ),
+                            const SizedBox(width: 10),
+                            // "Next" button
+                            ElevatedButton(
+                              onPressed: () {
+                                ref
+                                    .read(currentPageProvider.notifier)
+                                    .increment();
+                              },
+                              child: const Text("Next >"),
+                            ),
+                          ],
+                        ),
+
+                        // Use the dynamically generated dataColumns
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columns: dataColumns,
+                            rows: dataRows,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                   child: Container(
