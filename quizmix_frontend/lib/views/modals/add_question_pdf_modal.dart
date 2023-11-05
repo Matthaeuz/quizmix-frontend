@@ -41,6 +41,7 @@ class AddQuestionPdfModalState extends ConsumerState<AddQuestionPdfModal> {
                       padding: EdgeInsets.fromLTRB(24, 48, 24, 48),
                       child: SingleChildScrollView(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             SizedBox(
                               height: 48.0,

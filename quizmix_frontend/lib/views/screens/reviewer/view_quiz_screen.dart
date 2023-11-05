@@ -266,17 +266,19 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                     ),
                   ),
                 ),
-                QuestionGrid(
-                    itemCount: currentQuiz.questions.length,
-                    onPressed: (index) {
-                      final double offset = (index - 1) *
-                          136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
-                      scrollController.animateTo(
-                        offset,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }),
+                Flexible(
+                  child: QuestionGrid(
+                      itemCount: currentQuiz.questions.length,
+                      onPressed: (index) {
+                        final double offset = (index - 1) *
+                            136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
+                        scrollController.animateTo(
+                          offset,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }),
+                ),
                 const ViewQuizQuestionContainer(),
               ],
             ),
