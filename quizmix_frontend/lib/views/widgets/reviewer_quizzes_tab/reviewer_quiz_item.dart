@@ -7,6 +7,7 @@ import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/process_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_screen.dart';
+import 'package:quizmix_frontend/views/screens/reviewer/view_quiz_statistics_screen.dart';
 
 class ReviewerQuizItem extends ConsumerWidget {
   final Quiz quiz;
@@ -22,6 +23,8 @@ class ReviewerQuizItem extends ConsumerWidget {
           ref
               .read(processStateProvider.notifier)
               .updateProcessState(ProcessState.loading);
+          ref
+              .read(currentPageProvider.notifier).resetToDefault();
           ref.read(currentQuizViewedProvider.notifier).updateCurrentQuiz(quiz);
           await ref
               .read(currentQuizListAttemptsProvider.notifier)

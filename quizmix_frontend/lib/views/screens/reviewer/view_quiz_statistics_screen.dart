@@ -41,11 +41,42 @@ class CurrentPageNotifier extends StateNotifier<int> {
       state--;
     }
   }
+
+  void resetToDefault() {
+    state = 0;
+  }
 }
 
 final currentPageProvider =
     StateNotifierProvider<CurrentPageNotifier, int>((ref) {
   return CurrentPageNotifier();
+});
+
+class DataRowsNotifier extends StateNotifier<List<DataRow>> {
+  DataRowsNotifier() : super(<DataRow>[]); // Initial state is an empty list
+
+  void updateDataRows(List<DataRow> newRows) {
+    state = newRows;
+  }
+}
+
+final dataRowsProvider =
+    StateNotifierProvider<DataRowsNotifier, List<DataRow>>((ref) {
+  return DataRowsNotifier();
+});
+
+class DataColumnsNotifier extends StateNotifier<List<DataColumn>> {
+  DataColumnsNotifier()
+      : super(<DataColumn>[]); // Initial state is an empty list
+
+  void updateDataColumns(List<DataColumn> newColumns) {
+    state = newColumns;
+  }
+}
+
+final dataColumnsProvider =
+    StateNotifierProvider<DataColumnsNotifier, List<DataColumn>>((ref) {
+  return DataColumnsNotifier();
 });
 
 class ViewQuizStatisticsScreen extends ConsumerWidget {
@@ -95,51 +126,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
 
     final currentPage = ref.watch(currentPageProvider);
 
-    // Calculate the start and end indices for the current page
-    final startIndex = currentPage * questionsPerPage;
-    final endIndex = (startIndex + questionsPerPage < questionNames.length)
-        ? startIndex + questionsPerPage
-        : questionNames.length;
-
-    // Create a sublist of question names for the current page
-    List<String> currentQuestionPage =
-        questionNames.sublist(startIndex, endIndex);
-
-    int numberOfQuestions = currentQuestionPage.length;
-
-    // Generate rows for the DataTable based on the attempts for the current page
-    final List<DataRow> dataRows = firstAttempts.asMap().entries.map((entry) {
-      final int index = entry.key;
-      final QuizAttempt attempt = entry.value;
-      final List<DataCell> cells = [
-        DataCell(Text(attempt.attemptedBy.fullName)),
-        for (int i = 0; i < numberOfQuestions; i++)
-          DataCell(
-            FutureBuilder(
-              future:
-                  client.getQuestionAttemptsByQuizAttempt(token, attempt.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Loading indicator while waiting for the data
-                } else if (snapshot.hasData) {
-                  final allQuestionAttempts = snapshot.data;
-                  final isCorrect = allQuestionAttempts![i].isCorrect;
-                  return Text(
-                    isCorrect ? 'Correct' : 'Wrong',
-                    style: TextStyle(
-                      color: isCorrect ? AppColors.green : AppColors.red,
-                    ),
-                  );
-                } else {
-                  return Text('Error: ${snapshot.error}');
-                }
-              },
-            ),
-          ),
-      ];
-      return DataRow(cells: cells);
-    }).toList();
-
     // Function to generate dataColumns
     List<DataColumn> generateDataColumns(
         int currentPage, int questionsPerPage, int totalQuestions) {
@@ -157,6 +143,105 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
     // Generate DataColumn widgets for the current page
     List<DataColumn> dataColumns = generateDataColumns(
         currentPage, questionsPerPage, questionNames.length);
+
+    List<DataRow> generateDataRows(
+      List<QuizAttempt> firstAttempts,
+      int currentPage,
+      int questionsPerPage,
+      List<String> questionNames,
+      BuildContext context,
+    ) {
+      final int startIndex = currentPage * questionsPerPage;
+      final int endIndex =
+          (startIndex + questionsPerPage < questionNames.length)
+              ? startIndex + questionsPerPage
+              : questionNames.length;
+
+      final List<DataRow> rows = firstAttempts.asMap().entries.map((entry) {
+        final QuizAttempt attempt = entry.value;
+        final List<DataCell> cells = [
+          DataCell(
+            InkWell(
+              onTap: () {
+                // Handle row press, e.g., navigate to a new screen
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const QuizAttemptScreen(),
+                  ),
+                );
+              },
+              child: Text(attempt.attemptedBy.fullName),
+            ),
+          ),
+        ];
+
+        for (int i = startIndex; i < endIndex; i++) {
+          final int questionIndex = i;
+          cells.add(
+            DataCell(
+              FutureBuilder(
+                future:
+                    client.getQuestionAttemptsByQuizAttempt(token, attempt.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
+                    final allQuestionAttempts = snapshot.data;
+                    if (questionIndex < allQuestionAttempts!.length) {
+                      final isCorrect =
+                          allQuestionAttempts[questionIndex].isCorrect;
+                      return Text(
+                        isCorrect ? 'Correct' : 'Wrong',
+                        style: TextStyle(
+                          color: isCorrect ? AppColors.green : AppColors.red,
+                        ),
+                      );
+                    }
+                  }
+                  return const Text('-');
+                },
+              ),
+            ),
+          );
+        }
+
+        return DataRow(
+          cells: cells,
+          onSelectChanged: (_) {
+            ref
+                .read(modalStateProvider.notifier)
+                .updateModalState(ModalState.preparingReview);
+
+            ref
+                .read(currentQuizAttemptedProvider.notifier)
+                .updateCurrentQuizAttempted(attempt, currentPage + 1);
+
+            client.getQuestionAttemptsByQuizAttempt(token, attempt.id).then(
+                (value) {
+              ref
+                  .read(currentQuestionAttemptsProvider.notifier)
+                  .updateCurrentQuestionAttempts(value);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const QuizAttemptScreen(),
+                ),
+              );
+              ref
+                  .read(modalStateProvider.notifier)
+                  .updateModalState(ModalState.none);
+            }, onError: (err) {
+              ref
+                  .read(modalStateProvider.notifier)
+                  .updateModalState(ModalState.none);
+            });
+          },
+        );
+      }).toList();
+
+      return rows;
+    }
 
     return Scaffold(
       backgroundColor: AppColors.mainColor,
@@ -224,37 +309,83 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         // Navigation Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // "Previous" button
-                            ElevatedButton(
-                              onPressed: () {
-                                ref
-                                    .read(currentPageProvider.notifier)
-                                    .decrement();
-                              },
-                              child: const Text("< Previous"),
-                            ),
-                            const SizedBox(width: 10),
-                            // "Next" button
-                            ElevatedButton(
-                              onPressed: () {
-                                ref
-                                    .read(currentPageProvider.notifier)
-                                    .increment();
-                              },
-                              child: const Text("Next >"),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // "Previous" button
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (currentPage > 0) {
+                                    ref
+                                        .read(currentPageProvider.notifier)
+                                        .decrement();
+                                    final newPage = currentPage - 1;
+                                    final newColumns = generateDataColumns(
+                                        newPage,
+                                        questionsPerPage,
+                                        questionNames.length);
+                                    final newRows = generateDataRows(
+                                        firstAttempts,
+                                        newPage,
+                                        questionsPerPage,
+                                        questionNames,
+                                        context);
+                                    ref
+                                        .read(dataRowsProvider.notifier)
+                                        .updateDataRows(newRows);
+                                    ref
+                                        .read(dataColumnsProvider.notifier)
+                                        .updateDataColumns(newColumns);
+                                  }
+                                },
+                                child: const Text("< Previous"),
+                              ),
+                              const SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  final nextPage = currentPage + 1;
+                                  if (nextPage * questionsPerPage <
+                                      questionNames.length) {
+                                    ref
+                                        .read(currentPageProvider.notifier)
+                                        .increment();
+                                    var newRows = generateDataRows(
+                                        firstAttempts,
+                                        currentPage,
+                                        questionsPerPage,
+                                        questionNames,
+                                        context);
+                                    ref
+                                        .read(dataRowsProvider.notifier)
+                                        .updateDataRows(newRows);
+                                  }
+                                },
+                                child: const Text("Next >"),
+                              ),
+                            ],
+                          ),
                         ),
 
                         // Use the dynamically generated dataColumns
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columns: dataColumns,
-                            rows: dataRows,
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              var newRows = generateDataRows(
+                                  firstAttempts,
+                                  currentPage,
+                                  questionsPerPage,
+                                  questionNames,
+                                  context);
+
+                              return DataTable(
+                                showCheckboxColumn: false,
+                                columns: dataColumns,
+                                rows: newRows,
+                              );
+                            },
                           ),
                         ),
                       ],
