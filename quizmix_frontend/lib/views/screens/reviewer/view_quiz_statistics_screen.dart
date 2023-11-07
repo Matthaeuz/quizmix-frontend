@@ -16,7 +16,6 @@ import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_statistics_attempts_container.dart';
 
-// Define a StateNotifier to manage the sorting state.
 class SortingNotifier extends StateNotifier<bool> {
   SortingNotifier() : super(true);
 
@@ -53,7 +52,7 @@ final currentPageProvider =
 });
 
 class DataRowsNotifier extends StateNotifier<List<DataRow>> {
-  DataRowsNotifier() : super(<DataRow>[]); // Initial state is an empty list
+  DataRowsNotifier() : super(<DataRow>[]);
 
   void updateDataRows(List<DataRow> newRows) {
     state = newRows;
@@ -66,8 +65,7 @@ final dataRowsProvider =
 });
 
 class DataColumnsNotifier extends StateNotifier<List<DataColumn>> {
-  DataColumnsNotifier()
-      : super(<DataColumn>[]); // Initial state is an empty list
+  DataColumnsNotifier() : super(<DataColumn>[]);
 
   void updateDataColumns(List<DataColumn> newColumns) {
     state = newColumns;
@@ -88,7 +86,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
-    // final attempts = ref.watch(currentQuizListAttemptsProvider);
     final List<QuizAttempt> firstAttempts = [];
     final isAscending = ref.watch(sortingProvider);
 
@@ -121,12 +118,10 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
       },
     );
 
-    // Pagination settings
     const questionsPerPage = 5;
 
     final currentPage = ref.watch(currentPageProvider);
 
-    // Function to generate dataColumns
     List<DataColumn> generateDataColumns(
         int currentPage, int questionsPerPage, int totalQuestions) {
       final List<DataColumn> columns = [
@@ -163,7 +158,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
           DataCell(
             InkWell(
               onTap: () {
-                // Handle row press, e.g., navigate to a new screen
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const QuizAttemptScreen(),
@@ -288,8 +282,9 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+                // Histogram
                 QuizHistogram(attempts: AsyncValue.data(firstAttempts)),
-                // Insert Table Here
+                // Table
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                   child: Container(
@@ -308,13 +303,11 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
-                        // Navigation Row
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // "Previous" button
                               ElevatedButton(
                                 onPressed: () {
                                   if (currentPage > 0) {
@@ -367,8 +360,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-
-                        // Use the dynamically generated dataColumns
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Consumer(
