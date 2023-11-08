@@ -26,12 +26,12 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
   int currentQuestionIndex = 0;
   bool allQuestionsAnswered = false;
 
-  void itemAnalysisAndScoring(
+  Future<void> itemAnalysisAndScoring(
     WidgetRef ref,
     int revieweeId,
     bool isCurrentAnswerCorrect,
     Question? currentQuestion,
-  ) {
+  ) async {
     final Map<String, int> resp = {
       "reviewee": revieweeId,
       "question": currentQuestion == null
@@ -44,7 +44,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     };
 
     // let our notifier know that a change in the api has occured
-    ref.read(userProvider.notifier).updateReviewee(ref, resp);
+    await ref.read(userProvider.notifier).updateReviewee(ref, resp);
   }
 
   void endQuiz() async {
@@ -116,20 +116,22 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     }
 
     itemAnalysisAndScoring(
-        ref, reviewee.id, isCurrentAnswerCorrect, currentQuestion);
+        ref, reviewee.id, isCurrentAnswerCorrect, currentQuestion).then((value) {
+          setState(() {
+            if (currentQuestionIndex >= currentTakenQuiz.questions.length - 1) {
+              allQuestionsAnswered = true;
+            } else {
+              if (currentQuestion != null) {
+                // decrement category from specs
+                ref.read(catProvider.notifier).getNextQuestion();
+              }
+              // proceed to next question
+              currentQuestionIndex++;
+            }
+          });
+        },);
 
-    setState(() {
-      if (currentQuestionIndex >= currentTakenQuiz.questions.length - 1) {
-        allQuestionsAnswered = true;
-      } else {
-        if (currentQuestion != null) {
-          // decrement category from specs
-          ref.read(catProvider.notifier).getNextQuestion();
-        }
-        // proceed to next question
-        currentQuestionIndex++;
-      }
-    });
+    
   }
 
   @override
