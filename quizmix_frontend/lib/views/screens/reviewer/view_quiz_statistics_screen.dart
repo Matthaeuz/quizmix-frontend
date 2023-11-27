@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
+import 'package:quizmix_frontend/state/models/question_attempts/question_attempt.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
@@ -106,42 +107,40 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
       final int endIndex =
           min(startIndex + questionsPerPage, questionNames.length);
 
-      final allQuestionAttempts = ref.watch(allQuestionAttemptsProvider);
+      final AsyncValue<Map<String, List<QuestionAttempt>>>
+          attemptsByIndividualState = ref.watch(allQuestionAttemptsProvider);
 
-      final List<DataRow> rows = firstAttempts.asMap().entries.map((entry) {
-        final QuizAttempt attempt = entry.value;
+      List<DataRow> rows = firstAttempts.map((attempt) {
         final List<DataCell> cells = [
-          DataCell(
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const QuizAttemptScreen(),
-                  ),
-                );
-              },
-              child: Text(attempt.attemptedBy.fullName),
-            ),
-          ),
+          DataCell(Text(attempt.attemptedBy.fullName)),
         ];
 
         for (int i = startIndex; i < endIndex; i++) {
-          final int questionIndex = i;
           cells.add(
             DataCell(
-              allQuestionAttempts.when(
-                data: (questionAttempts) {
-                  final isCorrect = 
-                      questionAttempts[questionIndex].isCorrect;
-                  return Text(
-                    isCorrect ? 'Correct' : 'Wrong',
-                    style: TextStyle(
-                      color: isCorrect ? AppColors.green : AppColors.red,
-                    ),
-                  );
+              attemptsByIndividualState.when(
+                data: (attemptsByIndividual) {
+                  final individualAttempts =
+                      attemptsByIndividual[attempt.attemptedBy.id.toString()] ??
+                          [];
+                  if (i < individualAttempts.length) {
+                    final isCorrect = individualAttempts[i].isCorrect;
+                    return Text(
+                      isCorrect ? 'Correct' : 'Wrong',
+                      style: TextStyle(
+                        color: isCorrect ? AppColors.green : AppColors.red,
+                      ),
+                    );
+                  } else {
+                    return const Text('-');
+                  }
                 },
-                loading: () => const CircularProgressIndicator(),
-                error: (_, __) => const Text('-'),
+                loading: () => const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                error: (_, __) => const Text('Error'),
               ),
             ),
           );
@@ -153,17 +152,14 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
             ref
                 .read(modalStateProvider.notifier)
                 .updateModalState(ModalState.preparingReview);
-
             ref
                 .read(currentQuizAttemptedProvider.notifier)
                 .updateCurrentQuizAttempted(attempt, currentPage + 1);
-
             client.getQuestionAttemptsByQuizAttempt(token, attempt.id).then(
                 (value) {
               ref
                   .read(currentQuestionAttemptsProvider.notifier)
                   .updateCurrentQuestionAttempts(value);
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
