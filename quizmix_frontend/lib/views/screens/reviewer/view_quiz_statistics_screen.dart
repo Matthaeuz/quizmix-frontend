@@ -245,87 +245,138 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Column(
+                    child: Stack(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        if (!ref.watch(allQuestionAttemptsProvider).maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ))
+                          Column(
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (currentPage > 0) {
-                                    ref
-                                        .read(currentPageProvider.notifier)
-                                        .decrement();
-                                    final newPage = currentPage - 1;
-                                    final newColumns = generateDataColumns(
-                                        newPage,
-                                        questionsPerPage,
-                                        questionNames.length);
-                                    final newRows = generateDataRows(
-                                        firstAttempts,
-                                        newPage,
-                                        questionsPerPage,
-                                        questionNames,
-                                        context,
-                                        ref);
-                                    ref
-                                        .read(dataRowsProvider.notifier)
-                                        .updateDataRows(newRows);
-                                    ref
-                                        .read(dataColumnsProvider.notifier)
-                                        .updateDataColumns(newColumns);
-                                  }
-                                },
-                                child: const Text("< Previous"),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (currentPage > 0) {
+                                          ref
+                                              .read(
+                                                  currentPageProvider.notifier)
+                                              .decrement();
+                                          final newPage = currentPage - 1;
+                                          final newColumns =
+                                              generateDataColumns(
+                                                  newPage,
+                                                  questionsPerPage,
+                                                  questionNames.length);
+                                          final newRows = generateDataRows(
+                                              firstAttempts,
+                                              newPage,
+                                              questionsPerPage,
+                                              questionNames,
+                                              context,
+                                              ref);
+                                          ref
+                                              .read(dataRowsProvider.notifier)
+                                              .updateDataRows(newRows);
+                                          ref
+                                              .read(
+                                                  dataColumnsProvider.notifier)
+                                              .updateDataColumns(newColumns);
+                                        }
+                                      },
+                                      child: const Text("< Previous"),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final nextPage = currentPage + 1;
+                                        if (nextPage * questionsPerPage <
+                                            questionNames.length) {
+                                          ref
+                                              .read(
+                                                  currentPageProvider.notifier)
+                                              .increment();
+                                          var newRows = generateDataRows(
+                                              firstAttempts,
+                                              currentPage,
+                                              questionsPerPage,
+                                              questionNames,
+                                              context,
+                                              ref);
+                                          ref
+                                              .read(dataRowsProvider.notifier)
+                                              .updateDataRows(newRows);
+                                        }
+                                      },
+                                      child: const Text("Next >"),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  final nextPage = currentPage + 1;
-                                  if (nextPage * questionsPerPage <
-                                      questionNames.length) {
-                                    ref
-                                        .read(currentPageProvider.notifier)
-                                        .increment();
-                                    var newRows = generateDataRows(
+                              SizedBox(
+                                height: 250,
+                                width: double.infinity,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Consumer(
+                                    builder: (context, ref, child) {
+                                      var newRows = generateDataRows(
                                         firstAttempts,
                                         currentPage,
                                         questionsPerPage,
                                         questionNames,
                                         context,
-                                        ref);
-                                    ref
-                                        .read(dataRowsProvider.notifier)
-                                        .updateDataRows(newRows);
-                                  }
-                                },
-                                child: const Text("Next >"),
+                                        ref,
+                                      );
+
+                                      return DataTable(
+                                        showCheckboxColumn: false,
+                                        columns: dataColumns,
+                                        rows: newRows,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              var newRows = generateDataRows(
-                                  firstAttempts,
-                                  currentPage,
-                                  questionsPerPage,
-                                  questionNames,
-                                  context,
-                                  ref);
-
-                              return DataTable(
-                                showCheckboxColumn: false,
-                                columns: dataColumns,
-                                rows: newRows,
-                              );
-                            },
+                        // Circular Loading Indicator
+                        if (ref.watch(allQuestionAttemptsProvider).maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ))
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Container(
+                              width: 800,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 4),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Retrieving Question Attempts',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.mainColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -462,73 +513,79 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                             data: (data) {
                               if (firstAttempts.isEmpty) {
                                 return const EmptyDataPlaceholder(
-                                    message:
-                                        "There are currently no attempts for this quiz.");
+                                  message:
+                                      "There are currently no attempts for this quiz.",
+                                );
                               }
 
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: firstAttempts.length,
-                                itemBuilder: (context, index) {
-                                  // Sort your data based on the current sorting order
-                                  final sortedAttempts = isAscending
-                                      ? firstAttempts
-                                      : List.from(firstAttempts.reversed);
+                              return SizedBox(
+                                height: 250,
+                                child: ListView.builder(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemCount: firstAttempts.length,
+                                  itemBuilder: (context, index) {
+                                    final sortedAttempts = isAscending
+                                        ? firstAttempts
+                                        : List.from(firstAttempts.reversed);
 
-                                  final attempt = sortedAttempts[index];
+                                    final attempt = sortedAttempts[index];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        ref
-                                            .read(modalStateProvider.notifier)
-                                            .updateModalState(
-                                                ModalState.preparingReview);
-
-                                        ref
-                                            .read(currentQuizAttemptedProvider
-                                                .notifier)
-                                            .updateCurrentQuizAttempted(
-                                                attempt, index + 1);
-
-                                        client
-                                            .getQuestionAttemptsByQuizAttempt(
-                                                token, attempt.id)
-                                            .then((value) {
-                                          ref
-                                              .read(
-                                                  currentQuestionAttemptsProvider
-                                                      .notifier)
-                                              .updateCurrentQuestionAttempts(
-                                                  value);
-
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const QuizAttemptScreen(),
-                                            ),
-                                          );
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: InkWell(
+                                        onTap: () async {
                                           ref
                                               .read(modalStateProvider.notifier)
                                               .updateModalState(
-                                                  ModalState.none);
-                                        }, onError: (err) {
+                                                  ModalState.preparingReview);
+
                                           ref
-                                              .read(modalStateProvider.notifier)
-                                              .updateModalState(
-                                                  ModalState.none);
-                                        });
-                                      },
-                                      child: QuizStatisticsAttemptsContainer(
-                                        attempt: attempt,
-                                        color: AppColors.iconColor,
+                                              .read(currentQuizAttemptedProvider
+                                                  .notifier)
+                                              .updateCurrentQuizAttempted(
+                                                  attempt, index + 1);
+
+                                          client
+                                              .getQuestionAttemptsByQuizAttempt(
+                                                  token, attempt.id)
+                                              .then((value) {
+                                            ref
+                                                .read(
+                                                    currentQuestionAttemptsProvider
+                                                        .notifier)
+                                                .updateCurrentQuestionAttempts(
+                                                    value);
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QuizAttemptScreen(),
+                                              ),
+                                            );
+                                            ref
+                                                .read(
+                                                    modalStateProvider.notifier)
+                                                .updateModalState(
+                                                    ModalState.none);
+                                          }, onError: (err) {
+                                            ref
+                                                .read(
+                                                    modalStateProvider.notifier)
+                                                .updateModalState(
+                                                    ModalState.none);
+                                          });
+                                        },
+                                        child: QuizStatisticsAttemptsContainer(
+                                          attempt: attempt,
+                                          color: AppColors.iconColor,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               );
                             },
                             error: (error, stack) =>
