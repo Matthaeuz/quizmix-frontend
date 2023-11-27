@@ -17,10 +17,12 @@ class QuizHistogram extends ConsumerWidget {
       data: (quizAttempts) {
         final Map<int, ScoreDetail> scoreDetails = {};
         for (var attempt in quizAttempts) {
-          scoreDetails.putIfAbsent(
-              attempt.attemptScore, () => ScoreDetail(attempt.attemptScore, 0, []));
+          scoreDetails.putIfAbsent(attempt.attemptScore,
+              () => ScoreDetail(attempt.attemptScore, 0, []));
           scoreDetails[attempt.attemptScore]!.frequency += 1;
-          scoreDetails[attempt.attemptScore]!.names.add(attempt.attemptedBy.fullName);
+          scoreDetails[attempt.attemptScore]!
+              .names
+              .add(attempt.attemptedBy.fullName);
         }
 
         final sortedData = scoreDetails.values.toList()
@@ -50,7 +52,9 @@ class QuizHistogram extends ConsumerWidget {
             onTooltipRender: (TooltipArgs args) {
               int score = args.dataPoints![args.pointIndex!.toInt()].x.toInt();
               List<String> names = scoreDetails[score]?.names ?? [];
-              args.text = 'Score: $score\nNames: ${names.join(', ')}';
+              String formattedNames = names.map((name) => '• $name').join('\n');
+
+              args.text = 'Score: $score\nNames:\n$formattedNames';
             },
             series: <ChartSeries>[
               ColumnSeries<ScoreDetail, int>(
