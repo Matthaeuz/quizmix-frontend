@@ -5,6 +5,7 @@ import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/questions/question.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/question_attempts/all_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_questions/current_viewed_quiz_question_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/available_quiz_questions_provider.dart';
@@ -165,6 +166,7 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                               ? false
                                               : true,
                                       onPressed: () {
+                                        ref.read(allQuestionAttemptsProvider.notifier).fetchAllQuestionAttempts();
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
@@ -6,10 +8,12 @@ import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
 import 'package:quizmix_frontend/state/models/quizzes/quiz.dart';
 import 'package:quizmix_frontend/state/providers/api/rest_client_provider.dart';
 import 'package:quizmix_frontend/state/providers/auth/auth_token_provider.dart';
+import 'package:quizmix_frontend/state/providers/question_attempts/all_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
+import 'package:quizmix_frontend/state/providers/quizzes/statistics_table_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
 import 'package:quizmix_frontend/views/screens/quiz_attempt_screen.dart';
 import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
@@ -26,55 +30,6 @@ class SortingNotifier extends StateNotifier<bool> {
 
 final sortingProvider = StateNotifierProvider<SortingNotifier, bool>((ref) {
   return SortingNotifier();
-});
-
-class CurrentPageNotifier extends StateNotifier<int> {
-  CurrentPageNotifier() : super(0);
-
-  void increment() {
-    state++;
-  }
-
-  void decrement() {
-    if (state > 0) {
-      state--;
-    }
-  }
-
-  void resetToDefault() {
-    state = 0;
-  }
-}
-
-final currentPageProvider =
-    StateNotifierProvider<CurrentPageNotifier, int>((ref) {
-  return CurrentPageNotifier();
-});
-
-class DataRowsNotifier extends StateNotifier<List<DataRow>> {
-  DataRowsNotifier() : super(<DataRow>[]);
-
-  void updateDataRows(List<DataRow> newRows) {
-    state = newRows;
-  }
-}
-
-final dataRowsProvider =
-    StateNotifierProvider<DataRowsNotifier, List<DataRow>>((ref) {
-  return DataRowsNotifier();
-});
-
-class DataColumnsNotifier extends StateNotifier<List<DataColumn>> {
-  DataColumnsNotifier() : super(<DataColumn>[]);
-
-  void updateDataColumns(List<DataColumn> newColumns) {
-    state = newColumns;
-  }
-}
-
-final dataColumnsProvider =
-    StateNotifierProvider<DataColumnsNotifier, List<DataColumn>>((ref) {
-  return DataColumnsNotifier();
 });
 
 class ViewQuizStatisticsScreen extends ConsumerWidget {
@@ -135,7 +90,7 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
       return columns;
     }
 
-    // Generate DataColumn widgets for the current page
+// Generate DataColumn widgets for the current page
     List<DataColumn> dataColumns = generateDataColumns(
         currentPage, questionsPerPage, questionNames.length);
 
@@ -145,12 +100,13 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
       int questionsPerPage,
       List<String> questionNames,
       BuildContext context,
+      WidgetRef ref,
     ) {
       final int startIndex = currentPage * questionsPerPage;
       final int endIndex =
-          (startIndex + questionsPerPage < questionNames.length)
-              ? startIndex + questionsPerPage
-              : questionNames.length;
+          min(startIndex + questionsPerPage, questionNames.length);
+
+      final allQuestionAttempts = ref.watch(allQuestionAttemptsProvider);
 
       final List<DataRow> rows = firstAttempts.asMap().entries.map((entry) {
         final QuizAttempt attempt = entry.value;
@@ -173,27 +129,19 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
           final int questionIndex = i;
           cells.add(
             DataCell(
-              FutureBuilder(
-                future:
-                    client.getQuestionAttemptsByQuizAttempt(token, attempt.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasData) {
-                    final allQuestionAttempts = snapshot.data;
-                    if (questionIndex < allQuestionAttempts!.length) {
-                      final isCorrect =
-                          allQuestionAttempts[questionIndex].isCorrect;
-                      return Text(
-                        isCorrect ? 'Correct' : 'Wrong',
-                        style: TextStyle(
-                          color: isCorrect ? AppColors.green : AppColors.red,
-                        ),
-                      );
-                    }
-                  }
-                  return const Text('-');
+              allQuestionAttempts.when(
+                data: (questionAttempts) {
+                  final isCorrect = 
+                      questionAttempts[questionIndex].isCorrect;
+                  return Text(
+                    isCorrect ? 'Correct' : 'Wrong',
+                    style: TextStyle(
+                      color: isCorrect ? AppColors.green : AppColors.red,
+                    ),
+                  );
                 },
+                loading: () => const CircularProgressIndicator(),
+                error: (_, __) => const Text('-'),
               ),
             ),
           );
@@ -324,7 +272,8 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                         newPage,
                                         questionsPerPage,
                                         questionNames,
-                                        context);
+                                        context,
+                                        ref);
                                     ref
                                         .read(dataRowsProvider.notifier)
                                         .updateDataRows(newRows);
@@ -349,7 +298,8 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                         currentPage,
                                         questionsPerPage,
                                         questionNames,
-                                        context);
+                                        context,
+                                        ref);
                                     ref
                                         .read(dataRowsProvider.notifier)
                                         .updateDataRows(newRows);
@@ -369,7 +319,8 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                   currentPage,
                                   questionsPerPage,
                                   questionNames,
-                                  context);
+                                  context,
+                                  ref);
 
                               return DataTable(
                                 showCheckboxColumn: false,

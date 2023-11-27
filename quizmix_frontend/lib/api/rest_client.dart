@@ -205,6 +205,12 @@ abstract class RestClient {
     @Path("attempt_id") int attemptId,
   );
 
+  @GET("/question_attempts/?attempt__quiz__id={quizId}")
+  Future<List<QuestionAttempt>> getQuestionAttemptsByQuiz(
+    @Header("Authorization") String token,
+    @Path("quizId") int quizId,
+  );
+
   /// USER ATTRIBUTE VALUE API
 
   @GET(
