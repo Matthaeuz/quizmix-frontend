@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
 import 'package:quizmix_frontend/state/models/quiz_attempts/quiz_attempt.dart';
+import 'package:quizmix_frontend/state/models/quiz_attempts/score_details.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class QuizHistogram extends ConsumerWidget {
@@ -14,14 +15,16 @@ class QuizHistogram extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return attempts.when(
       data: (quizAttempts) {
-        final Map<int, int> scoreFrequencies = {};
+        final Map<int, ScoreDetail> scoreDetails = {};
         for (var attempt in quizAttempts) {
-          scoreFrequencies[attempt.attemptScore] =
-              (scoreFrequencies[attempt.attemptScore] ?? 0) + 1;
+          scoreDetails.putIfAbsent(
+              attempt.attemptScore, () => ScoreDetail(attempt.attemptScore, 0, []));
+          scoreDetails[attempt.attemptScore]!.frequency += 1;
+          scoreDetails[attempt.attemptScore]!.names.add(attempt.attemptedBy.fullName);
         }
 
-        // Print the values received by the histogram
-        print("Score Frequencies: $scoreFrequencies");
+        final sortedData = scoreDetails.values.toList()
+          ..sort((a, b) => a.score.compareTo(b.score));
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
@@ -44,12 +47,16 @@ class QuizHistogram extends ConsumerWidget {
               labelStyle: const TextStyle(color: AppColors.white),
             ),
             tooltipBehavior: TooltipBehavior(enable: true),
+            onTooltipRender: (TooltipArgs args) {
+              int score = args.dataPoints![args.pointIndex!.toInt()].x.toInt();
+              List<String> names = scoreDetails[score]?.names ?? [];
+              args.text = 'Score: $score\nNames: ${names.join(', ')}';
+            },
             series: <ChartSeries>[
-              ColumnSeries<MapEntry<int, int>, String>(
-                dataSource: scoreFrequencies.entries.toList(),
-                xValueMapper: (MapEntry<int, int> entry, _) =>
-                    entry.key.toString(),
-                yValueMapper: (MapEntry<int, int> entry, _) => entry.value,
+              ColumnSeries<ScoreDetail, int>(
+                dataSource: sortedData,
+                xValueMapper: (ScoreDetail details, _) => details.score,
+                yValueMapper: (ScoreDetail details, _) => details.frequency,
                 name: 'Frequency of Attempt Scores',
                 color: AppColors.thirdColor,
               ),
