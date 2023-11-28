@@ -21,6 +21,30 @@ import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_statistics_attempts_container.dart';
 
+class SortByNotifier extends StateNotifier<String?> {
+  SortByNotifier() : super('reviewee');
+
+  void updateSortBy(String? value) {
+    state = value;
+  }
+}
+
+final sortByProvider = StateNotifierProvider<SortByNotifier, String?>((ref) {
+  return SortByNotifier(); // Replace SortByNotifier with your actual notifier class
+});
+
+class OrderByNotifier extends StateNotifier<bool> {
+  OrderByNotifier() : super(true);
+
+  void toggleOrder() {
+    state = !state;
+  }
+}
+
+final orderByProvider = StateNotifierProvider<OrderByNotifier, bool>((ref) {
+  return OrderByNotifier();
+});
+
 class SortingNotifier extends StateNotifier<bool> {
   SortingNotifier() : super(true);
 
@@ -43,7 +67,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
     final List<QuizAttempt> firstAttempts = [];
-    final isAscending = ref.watch(sortingProvider);
 
     final currentQuiz = ref.watch(currentQuizViewedProvider);
 
@@ -403,109 +426,103 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                       child: Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 2,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
+                              const Text("Sort By"),
+                              const SizedBox(width: 12),
+                              DropdownButton<String>(
+                                onChanged: (String? value) {
+                                  ref
+                                      .read(sortByProvider.notifier)
+                                      .updateSortBy(value);
+                                },
+                                value: ref.watch(sortByProvider),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'reviewee',
+                                    child: Text('Reviewee'),
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          'Reviewee',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  DropdownMenuItem(
+                                    value: 'date',
+                                    child: Text('Date'),
                                   ),
-                                ),
+                                  DropdownMenuItem(
+                                    value: 'score',
+                                    child: Text('Score'),
+                                  ),
+                                ],
+                                hint: const Text('Sort By'),
                               ),
                               const SizedBox(width: 12),
-                              Expanded(
-                                flex: 2,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          'Date',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              const Text("Order By"),
                               const SizedBox(width: 12),
-                              Expanded(
-                                child: TextButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(sortingProvider.notifier)
-                                        .toggleSorting();
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
+                              DropdownButton<String>(
+                                onChanged: (_) {
+                                  ref
+                                      .read(orderByProvider.notifier)
+                                      .toggleOrder();
+                                },
+                                value:
+                                    ref.watch(orderByProvider) ? 'asc' : 'desc',
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'asc',
+                                    child: Text('Ascending'),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        isAscending
-                                            ? Icons.arrow_upward
-                                            : Icons.arrow_downward,
-                                        color: Colors.black,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Expanded(
-                                        child: Text(
-                                          'Score',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  DropdownMenuItem(
+                                    value: 'desc',
+                                    child: Text('Descending'),
+                                  ),
+                                ],
+                                hint: const Text('Order'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          const Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Reviewee',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Date',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Score',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -518,6 +535,27 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                 );
                               }
 
+                              List<QuizAttempt> sortedAttempts =
+                                  List.from(firstAttempts);
+
+                              final sortBy = ref.watch(sortByProvider);
+                              if (sortBy == 'reviewee') {
+                                sortedAttempts.sort((a, b) => a
+                                    .attemptedBy.fullName
+                                    .compareTo(b.attemptedBy.fullName));
+                              } else if (sortBy == 'date') {
+                                sortedAttempts.sort((a, b) =>
+                                    a.timeFinished!.compareTo(b.timeFinished!));
+                              } else if (sortBy == 'score') {
+                                sortedAttempts.sort((a, b) =>
+                                    a.attemptScore.compareTo(b.attemptScore));
+                              }
+
+                              if (!ref.watch(orderByProvider)) {
+                                sortedAttempts =
+                                    sortedAttempts.reversed.toList();
+                              }
+
                               return SizedBox(
                                 height: 250,
                                 child: ListView.builder(
@@ -525,9 +563,9 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                       const AlwaysScrollableScrollPhysics(),
                                   itemCount: firstAttempts.length,
                                   itemBuilder: (context, index) {
-                                    final sortedAttempts = isAscending
-                                        ? firstAttempts
-                                        : List.from(firstAttempts.reversed);
+                                    // final sortedAttempts = isAscending
+                                    //     ? firstAttempts
+                                    //     : List.from(firstAttempts.reversed);
 
                                     final attempt = sortedAttempts[index];
 
