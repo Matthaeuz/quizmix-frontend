@@ -21,6 +21,30 @@ import 'package:quizmix_frontend/views/widgets/empty_data_placeholder.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_histogram.dart';
 import 'package:quizmix_frontend/views/widgets/reviewer_view_quiz_statistics/quiz_statistics_attempts_container.dart';
 
+class SortByNotifier extends StateNotifier<String?> {
+  SortByNotifier() : super('reviewee');
+
+  void updateSortBy(String? value) {
+    state = value;
+  }
+}
+
+final sortByProvider = StateNotifierProvider<SortByNotifier, String?>((ref) {
+  return SortByNotifier(); // Replace SortByNotifier with your actual notifier class
+});
+
+class OrderByNotifier extends StateNotifier<bool> {
+  OrderByNotifier() : super(true);
+
+  void toggleOrder() {
+    state = !state;
+  }
+}
+
+final orderByProvider = StateNotifierProvider<OrderByNotifier, bool>((ref) {
+  return OrderByNotifier();
+});
+
 class SortingNotifier extends StateNotifier<bool> {
   SortingNotifier() : super(true);
 
@@ -43,7 +67,6 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
     final client = ref.watch(restClientProvider);
     final token = ref.watch(authTokenProvider).accessToken;
     final List<QuizAttempt> firstAttempts = [];
-    final isAscending = ref.watch(sortingProvider);
 
     final currentQuiz = ref.watch(currentQuizViewedProvider);
 
@@ -245,87 +268,138 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Column(
+                    child: Stack(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        if (!ref.watch(allQuestionAttemptsProvider).maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ))
+                          Column(
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (currentPage > 0) {
-                                    ref
-                                        .read(currentPageProvider.notifier)
-                                        .decrement();
-                                    final newPage = currentPage - 1;
-                                    final newColumns = generateDataColumns(
-                                        newPage,
-                                        questionsPerPage,
-                                        questionNames.length);
-                                    final newRows = generateDataRows(
-                                        firstAttempts,
-                                        newPage,
-                                        questionsPerPage,
-                                        questionNames,
-                                        context,
-                                        ref);
-                                    ref
-                                        .read(dataRowsProvider.notifier)
-                                        .updateDataRows(newRows);
-                                    ref
-                                        .read(dataColumnsProvider.notifier)
-                                        .updateDataColumns(newColumns);
-                                  }
-                                },
-                                child: const Text("< Previous"),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (currentPage > 0) {
+                                          ref
+                                              .read(
+                                                  currentPageProvider.notifier)
+                                              .decrement();
+                                          final newPage = currentPage - 1;
+                                          final newColumns =
+                                              generateDataColumns(
+                                                  newPage,
+                                                  questionsPerPage,
+                                                  questionNames.length);
+                                          final newRows = generateDataRows(
+                                              firstAttempts,
+                                              newPage,
+                                              questionsPerPage,
+                                              questionNames,
+                                              context,
+                                              ref);
+                                          ref
+                                              .read(dataRowsProvider.notifier)
+                                              .updateDataRows(newRows);
+                                          ref
+                                              .read(
+                                                  dataColumnsProvider.notifier)
+                                              .updateDataColumns(newColumns);
+                                        }
+                                      },
+                                      child: const Text("< Previous"),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final nextPage = currentPage + 1;
+                                        if (nextPage * questionsPerPage <
+                                            questionNames.length) {
+                                          ref
+                                              .read(
+                                                  currentPageProvider.notifier)
+                                              .increment();
+                                          var newRows = generateDataRows(
+                                              firstAttempts,
+                                              currentPage,
+                                              questionsPerPage,
+                                              questionNames,
+                                              context,
+                                              ref);
+                                          ref
+                                              .read(dataRowsProvider.notifier)
+                                              .updateDataRows(newRows);
+                                        }
+                                      },
+                                      child: const Text("Next >"),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  final nextPage = currentPage + 1;
-                                  if (nextPage * questionsPerPage <
-                                      questionNames.length) {
-                                    ref
-                                        .read(currentPageProvider.notifier)
-                                        .increment();
-                                    var newRows = generateDataRows(
+                              SizedBox(
+                                height: 250,
+                                width: double.infinity,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Consumer(
+                                    builder: (context, ref, child) {
+                                      var newRows = generateDataRows(
                                         firstAttempts,
                                         currentPage,
                                         questionsPerPage,
                                         questionNames,
                                         context,
-                                        ref);
-                                    ref
-                                        .read(dataRowsProvider.notifier)
-                                        .updateDataRows(newRows);
-                                  }
-                                },
-                                child: const Text("Next >"),
+                                        ref,
+                                      );
+
+                                      return DataTable(
+                                        showCheckboxColumn: false,
+                                        columns: dataColumns,
+                                        rows: newRows,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              var newRows = generateDataRows(
-                                  firstAttempts,
-                                  currentPage,
-                                  questionsPerPage,
-                                  questionNames,
-                                  context,
-                                  ref);
-
-                              return DataTable(
-                                showCheckboxColumn: false,
-                                columns: dataColumns,
-                                rows: newRows,
-                              );
-                            },
+                        // Circular Loading Indicator
+                        if (ref.watch(allQuestionAttemptsProvider).maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ))
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Container(
+                              width: 800,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 4),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Retrieving Question Attempts',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.mainColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -352,109 +426,103 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                       child: Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 2,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
+                              const Text("Sort By"),
+                              const SizedBox(width: 12),
+                              DropdownButton<String>(
+                                onChanged: (String? value) {
+                                  ref
+                                      .read(sortByProvider.notifier)
+                                      .updateSortBy(value);
+                                },
+                                value: ref.watch(sortByProvider),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'reviewee',
+                                    child: Text('Reviewee'),
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          'Reviewee',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  DropdownMenuItem(
+                                    value: 'date',
+                                    child: Text('Date'),
                                   ),
-                                ),
+                                  DropdownMenuItem(
+                                    value: 'score',
+                                    child: Text('Score'),
+                                  ),
+                                ],
+                                hint: const Text('Sort By'),
                               ),
                               const SizedBox(width: 12),
-                              Expanded(
-                                flex: 2,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          'Date',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              const Text("Order By"),
                               const SizedBox(width: 12),
-                              Expanded(
-                                child: TextButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(sortingProvider.notifier)
-                                        .toggleSorting();
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
+                              DropdownButton<String>(
+                                onChanged: (_) {
+                                  ref
+                                      .read(orderByProvider.notifier)
+                                      .toggleOrder();
+                                },
+                                value:
+                                    ref.watch(orderByProvider) ? 'asc' : 'desc',
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'asc',
+                                    child: Text('Ascending'),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        isAscending
-                                            ? Icons.arrow_upward
-                                            : Icons.arrow_downward,
-                                        color: Colors.black,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Expanded(
-                                        child: Text(
-                                          'Score',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  DropdownMenuItem(
+                                    value: 'desc',
+                                    child: Text('Descending'),
+                                  ),
+                                ],
+                                hint: const Text('Order'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          const Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Reviewee',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Date',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Score',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -462,73 +530,100 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                             data: (data) {
                               if (firstAttempts.isEmpty) {
                                 return const EmptyDataPlaceholder(
-                                    message:
-                                        "There are currently no attempts for this quiz.");
+                                  message:
+                                      "There are currently no attempts for this quiz.",
+                                );
                               }
 
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: firstAttempts.length,
-                                itemBuilder: (context, index) {
-                                  // Sort your data based on the current sorting order
-                                  final sortedAttempts = isAscending
-                                      ? firstAttempts
-                                      : List.from(firstAttempts.reversed);
+                              List<QuizAttempt> sortedAttempts =
+                                  List.from(firstAttempts);
 
-                                  final attempt = sortedAttempts[index];
+                              final sortBy = ref.watch(sortByProvider);
+                              if (sortBy == 'reviewee') {
+                                sortedAttempts.sort((a, b) => a
+                                    .attemptedBy.fullName
+                                    .compareTo(b.attemptedBy.fullName));
+                              } else if (sortBy == 'date') {
+                                sortedAttempts.sort((a, b) =>
+                                    a.timeFinished!.compareTo(b.timeFinished!));
+                              } else if (sortBy == 'score') {
+                                sortedAttempts.sort((a, b) =>
+                                    a.attemptScore.compareTo(b.attemptScore));
+                              }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        ref
-                                            .read(modalStateProvider.notifier)
-                                            .updateModalState(
-                                                ModalState.preparingReview);
+                              if (!ref.watch(orderByProvider)) {
+                                sortedAttempts =
+                                    sortedAttempts.reversed.toList();
+                              }
 
-                                        ref
-                                            .read(currentQuizAttemptedProvider
-                                                .notifier)
-                                            .updateCurrentQuizAttempted(
-                                                attempt, index + 1);
+                              return SizedBox(
+                                height: 250,
+                                child: ListView.builder(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemCount: firstAttempts.length,
+                                  itemBuilder: (context, index) {
+                                    // final sortedAttempts = isAscending
+                                    //     ? firstAttempts
+                                    //     : List.from(firstAttempts.reversed);
 
-                                        client
-                                            .getQuestionAttemptsByQuizAttempt(
-                                                token, attempt.id)
-                                            .then((value) {
-                                          ref
-                                              .read(
-                                                  currentQuestionAttemptsProvider
-                                                      .notifier)
-                                              .updateCurrentQuestionAttempts(
-                                                  value);
+                                    final attempt = sortedAttempts[index];
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const QuizAttemptScreen(),
-                                            ),
-                                          );
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: InkWell(
+                                        onTap: () async {
                                           ref
                                               .read(modalStateProvider.notifier)
                                               .updateModalState(
-                                                  ModalState.none);
-                                        }, onError: (err) {
+                                                  ModalState.preparingReview);
+
                                           ref
-                                              .read(modalStateProvider.notifier)
-                                              .updateModalState(
-                                                  ModalState.none);
-                                        });
-                                      },
-                                      child: QuizStatisticsAttemptsContainer(
-                                        attempt: attempt,
-                                        color: AppColors.iconColor,
+                                              .read(currentQuizAttemptedProvider
+                                                  .notifier)
+                                              .updateCurrentQuizAttempted(
+                                                  attempt, index + 1);
+
+                                          client
+                                              .getQuestionAttemptsByQuizAttempt(
+                                                  token, attempt.id)
+                                              .then((value) {
+                                            ref
+                                                .read(
+                                                    currentQuestionAttemptsProvider
+                                                        .notifier)
+                                                .updateCurrentQuestionAttempts(
+                                                    value);
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QuizAttemptScreen(),
+                                              ),
+                                            );
+                                            ref
+                                                .read(
+                                                    modalStateProvider.notifier)
+                                                .updateModalState(
+                                                    ModalState.none);
+                                          }, onError: (err) {
+                                            ref
+                                                .read(
+                                                    modalStateProvider.notifier)
+                                                .updateModalState(
+                                                    ModalState.none);
+                                          });
+                                        },
+                                        child: QuizStatisticsAttemptsContainer(
+                                          attempt: attempt,
+                                          color: AppColors.iconColor,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               );
                             },
                             error: (error, stack) =>
