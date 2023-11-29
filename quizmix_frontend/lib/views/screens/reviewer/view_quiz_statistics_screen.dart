@@ -13,6 +13,7 @@ import 'package:quizmix_frontend/state/providers/question_attempts/all_question_
 import 'package:quizmix_frontend/state/providers/question_attempts/current_question_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_attempted_provider.dart';
 import 'package:quizmix_frontend/state/providers/quiz_attempts/current_quiz_list_attempts_provider.dart';
+import 'package:quizmix_frontend/state/providers/quiz_attempts/first_quiz_attempts_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/current_viewed_quiz_provider.dart';
 import 'package:quizmix_frontend/state/providers/quizzes/statistics_table_provider.dart';
 import 'package:quizmix_frontend/state/providers/ui/modal_state_provider.dart';
@@ -79,7 +80,7 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
 
     // Get the list of attempts from the currentQuizListAttemptsProvider
     final AsyncValue<List<QuizAttempt>> attempts =
-        ref.watch(currentQuizListAttemptsProvider);
+        ref.watch(firstQuizAttemptProvider);
 
     attempts.maybeWhen(
       data: (data) {
