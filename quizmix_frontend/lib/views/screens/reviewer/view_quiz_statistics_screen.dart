@@ -80,7 +80,7 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
 
     // Get the list of attempts from the currentQuizListAttemptsProvider
     final AsyncValue<List<QuizAttempt>> attempts =
-        ref.watch(firstQuizAttemptProvider);
+        ref.watch(currentQuizListAttemptsProvider);
 
     attempts.maybeWhen(
       data: (data) {
