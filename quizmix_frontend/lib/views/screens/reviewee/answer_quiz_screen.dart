@@ -69,6 +69,7 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     ref
         .read(revieweeTopCategoriesProvider.notifier)
         .fetchRevieweeTopCategories();
+    ref.read(catProvider.notifier).endAdaptiveQuiz();
   }
 
   void handleChoicePressed(String choice, Question? currentQuestion) async {
@@ -116,22 +117,23 @@ class AnswerQuizScreenState extends ConsumerState<AnswerQuizScreen> {
     }
 
     itemAnalysisAndScoring(
-        ref, reviewee.id, isCurrentAnswerCorrect, currentQuestion).then((value) {
-          setState(() {
-            if (currentQuestionIndex >= currentTakenQuiz.questions.length - 1) {
-              allQuestionsAnswered = true;
-            } else {
-              if (currentQuestion != null) {
-                // decrement category from specs
-                ref.read(catProvider.notifier).getNextQuestion();
-              }
-              // proceed to next question
-              currentQuestionIndex++;
+            ref, reviewee.id, isCurrentAnswerCorrect, currentQuestion)
+        .then(
+      (value) {
+        setState(() {
+          if (currentQuestionIndex >= currentTakenQuiz.questions.length - 1) {
+            allQuestionsAnswered = true;
+          } else {
+            if (currentQuestion != null) {
+              // decrement category from specs
+              ref.read(catProvider.notifier).getNextQuestion();
             }
-          });
-        },);
-
-    
+            // proceed to next question
+            currentQuestionIndex++;
+          }
+        });
+      },
+    );
   }
 
   @override
