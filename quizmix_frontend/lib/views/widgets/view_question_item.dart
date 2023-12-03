@@ -64,13 +64,19 @@ class ViewQuestionItem extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 8.0),
-                    Text(
-                      questionDetails.question,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            questionDetails.question,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 )

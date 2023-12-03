@@ -117,6 +117,10 @@ class CATNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
     newState["question"] = null;
     state = AsyncValue.data(newState);
   }
+
+  void endAdaptiveQuiz() {
+    state = const AsyncValue.loading();
+  }
 }
 
 final catProvider =
