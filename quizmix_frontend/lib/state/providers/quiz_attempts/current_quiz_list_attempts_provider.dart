@@ -24,6 +24,7 @@ class CurrentQuizListAttemptsNotifier
     try {
       var currentQuizListAttempts =
           await client.getQuizAttemptsByQuiz(accessToken, currentQuiz.id);
+      currentQuizListAttempts.sort((a, b) => a.timeStarted.compareTo(b.timeStarted));
       state = AsyncValue.data(currentQuizListAttempts);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
