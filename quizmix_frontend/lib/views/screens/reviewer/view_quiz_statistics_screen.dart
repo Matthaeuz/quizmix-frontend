@@ -611,7 +611,7 @@ class ViewQuizStatisticsScreen extends ConsumerWidget {
                                                       currentQuizAttemptedProvider
                                                           .notifier)
                                                   .updateCurrentQuizAttempted(
-                                                      attempt, index + 1);
+                                                      attempt, 1);
 
                                               client
                                                   .getQuestionAttemptsByQuizAttempt(
