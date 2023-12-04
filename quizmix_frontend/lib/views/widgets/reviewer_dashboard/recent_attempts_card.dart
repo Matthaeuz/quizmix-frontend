@@ -107,7 +107,7 @@ class RecentPretestAttemptsCard extends ConsumerWidget {
                                         .read(currentQuizAttemptedProvider
                                             .notifier)
                                         .updateCurrentQuizAttempted(
-                                            attempt, reversedIndex + 1);
+                                            attempt, 1);
 
                                     // Get question attempts for this quiz attempt
                                     final questionAttempts = await client
