@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quizmix_frontend/constants/colors.constants.dart';
@@ -185,6 +187,13 @@ class _ViewQuestionModalState extends ConsumerState<ViewQuestionModal> {
                                 ),
                                 Text(
                                   'Difficulty: ${currentQuestion.parameters[1].toStringAsFixed(4)} - ${getInterpretationFromDiff(currentQuestion.parameters[1])}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  //((1 / (1 + exp(-currentQuestion.parameters[0] * (0 - currentQuestion.parameters[1])))) * 100).toStringAsFixed(2)
+                                  'Probability of 0-theta reviewee to get correct answer: ${((1 / (1 + exp(-currentQuestion.parameters[0] * (0 - currentQuestion.parameters[1])))) * 100).toStringAsFixed(2)}%',
                                   style: const TextStyle(
                                     fontSize: 16,
                                   ),
