@@ -158,7 +158,7 @@ class _ViewAllQuizAttemptsModalState
                                               .read(currentQuizAttemptedProvider
                                                   .notifier)
                                               .updateCurrentQuizAttempted(
-                                                  data[index], index + 1);
+                                                  data[index], attemptIndexes[index] + 1);
 
                                           client
                                               .getQuestionAttemptsByQuizAttempt(
