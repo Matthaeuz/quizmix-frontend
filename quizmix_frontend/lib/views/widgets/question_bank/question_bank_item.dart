@@ -61,7 +61,7 @@ class QuestionBankItem extends ConsumerWidget {
               const SizedBox(height: 8.0),
               Text(
                 question.question,
-                maxLines: 4,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 12,

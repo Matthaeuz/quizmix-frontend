@@ -166,7 +166,10 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                                               ? false
                                               : true,
                                       onPressed: () {
-                                        ref.read(allQuestionAttemptsProvider.notifier).fetchAllQuestionAttempts();
+                                        ref
+                                            .read(allQuestionAttemptsProvider
+                                                .notifier)
+                                            .fetchAllQuestionAttempts();
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -268,20 +271,18 @@ class _ViewQuizScreenState extends ConsumerState<ViewQuizScreen> {
                     ),
                   ),
                 ),
-                Flexible(
-                  child: QuestionGrid(
-                      itemCount: currentQuiz.questions.length,
-                      onPressed: (index) {
-                        final double offset = (index - 1) *
-                            136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
-                        scrollController.animateTo(
-                          offset,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }),
-                ),
-                const ViewQuizQuestionContainer(),
+                QuestionGrid(
+                    itemCount: currentQuiz.questions.length,
+                    onPressed: (index) {
+                      final double offset = (index - 1) *
+                          136; //offset = (index - 1) * (itemheight + spacing[sizedbox])
+                      scrollController.animateTo(
+                        offset,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }),
+                const Expanded(child: ViewQuizQuestionContainer())
               ],
             ),
           ),

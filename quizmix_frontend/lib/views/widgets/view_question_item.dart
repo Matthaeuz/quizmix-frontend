@@ -69,7 +69,7 @@ class ViewQuestionItem extends ConsumerWidget {
                         Expanded(
                           child: Text(
                             questionDetails.question,
-                            maxLines: 4,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 12,

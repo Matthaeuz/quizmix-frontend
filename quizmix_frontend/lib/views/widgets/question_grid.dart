@@ -16,7 +16,13 @@ class QuestionGrid extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
-        height: 80,
+        // height: 20,
+        /// The line `// height: 20,` is a commented out line of code. It is not doing anything in the
+        /// current code. It is likely that it was added as a placeholder or for testing purposes, but
+        /// it is not being used in the actual implementation of the `QuestionGrid` widget.
+        constraints: const BoxConstraints(
+          maxHeight: 80,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
           border: Border.all(
